@@ -132,8 +132,6 @@ def tetrahedron(vasp: Vasp, structure=None):
     vasp.ismear = -5
     return vasp
 
-
-
 ##########
 # IONIC  #
 ##########

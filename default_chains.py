@@ -22,7 +22,7 @@ class CustomChain(object):
         if not names:
             names = [ str(i) for i in range(len(workflows)) ]
         else:
-            assert len(names) == len(workflow)
+            assert len(names) == len(workflows)
         self.names=names
         self.vasp=vaspobj
         self.workflows = workflows

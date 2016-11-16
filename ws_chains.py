@@ -1,4 +1,4 @@
-from default_chains import CustomChain,load_default_vasp,set_spin
+from default_chains import *
 from pylada.vasp.specie import U
 
 def load_optimized_U_species(vasp, structure):
@@ -19,9 +19,17 @@ def load_optimized_U_species(vasp, structure):
     vasp.add_specie = "H", pseudoDir + "/H"
     return(vasp)
 
-class WSBulkChain(CustomChain):
+class WSBulkChain_ferro(CustomChain):
     def __init__(self, vaspobj):
-        return super().__init__([[load_default_vasp, load_optimized_U_species, ferro_spin]], vaspobj=vaspobj)    
+        spin = ferro_spin
+        pre_converge = [load_default_vasp, load_optimized_U_species, spin, awful_converge]
+        bad_converge = [load_default_vasp, load_optimized_U_species, spin, rough_converge]
+        get_eigenvalues = [load_default_vasp, load_optimized_U_species, spin, get_eigen]
+        final_converge = [load_default_vasp, load_optimized_U_species, spin, full_converge]
+        hse = [load_default_vasp, load_optimized_U_species, spin, single_point, hse06]
+        dos = [load_default_vasp, load_optimized_U_species, spin, single_point, hse06, set_dos]
+        names = ['0_pre_converge', '1_rough_converge', '2_get_eigenvalues', '3_final_converge', '4_hse', '5_dos']
+        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names, vaspobj=vaspobj)
 
 def anti_spin(vasp, structure):
     vasp.ispin = 2

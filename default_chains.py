@@ -92,26 +92,154 @@ def all_output(vasp, structure=None):
     vasp.lorbit=11                       #Print PROCAR and DOSCAR
     return vasp
 
-def set_kpoints(x, y, z, packing='Gamma'):
-    def kpoints_fxn(vasp, structure=None):
-        vasp.kpoints = "Set Mesh\n0\n{}\n{} {} {}".format(packing,x,y,z)
-        if packing[0].upper() == 'G':
-            vasp.add_keyword('auto_gamma', 'True')
-        return vasp
-    return kpoints_fxn
+##############
+# ELECTRONIC #
+##############
 
-def set_spin(magmom):
-    def spin_fxn(vasp, structure):
-        assert len(magmom) == len(structure)
-        vasp.ispin = 2
-        vasp.magmom = True
-        old_structure = structure.copy
-        for _ in range(len(magmom)): # remove all atoms
-            structure.pop(0)
-        for i in range(len(magmom)): # add atoms again, removing
-            x = old_structure[i].pos[0]
-            y = old_structure[i].pos[1]
-            z = old_structure[i].pos[2]            
-            structure.add_atom(x, y, z, structure[i].type, magmom=magmom[i])
-        return vasp
-    return spin_fxn
+def set_algo_normal(vasp: Vasp, structure=None):
+    '''
+
+    :param vasp: Vasp
+    :param structure:
+    :return:
+    '''
+    vasp.algo = "Normal"
+    return vasp
+
+def set_algo_all(vasp: Vasp, structure=None):
+    vasp.algo = "All"
+    return vasp
+
+def set_algo_fast(vasp: Vasp, structure=None):
+    vasp.algo = "Fast"
+    return vasp
+
+def hse06(vasp: Vasp, structure=None):
+    vasp.istart = 1
+    vasp.icharg = 1
+    vasp.nelm = 1000
+    vasp.add_keyword('lhfcalc', True)
+    vasp.precfock = 'Fast'
+    vasp.add_keyword('hfscreen', 0.2)
+    vasp.algo = 'All'
+    return vasp
+
+def set_dos(vasp: Vasp, structure=None):
+    vasp.algo = 'None'
+    return vasp
+
+def tetrahedron(vasp: Vasp, structure=None):
+    vasp.ismear = -5
+    return vasp
+
+
+
+##########
+# IONIC  #
+##########
+
+def set_iopt_7(vasp: Vasp, structure=None):
+    vasp.ibrion = 3
+    vasp.add_keyword('potim', 0)
+    vasp.add_keyword('iopt', 7)
+    return vasp
+
+def single_point(vasp: Vasp, structure=None):
+    vasp.ibrion = -1
+    vasp.nsw = 0
+    return Vasp
+
+######################
+# CONVERGENCE LEVELS #
+######################
+
+def awful_converge(vasp: Vasp, structure=None):
+    # Start
+    vasp.istart = 0
+    vasp.icharg = 2
+    # Electronic
+    vasp.prec = "Normal"
+    vasp.nelm = 60
+    vasp.nelmin = 8
+    vasp.ediff = 1e-4
+    # Ionic
+    vasp.edffg = -0.2
+    # Output
+    vasp.lwave = False
+    vasp.lcharg = False
+    return vasp
+
+def rough_converge(vasp: Vasp, structure=None):
+    # Start
+    vasp.istart = 0
+    vasp.icharg = 2
+    # Electronic
+    vasp.prec = "Accurate"
+    vasp.nelm = 60
+    vasp.nelmin = 8
+    vasp.ediff = 1e-4
+    # Ionic
+    vasp.edffg = -0.05
+    # Output
+    vasp.lwave = False
+    vasp.lcharg = False
+    return vasp
+
+def get_eigen(vasp: Vasp, structure=None):
+    # Start
+    vasp.istart = 0
+    vasp.icharg = 2
+    # Electronic
+    vasp.prec = "Accurate"
+    vasp.nelm = 200
+    vasp.ediff = 1e-6
+    # Ionic
+    vasp.ediffg = -0.03
+    # Output
+    vasp.lwave = True
+    vasp.lcharg = True
+    return vasp
+
+def full_converge(vasp: Vasp, structure=None):
+    # Start
+    vasp.istart = 1
+    vasp.icharg = 1
+    # Electronic
+    vasp.prec = "Accurate"
+    vasp.nelm = 200
+    vasp.ediff = 1e-7
+    # Ionic
+    vasp.ediffg = -0.02
+    # Output
+    vasp.lwave = True
+    vasp.lcharg = True
+    return vasp
+
+
+###########
+# KPOINTS #
+###########
+
+def set_gamma(vasp: Vasp, structure=None):
+    x=1; y=1 ; z=1
+    packing = 'Gamma'
+    vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    if packing[0].upper() == 'G':
+        vasp.add_keyword('auto_gamma', 'True')
+    return vasp
+
+def set_222(vasp: Vasp, structure=None):
+    x=2; y=2 ; z=2
+    packing = 'Gamma'
+    vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    if packing[0].upper() == 'G':
+        vasp.add_keyword('auto_gamma', 'True')
+    return vasp
+
+def set_221(vasp: Vasp, structure=None):
+    x=2; y=2 ; z=1
+    packing = 'Gamma'
+    vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    if packing[0].upper() == 'G':
+        vasp.add_keyword('auto_gamma', 'True')
+    return vasp

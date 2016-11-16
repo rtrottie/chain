@@ -73,7 +73,7 @@ def load_default_vasp(vasp,structure=None):
         kpoints_density = 4000
         vasp.kpoints=pylada.gen_kpts(structure,kpoints_density)
     vasp.first_trial = { "kpoints": "\n0\nAuto\n12", "encut": 400.0 }
-    vasp.program = '$VASP_PYLADA'   # default vasp program
+    vasp.program = '$VASP_KPTS'   # default vasp program
     vasp.npar       = int(structure.__len__() / 24 / 1.25)
     vasp.prec       = "accurate"
     vasp.ediff      = 1.0e-6        # total, not per atom
@@ -222,8 +222,7 @@ def set_gamma(vasp: Vasp, structure=None):
     x=1; y=1 ; z=1
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
-    if packing[0].upper() == 'G':
-        vasp.add_keyword('auto_gamma', 'True')
+    vasp.precfock='$VASP_GAMMA'\
     return vasp
 
 def set_222(vasp: Vasp, structure=None):

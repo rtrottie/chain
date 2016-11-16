@@ -222,7 +222,7 @@ def set_gamma(vasp: Vasp, structure=None):
     x=1; y=1 ; z=1
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
-    vasp.precfock='$VASP_GAMMA'\
+    vasp.program='$VASP_GAMMA'
     return vasp
 
 def set_222(vasp: Vasp, structure=None):

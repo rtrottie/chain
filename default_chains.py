@@ -161,6 +161,7 @@ def awful_converge(vasp: Vasp, structure=None):
     vasp.nelmin = 8
     vasp.ediff = 1e-4
     # Ionic
+    vasp.nsw = 5000
     vasp.edffg = -0.2
     # Output
     vasp.lwave = False
@@ -177,6 +178,7 @@ def rough_converge(vasp: Vasp, structure=None):
     vasp.nelmin = 8
     vasp.ediff = 1e-4
     # Ionic
+    vasp.nsw = 5000
     vasp.edffg = -0.05
     # Output
     vasp.lwave = False
@@ -192,6 +194,7 @@ def get_eigen(vasp: Vasp, structure=None):
     vasp.nelm = 200
     vasp.ediff = 1e-6
     # Ionic
+    vasp.nsw = 5000
     vasp.ediffg = -0.03
     # Output
     vasp.lwave = True
@@ -207,6 +210,7 @@ def full_converge(vasp: Vasp, structure=None):
     vasp.nelm = 200
     vasp.ediff = 1e-7
     # Ionic
+    vasp.nsw = 5000
     vasp.ediffg = -0.02
     # Output
     vasp.lwave = True

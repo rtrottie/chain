@@ -22,12 +22,12 @@ def load_optimized_U_species(vasp, structure):
 class WSBulkChain_ferro(CustomChain):
     def __init__(self, vaspobj):
         spin = ferro_spin
-        pre_converge = [load_default_vasp, load_optimized_U_species, spin, awful_converge, set_gamma]
-        bad_converge = [load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222]
-        get_eigenvalues = [load_default_vasp, load_optimized_U_species, spin, get_eigen, set_222]
-        final_converge = [load_default_vasp, load_optimized_U_species, spin, full_converge, set_222]
-        hse = [load_default_vasp, load_optimized_U_species, spin, single_point, hse06, set_222]
-        dos = [load_default_vasp, load_optimized_U_species, spin, single_point, hse06, set_dos, set_222, tetrahedron]
+        pre_converge = [load_default_vasp, load_optimized_U_species, spin, awful_converge, set_gamma, set_iopt_7]
+        bad_converge = [load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
+        get_eigenvalues = [load_default_vasp, load_optimized_U_species, spin, get_eigen, set_222, set_iopt_7]
+        final_converge = [load_default_vasp, load_optimized_U_species, spin, full_converge, set_222, set_iopt_7]
+        hse = [load_default_vasp, load_optimized_U_species, spin, single_point, hse06, set_222, set_iopt_7]
+        dos = [load_default_vasp, load_optimized_U_species, spin, single_point, hse06, set_dos, set_222, tetrahedron, set_iopt_7]
         names = ['0_pre_converge', '1_rough_converge', '2_get_eigenvalues', '3_final_converge', '4_hse', '5_dos']
         return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names, vaspobj=vaspobj)
 

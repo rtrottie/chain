@@ -1,4 +1,5 @@
 from pylada.vasp.relax import Relax
+from pylada.vasp.functional import Vasp
 from copy import deepcopy
 from pylada.crystal.structure import Structure
 from pylada.crystal.atom import Atom
@@ -10,8 +11,14 @@ from pylada.vasp import Vasp
 import pylada
 import os
 
+class CustomFunctional(object):
+    def __init__(self, base: Vasp, modifications: list):
+        self.base = base
+        self.modifications = modifications
+        return
+
 class CustomChain(object):
-    def __init__(self, workflows, names=None, vaspobj=None):
+    def __init__(self, functionals, names=None):
         '''
         Runs a series of workflows
         Args:
@@ -20,13 +27,12 @@ class CustomChain(object):
             vaspobj: TODO
         '''
         if not names:
-            names = [ str(i) for i in range(len(workflows)) ]
+            names = [str(i) for i in range(len(functionals))]
         else:
-            assert len(names) == len(workflows)
+            assert len(names) == len(functionals)
         self.names=names
-        self.vasp=vaspobj
-        self.workflows = workflows
-        self.total_steps = len(workflows)
+        self.functionals = functionals
+        self.total_steps = len(functionals)
         self.current_step = 0
         return
 
@@ -40,7 +46,8 @@ class CustomChain(object):
         extract.success=success
         return extract
 
-    def run_calculation(self, name, workflow, vasp, structure, outdir, kwargs):
+    def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, kwargs):
+        vasp = workflow.base
         structure_ = structure.copy()
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
         for modification in workflow:
@@ -57,11 +64,11 @@ class CustomChain(object):
 
         # make this function stateless.
         structure_ = structure.copy()
-        for i in range(len(self.workflows)):
-            vasp = Relax(copy=deepcopy(self.vasp))
+        for i in range(len(self.functionals)):
             name = self.names[i]
-            workflow = self.workflows[i]
-            self.run_calculation(name, workflow, vasp, structure, outdir, kwargs)
+            workflow = self.functionals[i]
+            self.run_calculation(name, workflow, structure, outdir, kwargs)
+        fulldir = os.path.join(outdir, name)
         return self.Extract(fulldir)
 
 def load_default_vasp(vasp,structure=None):

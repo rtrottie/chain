@@ -66,7 +66,6 @@ class CustomChain(object):
     def __call__(self, structure, outdir=None, **kwargs ):
 
         # make this function stateless.
-        structure_ = structure.copy()
         previous = None
         for i in range(len(self.functionals)):
             name = self.names[i]
@@ -156,7 +155,8 @@ def set_iopt_7(vasp: Vasp, structure=None):
 def single_point(vasp: Vasp, structure=None):
     vasp.ibrion = -1
     vasp.nsw = 0
-    return Vasp
+    vasp.add_keyword('iopt', None)
+    return vasp
 
 ######################
 # CONVERGENCE LEVELS #
@@ -237,21 +237,20 @@ def set_gamma(vasp: Vasp, structure=None):
     x=1; y=1 ; z=1
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
-    vasp.program='$VASP_GAMMA'
     return vasp
 
 def set_222(vasp: Vasp, structure=None):
     x=2; y=2 ; z=2
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
-    if packing[0].upper() == 'G':
-        vasp.add_keyword('auto_gamma', 'True')
     return vasp
 
 def set_221(vasp: Vasp, structure=None):
     x=2; y=2 ; z=1
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
-    if packing[0].upper() == 'G':
-        vasp.add_keyword('auto_gamma', 'True')
+    return vasp
+
+def gamma_optimization(vasp: Vasp, structure = None):
+    vasp.program='$VASP_GAMMA'
     return vasp

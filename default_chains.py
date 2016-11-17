@@ -11,6 +11,7 @@ from pylada.vasp import Vasp
 import pylada
 import os
 
+
 class CustomFunctional(object):
     def __init__(self, base: Vasp, modifications: list):
         self.base = base
@@ -18,7 +19,7 @@ class CustomFunctional(object):
         return
 
 class CustomChain(object):
-    def __init__(self, functionals, names=None):
+    def __init__(self, functionals, names=None, vaspobj=None):
         '''
         Runs a series of workflows
         Args:
@@ -31,6 +32,7 @@ class CustomChain(object):
         else:
             assert len(names) == len(functionals)
         self.names=names
+        self.vasp = vaspobj
         self.functionals = functionals
         self.total_steps = len(functionals)
         self.current_step = 0
@@ -47,7 +49,7 @@ class CustomChain(object):
         return extract
 
     def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, kwargs):
-        vasp = workflow.base
+        vasp = workflow.base(copy=deepcopy(self.vasp))
         structure_ = structure.copy()
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
         for modification in workflow:

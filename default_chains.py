@@ -52,7 +52,7 @@ class CustomChain(object):
         vasp = workflow.base(copy=deepcopy(self.vasp))
         structure_ = structure.copy()
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
-        for modification in workflow:
+        for modification in workflow.modifications:
             vasp = modification(vasp, structure)    
         ## if this calculation has not been done run it
         params = deepcopy(kwargs)

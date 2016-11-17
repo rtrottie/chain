@@ -48,7 +48,7 @@ class CustomChain(object):
         extract.success=success
         return extract
 
-    def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, kwargs):
+    def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, previous, kwargs):
         vasp = workflow.base(copy=deepcopy(self.vasp))
         structure_ = structure.copy()
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
@@ -57,19 +57,21 @@ class CustomChain(object):
         ## if this calculation has not been done run it
         params = deepcopy(kwargs)
         fulldir = os.path.join(outdir, name)
-        output = vasp(structure_, outdir=fulldir, **params)
+        output = vasp(structure_, outdir=fulldir, restart=previous ,**params)
         if not output.success:
             raise ExternalRunFailed("VASP calculation did not succeed.")
+        return output
 
     # Creating the workflow
     def __call__(self, structure, outdir=None, **kwargs ):
 
         # make this function stateless.
         structure_ = structure.copy()
+        previous = None
         for i in range(len(self.functionals)):
             name = self.names[i]
             workflow = self.functionals[i]
-            self.run_calculation(name, workflow, structure, outdir, kwargs)
+            previous = self.run_calculation(name, workflow, structure, outdir, previous, kwargs)
         fulldir = os.path.join(outdir, name)
         return self.Extract(fulldir)
 

@@ -22,6 +22,7 @@ def load_optimized_U_species(vasp, structure):
 class WSBulkChain_ferro(CustomChain):
     def __init__(self, vaspobj: Vasp):
         spin = ferro_spin
+        standard = [load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
         pre_converge = CustomFunctional(Vasp, [load_default_vasp, load_optimized_U_species, spin, awful_converge, set_gamma, set_iopt_7])
         bad_converge = CustomFunctional(Vasp, [load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7])
         get_eigenvalues = CustomFunctional(Vasp, [load_default_vasp, load_optimized_U_species, spin, get_eigen, set_222, set_iopt_7])

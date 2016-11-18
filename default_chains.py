@@ -84,7 +84,7 @@ def load_default_vasp(vasp,structure=None):
         vasp.kpoints=pylada.gen_kpts(structure,kpoints_density)
     vasp.first_trial = { "kpoints": "\n0\nAuto\n12", "encut": 400.0 }
     vasp.program = '$VASP_KPTS'   # default vasp program
-    vasp.npar       = int(structure.__len__() / 24 / 1.25)
+    vasp.npar       = int(os.environ['PBS_NUM_NODES'])
     vasp.prec       = "accurate"
     vasp.ediff      = 1.0e-6        # total, not per atom
     vasp.ediffg     = -0.02
@@ -132,6 +132,7 @@ def hse06(vasp: Vasp, structure=None):
     vasp.precfock = 'Fast'
     vasp.add_keyword('hfscreen', 0.2)
     vasp.algo = 'All'
+    vasp.npar = None
     return vasp
 
 def set_dos(vasp: Vasp, structure=None):

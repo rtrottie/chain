@@ -23,12 +23,12 @@ def load_optimized_U_species(vasp, structure):
 class WSBulkChain_ferro(CustomChain):
     def __init__(self, vaspobj: Vasp):
         spin = ferro_spin
-        standard = [load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
+        standard = [ws, load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization])
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge])
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen])
         final_converge = CustomFunctional(Vasp, standard + [full_converge])
-        hse            = CustomFunctional(Vasp, standard + [hse06])
+        hse            = CustomFunctional(Vasp, standard + [single_point, hse06])
         dos            = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron])
         names          = ['0_pre_converge', '1_rough_converge', '2_get_eigenvalues', '3_final_converge', '4_hse', '5_dos']
         return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names)
@@ -36,7 +36,7 @@ class WSBulkChain_ferro(CustomChain):
 class WSBulkChain_anti(CustomChain):
     def __init__(self, vaspobj: Vasp):
         spin = anti_spin
-        standard = [load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
+        standard = [ws, load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization])
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge])
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen])
@@ -56,3 +56,12 @@ def ferro_spin(vasp, structure):
     vasp.magmom = '32*0 16*4 64*0' 
     return vasp
 
+def ws(vasp: Vasp, structure):
+    vasp.prec = 'Accurate'
+    vasp.encut = 500
+    vasp.ediff = 1e-6
+    vasp.ispin = 2
+    vasp.ismear = 0
+    vasp.sigma = 0.01
+    vasp.ldau = True
+    return vasp

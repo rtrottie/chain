@@ -57,7 +57,7 @@ class CustomChain(object):
             vasp = modification(vasp, structure)
         ## if this calculation has not been done run it
         params = deepcopy(kwargs)
-        fulldir = os.path.join(outdir, self.basename, name)
+        fulldir = os.path.join(outdir, name)
         output = vasp(structure_, outdir=fulldir, restart=previous ,**params)
         if not output.success:
             raise ExternalRunFailed("VASP calculation did not succeed.")

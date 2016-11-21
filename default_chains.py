@@ -125,6 +125,10 @@ def set_algo_fast(vasp: Vasp, structure=None):
     vasp.algo = "Fast"
     return vasp
 
+def set_algo_conj(vasp: Vasp, structure=None):
+    vasp.algo = "Conjugate"
+    return vasp
+
 def hse06(vasp: Vasp, structure=None):
     vasp.istart = 1
     vasp.icharg = 1

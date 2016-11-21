@@ -47,9 +47,9 @@ class WSBulkChain_anti(CustomChain):
         return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names)
 
 class WSSurfaceChain(CustomChain):
-    def __init__(self, vaspobj: Vasp):
+    def __init__(self, vaspobj: Vasp, standard = []):
         spin = ferro_spin
-        standard = [ws_surface, load_default_vasp, load_optimized_U_species, rough_converge, set_221, set_iopt_7]
+        standard = [ws_surface, load_default_vasp, load_optimized_U_species, rough_converge, set_221, set_iopt_7] + standard
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_conj])
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_conj])
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_conj])
@@ -60,6 +60,9 @@ class WSSurfaceChain(CustomChain):
         return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos],
                                 names=names)
 
+class WSSurfaceChain_unit(WSSurfaceChain):
+    def __init__(self, vaspobj: Vasp):
+        return  super().__init__(vaspobj, standard=[set_441])
 
 def anti_spin(vasp, structure):
     vasp.ispin = 2

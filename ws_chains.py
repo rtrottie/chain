@@ -23,7 +23,7 @@ def load_optimized_U_species(vasp, structure):
 class WSBulkChain_ferro(CustomChain):
     def __init__(self, vaspobj: Vasp):
         spin = ferro_spin
-        standard = [ws, load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
+        standard = [ws_bulk, load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization])
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge])
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen])
@@ -31,12 +31,12 @@ class WSBulkChain_ferro(CustomChain):
         hse            = CustomFunctional(Vasp, standard + [single_point, hse06])
         dos            = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron])
         names          = ['0_pre_converge', '1_rough_converge', '2_get_eigenvalues', '3_final_converge', '4_hse', '5_dos']
-        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names, basename='ferro')
+        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names)
 
 class WSBulkChain_anti(CustomChain):
     def __init__(self, vaspobj: Vasp):
         spin = anti_spin
-        standard = [ws, load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
+        standard = [ws_bulk, load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization])
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge])
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen])
@@ -44,7 +44,22 @@ class WSBulkChain_anti(CustomChain):
         hse            = CustomFunctional(Vasp, standard + [hse06])
         dos            = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron])
         names          = ['0_pre_converge', '1_rough_converge', '2_get_eigenvalues', '3_final_converge', '4_hse', '5_dos']
-        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names, basename='anti')
+        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names)
+
+class WSSurfaceChain(CustomChain):
+    def __init__(self, vaspobj: Vasp):
+        spin = ferro_spin
+        standard = [ws_surface, load_default_vasp, load_optimized_U_species, rough_converge, set_221, set_iopt_7]
+        pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization])
+        bad_converge = CustomFunctional(Vasp, standard + [rough_converge])
+        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen])
+        final_converge = CustomFunctional(Vasp, standard + [full_converge])
+        hse = CustomFunctional(Vasp, standard + [single_point, hse06])
+        dos = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron])
+        names = ['0_pre_converge', '1_rough_converge', '2_get_eigenvalues', '3_final_converge', '4_hse', '5_dos']
+        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos],
+                                names=names)
+
 
 def anti_spin(vasp, structure):
     vasp.ispin = 2
@@ -56,7 +71,7 @@ def ferro_spin(vasp, structure):
     vasp.magmom = '32*0 16*4 64*0' 
     return vasp
 
-def ws(vasp: Vasp, structure):
+def ws_bulk(vasp: Vasp, structure):
     vasp.prec = 'Accurate'
     vasp.encut = 500
     vasp.ediff = 1e-6
@@ -64,4 +79,9 @@ def ws(vasp: Vasp, structure):
     vasp.ismear = 0
     vasp.sigma = 0.01
     vasp.ldau = True
+    return vasp
+
+def ws_surface(vasp: Vasp, structure):
+    ws_bulk(vasp, structure)
+    vasp.encut = 800
     return vasp

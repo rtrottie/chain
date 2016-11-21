@@ -31,7 +31,7 @@ class WSBulkChain_ferro(CustomChain):
         hse            = CustomFunctional(Vasp, standard + [single_point, hse06])
         dos            = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron])
         names          = ['0_pre_converge', '1_rough_converge', '2_get_eigenvalues', '3_final_converge', '4_hse', '5_dos']
-        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names)
+        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names, basename='ferro')
 
 class WSBulkChain_anti(CustomChain):
     def __init__(self, vaspobj: Vasp):
@@ -44,7 +44,7 @@ class WSBulkChain_anti(CustomChain):
         hse            = CustomFunctional(Vasp, standard + [hse06])
         dos            = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron])
         names          = ['0_pre_converge', '1_rough_converge', '2_get_eigenvalues', '3_final_converge', '4_hse', '5_dos']
-        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names)
+        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names, basename='anti')
 
 def anti_spin(vasp, structure):
     vasp.ispin = 2

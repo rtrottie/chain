@@ -149,6 +149,7 @@ def tetrahedron(vasp: Vasp, structure=None):
     vasp.ismear = -5
     return vasp
 
+
 ##########
 # IONIC  #
 ##########
@@ -180,6 +181,7 @@ def awful_converge(vasp: Vasp, structure=None):
     vasp.nelm = 60
     vasp.nelmin = 8
     vasp.ediff = 1e-4
+    vasp.nelmdl = -12
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.2
@@ -197,6 +199,7 @@ def rough_converge(vasp: Vasp, structure=None):
     vasp.nelm = 60
     vasp.nelmin = 8
     vasp.ediff = 5e-4
+    vasp.nelmdl = -12
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.05
@@ -205,14 +208,33 @@ def rough_converge(vasp: Vasp, structure=None):
     vasp.lcharg = False
     return vasp
 
-def get_eigen(vasp: Vasp, structure=None):
+def get_eigen_nospin(vasp: Vasp, structure=None):
     # Start
-    vasp.istart = 0
-    vasp.icharg = 2
+    vasp.istart = 1
+    vasp.icharg = 1
+    vasp.ispin = 1
     # Electronic
     vasp.prec = "Accurate"
     vasp.nelm = 200
     vasp.ediff = 1e-6
+    vasp.nelmdl = -12
+    # Ionic
+    vasp.nsw = 0
+    vasp.ediffg = -1
+    # Output
+    vasp.lwave = True
+    vasp.lcharg = True
+    return vasp
+
+def get_eigen(vasp: Vasp, structure=None):
+    # Start
+    vasp.istart = 1
+    vasp.icharg = 1
+    # Electronic
+    vasp.prec = "Accurate"
+    vasp.nelm = 200
+    vasp.ediff = 1e-6
+    vasp.nelmdl = -12
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.03

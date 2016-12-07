@@ -51,11 +51,11 @@ class WSSurfaceChain(CustomChain):
     def __init__(self, vaspobj: Vasp, standard = []):
         spin = ferro_spin
         standard = [ws_surface, load_default_vasp, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7] + standard
-        pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_normal])
-        bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_normal])
-        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal])
+        pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast])
+        bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast])
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal])
-        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_normal])
+        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal])
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast])
         hse = CustomFunctional(Vasp, standard + [single_point, hse06])
         dos = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron])
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_hse', '6_dos']

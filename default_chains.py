@@ -86,8 +86,7 @@ def load_default_vasp(vasp,structure=None):
     vasp.first_trial = { "kpoints": "\n0\nAuto\n12", "encut": 400.0 }
     vasp.program = '$VASP_PYLADA'   # default vasp program
     vasp.npar       = int(os.environ['PBS_NUM_NODES'])
-    vasp.prec       = ":q" \
-                      "accurate"
+    vasp.prec       = "accurate"
     vasp.ediff      = 1.0e-6        # total, not per atom
     vasp.ediffg     = -0.02
     vasp.addgrid    = True

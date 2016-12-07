@@ -199,7 +199,7 @@ def rough_converge(vasp: Vasp, structure=None):
     vasp.nelm = 60
     vasp.nelmin = 8
     vasp.ediff = 5e-4
-    vasp.nelmdl = -12
+    vasp.nelmdl = -15
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.05
@@ -217,7 +217,7 @@ def get_eigen_nospin(vasp: Vasp, structure=None):
     vasp.prec = "Accurate"
     vasp.nelm = 200
     vasp.ediff = 1e-6
-    vasp.nelmdl = -12
+    vasp.nelmdl = -15
     # Ionic
     vasp.nsw = 0
     vasp.ediffg = -1
@@ -234,7 +234,7 @@ def get_eigen(vasp: Vasp, structure=None):
     vasp.prec = "Accurate"
     vasp.nelm = 200
     vasp.ediff = 1e-6
-    vasp.nelmdl = -12
+    vasp.nelmdl = -15
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.03

@@ -81,6 +81,7 @@ def ws_bulk(vasp: Vasp, structure):
     vasp.encut = 500
     vasp.ediff = 1e-6
     vasp.ispin = 2
+    vasp.magmom = True
     vasp.ismear = 0
     vasp.sigma = 0.01
     vasp.ldau = True

@@ -54,7 +54,7 @@ class CustomChain(object):
         structure_ = structure.copy()
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
         for modification in workflow.modifications:
-            vasp = modification(vasp, structure)
+            vasp = modification(vasp, structure_)
         ## if this calculation has not been done run it
         params = deepcopy(kwargs)
         fulldir = os.path.join(outdir, name)
@@ -219,7 +219,7 @@ def get_eigen_nospin(vasp: Vasp, structure=None):
     vasp.ediff = 1e-6
     vasp.nelmdl = -15
     # Ionic
-    vasp.nsw = 0
+    vasp.nsw = 5
     vasp.ediffg = -1
     # Output
     vasp.lwave = True
@@ -289,5 +289,5 @@ def set_441(vasp: Vasp, structure=None):
     return vasp
 
 def gamma_optimization(vasp: Vasp, structure = None):
-    vasp.program='$VASP_GAMMA'
+    vasp.add_keyword('AUTO_GAMMA', True)
     return vasp

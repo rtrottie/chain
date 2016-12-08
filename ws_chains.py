@@ -68,7 +68,7 @@ class WSSurfaceChain_unit(WSSurfaceChain):
 spins = {
     'Fe' : 4,
     'O'  : 0,
-    'Al' : 1
+    'Al' : 0
 }
 
 def anti_spin(vasp, structure):

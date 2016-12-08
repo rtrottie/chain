@@ -40,12 +40,13 @@ class WSBulkChain_anti(CustomChain):
         standard = [ws_bulk, load_default_vasp, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization])
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge])
+        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal])
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen])
         final_converge = CustomFunctional(Vasp, standard + [full_converge])
         hse            = CustomFunctional(Vasp, standard + [hse06])
         dos            = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron])
-        names          = ['0_pre_converge', '1_rough_converge', '2_get_eigenvalues', '3_final_converge', '4_hse', '5_dos']
-        return super().__init__([pre_converge, bad_converge, get_eigenvalues, final_converge, hse, dos], names=names)
+        names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_hse', '6_dos']
+        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse, dos], names=names)
 
 class WSSurfaceChain(CustomChain):
     def __init__(self, vaspobj: Vasp, standard = []):

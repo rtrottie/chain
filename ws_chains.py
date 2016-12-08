@@ -81,7 +81,7 @@ def ferro_spin(vasp, structure):
     vasp.magmom = True
     for a in structure:
         if a.type in spins:
-            a.magmom = spins(a.type)
+            a.magmom = spins[a.type]
     return vasp
 
 def ws_bulk(vasp: Vasp, structure):

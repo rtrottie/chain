@@ -67,6 +67,10 @@ class WSSurfaceChain_unit(WSSurfaceChain):
     def __init__(self, vaspobj: Vasp):
         return  super().__init__(vaspobj, standard=[set_441])
 
+spins = {
+    'Fe' : 4
+}
+
 def anti_spin(vasp, structure):
     vasp.ispin = 2
     vasp.magmom = '32*0 8*4 8*-4 64*0' 
@@ -74,7 +78,10 @@ def anti_spin(vasp, structure):
 
 def ferro_spin(vasp, structure):
     vasp.ispin = 2
-    vasp.magmom = '32*0 16*4 64*0' 
+    vasp.magmom = True
+    for a in structure:
+        if a in spins:
+            a.magmom = spins(a.type)
     return vasp
 
 def ws_bulk(vasp: Vasp, structure):
@@ -82,6 +89,7 @@ def ws_bulk(vasp: Vasp, structure):
     vasp.encut = 500
     vasp.ediff = 1e-6
     vasp.ispin = 2
+    vasp.magmom = True
     vasp.magmom = True
     vasp.ismear = 0
     vasp.sigma = 0.01

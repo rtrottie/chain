@@ -210,8 +210,8 @@ def rough_converge(vasp: Vasp, structure=None):
 
 def get_eigen_nospin(vasp: Vasp, structure=None):
     # Start
-    vasp.istart = 1
-    vasp.icharg = 1
+    vasp.istart = 0
+    vasp.icharg = 2
     vasp.ispin = 1
     # Electronic
     vasp.prec = "Accurate"

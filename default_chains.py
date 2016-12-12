@@ -132,6 +132,7 @@ def set_algo_conj(vasp: Vasp, structure=None):
 def hse06(vasp: Vasp, structure=None):
     vasp.istart = 1
     vasp.icharg = 1
+    vasp.nelmdl = 0
     vasp.nelm = 1000
     vasp.add_keyword('lhfcalc', True)
     vasp.precfock = 'Fast'
@@ -236,6 +237,7 @@ def get_eigen(vasp: Vasp, structure=None):
     vasp.prec = "Accurate"
     vasp.nelm = 200
     vasp.ediff = 1e-6
+    vasp.nelmdl = 0
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.03
@@ -252,6 +254,7 @@ def full_converge(vasp: Vasp, structure=None):
     vasp.prec = "Accurate"
     vasp.nelm = 200
     vasp.ediff = 1e-7
+    vasp.nelmdl = 0
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.02

@@ -139,6 +139,8 @@ def hse06(vasp: Vasp, structure=None):
     vasp.algo = 'All'
     vasp.npar = None
     vasp.ldau = False
+    vasp.lwave = True
+    vasp.lcharg = True
     return vasp
 
 def set_dos(vasp: Vasp, structure=None):
@@ -290,4 +292,14 @@ def set_441(vasp: Vasp, structure=None):
 
 def gamma_optimization(vasp: Vasp, structure = None):
     vasp.add_keyword('AUTO_GAMMA', True)
+    return vasp
+
+def set_nkred_222(vasp: Vasp, structure=None):
+    vasp.add_keyword('nkred', 2)
+    return vasp
+
+
+def set_nkred_221(vasp: Vasp, structure=None):
+    vasp.add_keyword('nkredx', 2)
+    vasp.add_keyword('nkredy', 2)
     return vasp

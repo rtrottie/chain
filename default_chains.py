@@ -71,6 +71,7 @@ class CustomChain(object):
         for i in range(len(self.functionals)):
             name = self.names[i]
             workflow = self.functionals[i]
+            print(previous)
             previous = self.run_calculation(name, workflow, structure, outdir, previous, kwargs)
         fulldir = os.path.join(outdir, name)
         return self.Extract(fulldir)

@@ -47,6 +47,7 @@ class CustomChain(object):
             success[name]=Extract(jobdir+'/'+name).success
         success=all(success.values())
         extract.success=success
+        extract.
         return extract
 
     def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, previous, kwargs):
@@ -259,7 +260,7 @@ def full_converge(vasp: Vasp, structure=None):
     vasp.nelmdl = 0
     # Ionic
     vasp.nsw = 5000
-    vasp.ediffg = -0.02
+    vasp.ediffg = -0.03
     # Output
     vasp.lwave = True
     vasp.lcharg = True

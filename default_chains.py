@@ -47,7 +47,6 @@ class CustomChain(object):
             success[name]=Extract(jobdir+'/'+name).success
         success=all(success.values())
         extract.success=success
-        extract.
         return extract
 
     def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, previous, kwargs):

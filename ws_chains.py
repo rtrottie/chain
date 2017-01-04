@@ -44,7 +44,7 @@ class WSBulkChain_anti(CustomChain):
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen])
         final_converge = CustomFunctional(Vasp, standard + [full_converge])
         hse            = CustomFunctional(Vasp, standard + [hse06, set_nkred_222])
-        dos            = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron, all_output])
+        dos            = CustomFunctional(Vasp, standard + [single_point, hse06, tetrahedron, all_output])
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_hse']
         return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse], names=names)
 

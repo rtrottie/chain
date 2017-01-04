@@ -140,6 +140,7 @@ def hse06(vasp: Vasp, structure=None):
     vasp.precfock = 'Fast'
     vasp.add_keyword('hfscreen', 0.2)
     vasp.algo = 'All'
+    vasp.ismear = 0
     vasp.npar = None
     vasp.ldau = False
     vasp.lwave = True

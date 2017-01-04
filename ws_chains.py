@@ -57,8 +57,8 @@ class WSSurfaceChain(CustomChain):
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal])
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal])
         final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast])
-        hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_nkred_221])
-        dos = CustomFunctional(Vasp, standard + [single_point, hse06, set_dos, tetrahedron, all_output])
+        hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_nkred_221, set_dos, all_output])
+        dos = CustomFunctional(Vasp, hse + [set_dos, all_output])
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_hse', '6_dos']
         return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse, dos], names=names)
 
@@ -74,6 +74,7 @@ spins = {
 
 def ws_standard(vasp: Vasp, structure):
     vasp.isym = 0
+    vasp.ismear = -5
     return vasp
 
 def anti_spin(vasp, structure):

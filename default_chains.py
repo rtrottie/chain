@@ -76,7 +76,7 @@ class CustomChain(object):
         fulldir = os.path.join(outdir, name)
         return self.Extract(fulldir)
 
-def load_default_vasp(vasp,structure=None):
+def load_default_vasp(vasp: Vasp,structure=None):
     vasp.has_nlep = False
     vasp.maxiter = 100
     if structure==None:
@@ -96,6 +96,7 @@ def load_default_vasp(vasp,structure=None):
     vasp.lmaxmix = 4
     vasp.convergence = 1.0e-5
     vasp.algo = "Normal"
+    vasp.lorbit=11
     return(vasp)
 
 def all_output(vasp, structure=None):

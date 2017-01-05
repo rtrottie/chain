@@ -19,7 +19,7 @@ class CustomFunctional(object):
         return
 
 class CustomChain(object):
-    def __init__(self, functionals, names=None, vaspobj=None, basename=''):
+    def __init__(self, functionals: list, names=None, vaspobj : Vasp=None, basename=''):
         '''
         Runs a series of workflows
         Args:

@@ -60,14 +60,23 @@ class WSSurfaceChain(CustomChain):
         hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_nkred_221])
         dos = CustomFunctional(Vasp, standard + [single_point, hse06, set_nkred_221, tetrahedron, all_output, set_dos])
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_hse']
-        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse], names=names)
+        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse], names=names, vaspobj=vaspobj)
 
 class WSSurfaceChain_unit(WSSurfaceChain):
     def __init__(self, vaspobj: Vasp):
         return  super().__init__(vaspobj, standard=[set_441])
 
 spins = {
+    'Sc' : 1,
+    'Ti' : 2,
+    'V'  : 3,
+    'Cr' : 4,
+    'Mn' : 5,
     'Fe' : 4,
+    'Co' : 3,
+    'Ni' : 2,
+    'Cu' : 1,
+    'Zn' : 0,
     'O'  : 0,
     'Al' : 0
 }

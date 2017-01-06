@@ -297,6 +297,7 @@ def set_gamma(vasp: Vasp, structure=None):
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
     vasp.ismear = 0
+    vasp.add_keyword('kpar', 1)
     return vasp
 
 def set_222(vasp: Vasp, structure=None):

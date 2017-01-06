@@ -51,7 +51,7 @@ class WSBulkChain_anti(CustomChain):
 class WSSurfaceChain(CustomChain):
     def __init__(self, vaspobj: Vasp, standard = []):
         spin = ferro_spin
-        standard = [load_default_vasp, ws_standard, ws_surface, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7] + standard
+        standard = [load_default_vasp, ws_standard, ws_surface, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7, set_kpar_auto] + standard
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast])
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast])
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal])

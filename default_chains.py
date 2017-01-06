@@ -119,7 +119,7 @@ def set_kpar_auto(vasp: Vasp, structure=None):
         while kpar > 1:
             if num_kpoints % kpar == 0 and nodes % kpar ==0:
                 vasp.add_keyword('kpar', kpar)
-                vasp.npar = nodes / kpar
+                vasp.npar = int(nodes / kpar)
                 return vasp
             else:
                 kpar = kpar -1

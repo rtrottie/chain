@@ -10,6 +10,7 @@ from pylada.error import ExternalRunFailed
 from pylada.vasp import Vasp
 import pylada
 import os
+import math
 
 
 class CustomFunctional(object):
@@ -19,7 +20,7 @@ class CustomFunctional(object):
         return
 
 class CustomChain(object):
-    def __init__(self, functionals: list, names=None, vaspobj : Vasp=None, basename=''):
+    def __init__(self, functionals: list, names=None, vaspobj:Vasp=None, basename=''):
         '''
         Runs a series of workflows
         Args:
@@ -104,6 +105,25 @@ def all_output(vasp, structure=None):
     vasp.add_keyword('lvhar', True)
     vasp.add_keyword('laechg','T')   #Print AECCAR for Bader analysis
     vasp.lorbit=11                       #Print PROCAR and DOSCAR
+    return vasp
+
+def set_kpar_auto(vasp: Vasp, structure=None):
+    nodes = int(os.environ['PBS_NUM_NODES'])
+    np = int(os.environ['PBS_NP'])
+    atoms = len(structure)
+    if np / atoms > 1:
+        kpar = math.ceil(np/atoms)
+        kpoint_str = vasp.kpoints.split('\n')[3]
+        kpoints = [ int(x) for x in kpoint_str.split() ]
+        num_kpoints = kpoints[0] * kpoints[1] * kpoints[2]
+        while kpar > 1:
+            if num_kpoints % kpar == 0 and nodes % kpar ==0:
+                vasp.add_keyword('kpar', kpar)
+                vasp.npar = nodes / kpar
+                return vasp
+            else:
+                kpar = kpar -1
+
     return vasp
 
 ##############

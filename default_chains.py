@@ -207,7 +207,7 @@ def awful_converge(vasp: Vasp, structure=None):
     vasp.prec = "Normal"
     vasp.nelm = 60
     vasp.nelmin = 8
-    vasp.ediff = 1e-4
+    vasp.ediff = 1e-3
     vasp.nelmdl = -15
     # Ionic
     vasp.nsw = 5000
@@ -243,7 +243,7 @@ def get_eigen_nospin(vasp: Vasp, structure=None):
     # Electronic
     vasp.prec = "Accurate"
     vasp.nelm = 200
-    vasp.ediff = 1e-6
+    vasp.ediff = 5e-4
     vasp.nelmdl = -15
     # Ionic
     vasp.nsw = 5
@@ -260,11 +260,11 @@ def get_eigen(vasp: Vasp, structure=None):
     # Electronic
     vasp.prec = "Accurate"
     vasp.nelm = 200
-    vasp.ediff = 1e-6
+    vasp.ediff = 1e-5
     vasp.nelmdl = 0
     # Ionic
     vasp.nsw = 5000
-    vasp.ediffg = -0.03
+    vasp.ediffg = -0.05
     # Output
     vasp.lwave = True
     vasp.lcharg = True
@@ -277,7 +277,7 @@ def full_converge(vasp: Vasp, structure=None):
     # Electronic
     vasp.prec = "Accurate"
     vasp.nelm = 200
-    vasp.ediff = 1e-7
+    vasp.ediff = 1e-5
     vasp.nelmdl = 0
     # Ionic
     vasp.nsw = 5000

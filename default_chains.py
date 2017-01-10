@@ -331,3 +331,10 @@ def set_nkred_221(vasp: Vasp, structure=None):
     vasp.add_keyword('nkredx', 2)
     vasp.add_keyword('nkredy', 2)
     return vasp
+
+def unset_nkred(vasp: Vasp, structure=None):
+    vasp.add_keyword('nkredx', None)
+    vasp.add_keyword('nkredy', None)
+    vasp.add_keyword('nkredz', None)
+    vasp.add_keyword('nkred', None)
+    return vasp

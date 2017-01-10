@@ -333,8 +333,8 @@ def set_nkred_221(vasp: Vasp, structure=None):
     return vasp
 
 def unset_nkred(vasp: Vasp, structure=None):
-    vasp.add_keyword('nkredx', None)
-    vasp.add_keyword('nkredy', None)
-    vasp.add_keyword('nkredz', None)
-    vasp.add_keyword('nkred', None)
+    vasp.add_keyword('nkredx', 1)
+    vasp.add_keyword('nkredy', 1)
+    vasp.add_keyword('nkredz', 1)
+    vasp.add_keyword('nkred', 1)
     return vasp

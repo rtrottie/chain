@@ -103,7 +103,7 @@ def load_default_vasp(vasp: Vasp,structure=None):
 def all_output(vasp, structure=None):
     vasp.lvtot=True                       #Write LOCPOT
     vasp.add_keyword('lvhar', True)
-    vasp.add_keyword('laechg','T')   #Print AECCAR for Bader analysis
+    vasp.add_keyword('laechg',True)   #Print AECCAR for Bader analysis
     vasp.lorbit=11                       #Print PROCAR and DOSCAR
     return vasp
 

@@ -211,7 +211,7 @@ def awful_converge(vasp: Vasp, structure=None):
     vasp.nelmdl = -15
     # Ionic
     vasp.nsw = 5000
-    vasp.ediffg = -0.2
+    vasp.ediffg = -0.5
     # Output
     vasp.lwave = False
     vasp.lcharg = False
@@ -229,7 +229,7 @@ def rough_converge(vasp: Vasp, structure=None):
     vasp.nelmdl = -15
     # Ionic
     vasp.nsw = 5000
-    vasp.ediffg = -0.05
+    vasp.ediffg = -0.1
     # Output
     vasp.lwave = False
     vasp.lcharg = False

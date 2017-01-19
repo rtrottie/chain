@@ -338,3 +338,11 @@ def unset_nkred(vasp: Vasp, structure=None):
     vasp.add_keyword('nkredz', 1)
     vasp.add_keyword('nkred', 1)
     return vasp
+
+######
+# TS #
+######
+
+def set_dimer(vasp: Vasp, structure=None):
+    vasp.add_keyword('ICHAIN', 2)
+    return vasp

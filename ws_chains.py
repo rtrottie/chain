@@ -66,9 +66,15 @@ class WSSurfaceChain_unit(WSSurfaceChain):
     def __init__(self, vaspobj: Vasp):
         return  super().__init__(vaspobj, standard=[set_441])
 
+
 class WSSurfaceChain_gamma(WSSurfaceChain):
     def __init__(self, vaspobj : Vasp):
         return  super().__init__(vaspobj, standard=[set_gamma, gamma_optimization], override=[unset_nkred])
+
+class WSSurfaceChain_gamma_dimer(WSSurfaceChain):
+    def __init__(self, vaspobj : Vasp):
+        return  super().__init__(vaspobj, standard=[set_gamma, gamma_optimization, set_dimer], override=[unset_nkred])
+
 
 
 spins = {

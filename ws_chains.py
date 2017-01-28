@@ -91,6 +91,7 @@ spins = {
     'O'  : 0,
     'Al' : 0,
     'H'  : 0
+
 }
 
 def ws_standard(vasp: Vasp, structure):

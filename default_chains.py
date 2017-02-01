@@ -97,7 +97,6 @@ class SpinCustomChain(CustomChain):
     def __call__(self, structure, outdir=None, **kwargs):
         energies = {}
         for nup in self.nupdowns:  # Check energies of various spin configurations
-            self.vasp.nupdown = nup
             nupdown_outdir = os.path.join(outdir, str(nup))
             names = [ str(x) for x in range(len(self.nupdown_functionals)) ]
             try: # Load answer from directory if it is present
@@ -107,7 +106,8 @@ class SpinCustomChain(CustomChain):
                 def set_nupdown(vasp: Vasp, structure=None):
                     vasp.nupdown = nup
                     return vasp
-                new_functionals = [ x + [set_nupdown] for x in self.nupdown_functionals]
+                for x in self.nupdown_functionals: # Set nupdown
+                    x.base.nupdown = nup
                 super.__call__(structure, outdir=nupdown_outdir, functionals=new_functionals, names=names)
                 energies[nup] = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
 

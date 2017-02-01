@@ -65,7 +65,7 @@ class CustomChain(object):
         return output
 
     # Creating the workflow
-    def __call__(self, structure, outdir=None, names=None, functionals=None **kwargs ):
+    def __call__(self, structure, outdir=None, names=None, functionals=None, **kwargs ):
         if not names:
             names = self.names
         if not functionals:
@@ -76,7 +76,7 @@ class CustomChain(object):
             name = names[i]
             workflow = functionals[i]
             print(previous)
-            previous = self.run_calculation(name, workflow, structure, outdir, previous, kwargs)
+            previous = self.run_calculation(name, workflow, structure, outdir, previous, **kwargs)
         fulldir = os.path.join(outdir, name)
         return self.Extract(fulldir)
 

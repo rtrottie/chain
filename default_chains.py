@@ -71,7 +71,7 @@ class CustomChain(object):
         if not functionals:
             functionals = self.functionals
         # make this function stateless.
-        previous = None
+        previous =  None
         for i in range(len(functionals)):
             name = names[i]
             workflow = functionals[i]

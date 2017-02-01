@@ -90,7 +90,7 @@ class SpinCustomChain(CustomChain):
             nupdowns (int list): nupdowns that will be considered
             vaspobj: TODO
         '''
-        self.nupdowns = nupdowns
+        self.nupdowns =  nupdowns
         self.nupdown_functionals = nupdown_functionals
         return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
 

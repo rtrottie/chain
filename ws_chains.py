@@ -19,18 +19,25 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "H", pseudoDir + "/H"
     return(vasp)
 
-class WSBulkChain(CustomChain):
-    def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
+class WSBulkChain(SpinCustomChain):
+    def __init__(self, vaspobj: Vasp, nupdowns, standard=[], override=[], final_step='5_hse' ):
         spin = ferro_spin
         standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
-        pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization] + override)
+        gamma = [set_gamma, gamma_optimization]
+        pre_converge   = CustomFunctional(Vasp, standard + [awful_converge] + gamma + override)
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge] + override)
+        bad_converge_gamma   = CustomFunctional(Vasp, standard + [rough_converge] + gamma + override)
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin] + override)
+        get_nopsin_eig_gamma = CustomFunctional(Vasp, standard + [get_eigen_nospin] + gamma + override)
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen] + override)
+        get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen] + gamma + override)
         final_converge = CustomFunctional(Vasp, standard + [full_converge] + override)
+        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge] + gamma + override)
         hse            = CustomFunctional(Vasp, standard + [single_point, hse06, set_nkred_222] + override)
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', final_step]
-        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse], names=names)
+        nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
+        return super().__init__(functionals=[pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],
+                                nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names)
 
 class WSBulkChain_ferro(CustomChain):
     def __init__(self, vaspobj: Vasp):

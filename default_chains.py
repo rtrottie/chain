@@ -107,7 +107,7 @@ class SpinCustomChain(CustomChain):
                     vasp.nupdown = nup
                     return vasp
                 for x in self.nupdown_functionals: # Set nupdown
-                    x.base.nupdown = nup
+                    x.modifications.append(set_nupdown)
                 super().__call__(structure, outdir=nupdown_outdir, functionals=self.nupdown_functionals, names=names)
                 energies[nup] = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
 

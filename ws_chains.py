@@ -19,6 +19,18 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "H", pseudoDir + "/H"
     return(vasp)
 
+class WSBulkChain(CustomChain):
+    def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
+        spin = ferro_spin
+        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
+        pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization] + override)
+        bad_converge   = CustomFunctional(Vasp, standard + [rough_converge] + override)
+        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin] + override)
+        get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen] + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge] + override)
+        hse            = CustomFunctional(Vasp, standard + [single_point, hse06, set_nkred_222] + override)
+        names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', final_step]
+        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse], names=names)
 
 class WSBulkChain_ferro(CustomChain):
     def __init__(self, vaspobj: Vasp):
@@ -65,7 +77,6 @@ class WSSurfaceChain(CustomChain):
 class WSSurfaceChain_unit(WSSurfaceChain):
     def __init__(self, vaspobj: Vasp):
         return  super().__init__(vaspobj, standard=[set_441])
-
 
 class WSSurfaceChain_gamma(WSSurfaceChain):
     def __init__(self, vaspobj : Vasp):

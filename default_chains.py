@@ -65,17 +65,52 @@ class CustomChain(object):
         return output
 
     # Creating the workflow
-    def __call__(self, structure, outdir=None, **kwargs ):
-
+    def __call__(self, structure, outdir=None, names=None, functionals=None **kwargs ):
+        if not names:
+            names = self.names
+        if not functionals:
+            functionals = self.functionals
         # make this function stateless.
         previous = None
-        for i in range(len(self.functionals)):
-            name = self.names[i]
-            workflow = self.functionals[i]
+        for i in range(len(functionals)):
+            name = names[i]
+            workflow = functionals[i]
             print(previous)
             previous = self.run_calculation(name, workflow, structure, outdir, previous, kwargs)
         fulldir = os.path.join(outdir, name)
         return self.Extract(fulldir)
+
+class SpinCustomChain(CustomChain):
+    def __init__(self, functionals: list, nupdown_functionals : list, nupdowns, names=None, vaspobj:Vasp=None, basename=''):
+        '''
+        Runs a series of workflows
+        Args:
+            functionals (list): list of lists.  Each sublist should be a series of functions that take, and statically modify, a pylada.vasp.relax.Relax object.
+            nupdown_functionals (list) : list of lists.  Each sublist should be a series of functions that take, and statically modify, a pylada.vasp.relax.Relax object.
+            nupdowns (int list): nupdowns that will be considered
+            vaspobj: TODO
+        '''
+        self.nupdowns = nupdowns
+        self.nupdown_functionals = nupdown_functionals
+        return  super.__init__(functionals=functionals, names=names, vaspobj=vaspobj, basename=basename)
+
+    def __call__(self, structure, outdir=None, **kwargs):
+        energies = {}
+        for nup in self.nupdowns:  # Check energies of various spin configurations
+            nupdown_outdir = os.path.join(outdir, str(nup))
+            names = [ str(x) for x in range(len(self.nupdown_functionals)) ]
+            try: # Load answer from directory if it is present
+                energies[nup] = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
+                break
+            except:  # if the directory does not have the information, run vasp
+                def set_nupdown(vasp: Vasp, structure=None):
+                    vasp.nupdown = nup
+                    return vasp
+                new_functionals = [ x + [set_nupdown] for x in self.nupdown_functionals]
+                super.__call__(structure, outdir=nupdown_outdir, functionals=new_functionals, names=names)
+                energies[nup] = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
+
+        return super.__call__(structure, outdir=outdir, **kwargs)
 
 def load_default_vasp(vasp: Vasp,structure=None):
     vasp.has_nlep = False
@@ -175,6 +210,7 @@ def set_dos(vasp: Vasp, structure=None):
 def tetrahedron(vasp: Vasp, structure=None):
     vasp.ismear = -5
     return vasp
+
 
 
 ##########

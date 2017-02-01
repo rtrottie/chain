@@ -50,7 +50,7 @@ class CustomChain(object):
         extract.success=success
         return extract
 
-    def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, previous, kwargs):
+    def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, previous, **kwargs):
         vasp = workflow.base(copy=deepcopy(self.vasp))
         structure_ = structure.copy()
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
@@ -97,6 +97,7 @@ class SpinCustomChain(CustomChain):
     def __call__(self, structure, outdir=None, **kwargs):
         energies = {}
         for nup in self.nupdowns:  # Check energies of various spin configurations
+            self.vasp.nupdown = nup
             nupdown_outdir = os.path.join(outdir, str(nup))
             names = [ str(x) for x in range(len(self.nupdown_functionals)) ]
             try: # Load answer from directory if it is present

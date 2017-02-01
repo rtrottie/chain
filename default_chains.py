@@ -92,7 +92,7 @@ class SpinCustomChain(CustomChain):
         '''
         self.nupdowns = nupdowns
         self.nupdown_functionals = nupdown_functionals
-        return  super.__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
+        return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
 
     def __call__(self, structure, outdir=None, **kwargs):
         energies = {}

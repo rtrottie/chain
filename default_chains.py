@@ -110,13 +110,13 @@ class SpinCustomChain(CustomChain):
                     x.modifications.append(set_nupdown)
                 super().__call__(structure, outdir=nupdown_outdir, functionals=self.nupdown_functionals, names=names)
                 energies[nup] = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
-
-        nup = min(energies.keys(), key=(lambda key: energies[key]) )
-        def set_nupdown(vasp: Vasp, structure=None):
-            vasp.nupdown = nup
-            return vasp
-        for x in self.functionals: # Set nupdown
-            x.modifications.append(set_nupdown)
+        if energies:
+            nup = min(energies.keys(), key=(lambda key: energies[key]) )
+            def set_nupdown(vasp: Vasp, structure=None):
+                vasp.nupdown = nup
+                return vasp
+            for x in self.functionals: # Set nupdown
+                x.modifications.append(set_nupdown)
         return super().__call__(structure, outdir=outdir, **kwargs)
 
 def load_default_vasp(vasp: Vasp,structure=None):

@@ -210,6 +210,12 @@ def hse06(vasp: Vasp, structure=None):
     vasp.lcharg = True
     return vasp
 
+def no_hse06(vasp: Vasp, structure=None):
+    vasp.add_keyword('lhfcalc', False)
+    vasp.algo = 'Normal'
+    vasp.ismear = -5
+    return vasp
+
 def set_dos(vasp: Vasp, structure=None):
     vasp.algo = 'None'
     return vasp

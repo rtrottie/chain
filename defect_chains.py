@@ -73,7 +73,7 @@ class AEXX(CustomChain):
     def __call__(self, structure, outdir=None, **kwargs):
         return self.find_aexx(structure, 0, 99)
 
-class BulkHSE(CustomChain):
+class BulkHSE(AEXX):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, cell_relax, set_iopt_7, bulk_standard]
         pbe = CustomFunctional(vaspobj, standard)

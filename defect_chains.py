@@ -11,7 +11,7 @@ from pylada.vasp import Vasp
 import pylada
 import os
 import math
-from default_chains import CustomChain
+from default_chains import *
 from pymatgen.io.vasp.outputs import Vasprun
 
 class AEXX(CustomChain):
@@ -27,42 +27,83 @@ class AEXX(CustomChain):
         self.bandgap =  bandgap
         return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
 
-    def get_bandgap_from_aexx(self, aexx):
+    def get_bandgap_from_aexx(self, structure, aexx):
         vasprun_location = os.path.join(str(aexx).zfill(2), self.names[-1], 'vasprun.xml')
-        vasprun = Vasprun(vasprun_location, parse_dos=False, parse_eigen=False, parse_projected_eigen=False, parse_potcar_file=False)
-        vasprun.get_band_structure().get_band_gap()
+        try:
+            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+            band_gap = vasprun.get_band_structure().get_band_gap()['energy']
+        except:
+            def set_aexx(vasp: Vasp, structure=None):
+                vasp.add_keyword('AEXX', aexx/100)
+                return vasp
+            for x in self.functionals: # Set nupdown
+                x.modifications.append(set_aexx)
+            super().__call__(structure=structure, outdir=str(aexx).zfill(2))
+            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+            band_gap = vasprun.get_band_structure().get_band_gap()['energy']
+        return band_gap
 
-    def find_aexx(self, aexx_low : int, aexx_high : int):
+    def find_aexx(self, structure, aexx_low : int, aexx_high : int):
         '''
         Does a binary search to find correct value of AEXX
         :param aexx_low:
         :param aexx_high:
         :return:
         '''
-        aexx_low = max(0, aexx_low)
-        aexx_high = min(99, aexx_high)
+        aexx_center = int((aexx_high + aexx_low) / 2)
+
+        bg_low  = self.get_bandgap_from_aexx(structure, aexx_low)
+        bg_high = self.get_bandgap_from_aexx(structure, aexx_high)
+        bg_center = self.get_bandgap_from_aexx(structure, aexx_center)
+        if aexx_high - aexx_low <= 1:
+            if abs(bg_low - self.bandgap) <= abs(bg_high - self.bandgap):
+                return aexx_low
+            else:
+                return aexx_high
+        elif bg_low > self.bandgap:
+            raise Exception('Bandgap low above desired bandgap')
+        elif bg_high < self.bandgap:
+            raise Exception('Bandgap high below desired bandgap')
+        elif bg_center > self.bandgap:
+            self.find_aexx(structure, aexx_low, aexx_center)
+        elif bg_center < self.bandgap:
+            self.find_aexx(structure, aexx_center, aexx_high)
+
 
     def __call__(self, structure, outdir=None, **kwargs):
-        energies = {}
-        for nup in self.nupdowns:  # Check energies of various spin configurations
-            nupdown_outdir = os.path.join(outdir, str(nup))
-            names = [ str(x) for x in range(len(self.nupdown_functionals)) ]
-            try: # Load answer from directory if it is present
-                energies[nup] = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
-                break
-            except:  # if the directory does not have the information, run vasp
-                def set_nupdown(vasp: Vasp, structure=None):
-                    vasp.nupdown = nup
-                    return vasp
-                for x in self.nupdown_functionals: # Set nupdown
-                    x.modifications.append(set_nupdown)
-                super().__call__(structure, outdir=nupdown_outdir, functionals=self.nupdown_functionals, names=names)
-                energies[nup] = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
-        if energies:
-            nup = min(energies.keys(), key=(lambda key: energies[key]) )
-            def set_nupdown(vasp: Vasp, structure=None):
-                vasp.nupdown = nup
-                return vasp
-            for x in self.functionals: # Set nupdown
-                x.modifications.append(set_nupdown)
-        return super().__call__(structure, outdir=outdir, **kwargs)
+        return self.find_aexx(structure, 0, 99)
+
+class BulkHSE(CustomChain):
+    def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], final_step='5_hse' ):
+        standard = [load_default_vasp, cell_relax, set_iopt_7, bulk_standard]
+        pbe = CustomFunctional(vaspobj, standard)
+        hse = CustomFunctional(Vasp, standard + [hse06])
+        hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output])
+        names = ['0_pbe', '1_hse', '2_hse_singlepoint']
+        super().__init__([pbe, hse, hse_single], names=names, vaspobj=vaspobj)
+
+def bulk_standard(vasp: Vasp, structure):
+    # Start
+    vasp.istart = 0
+    vasp.icharg = 2
+    # Electronic
+    vasp.add_keyword('GGA', 'PS')
+    vasp.isym = 0
+    vasp.ismear = -5
+    vasp.prec = "Accurate"
+    vasp.nelm = 60
+    vasp.ediff = 1e-5
+    vasp.nelmdl = 0
+    # Ionic
+    vasp.nsw = 5000
+    vasp.ediffg = -0.005
+    # Output
+    vasp.lwave = True
+    vasp.lcharg = True
+
+    # TODO: Get these automatically
+    x=4; y=4 ; z=4
+    packing = 'Gamma'
+    vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    vasp.encut = 500
+    return vasp

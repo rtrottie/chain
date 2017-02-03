@@ -243,6 +243,10 @@ def single_point(vasp: Vasp, structure=None):
     vasp.add_keyword('lmaxmix', None)
     return vasp
 
+def cell_relax(vasp: Vasp, structure=None):
+    vasp.isif = 3
+    vasp.add_keyword('LNEBCELL', True)
+    return vasp
 ######################
 # CONVERGENCE LEVELS #
 ######################

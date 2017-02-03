@@ -38,7 +38,7 @@ class AEXX(CustomChain):
                 return vasp
             for x in self.functionals: # Set nupdown
                 x.modifications.append(set_aexx)
-            super().__call__(structure=structure, outdir=str(aexx).zfill(2))
+            super().__call__(structure, outdir=str(aexx).zfill(2))
             vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
             band_gap = vasprun.get_band_structure().get_band_gap()['energy']
         return band_gap

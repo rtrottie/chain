@@ -19,9 +19,6 @@ class CustomFunctional(object):
         self.modifications = modifications
         return
 
-class OptimizedParametersChain(CustomChain):
-    def __call__(self, structure, outdir=None, **kwargs):
-        return super().__call__(structure, outdir=outdir)
 
 class CustomChain(object):
     def __init__(self, functionals: list, names=None, vaspobj:Vasp=None, basename=''):
@@ -83,6 +80,13 @@ class CustomChain(object):
             previous = self.run_calculation(name, workflow, structure, outdir, previous, **kwargs)
         fulldir = os.path.join(outdir, name)
         return self.Extract(fulldir)
+
+
+class OptimizedParametersChain(CustomChain):
+    def get_encut(self, structure, outdir):
+
+    def __call__(self, structure, outdir=None, **kwargs):
+        return super().__call__(structure, outdir=outdir)
 
 class SpinCustomChain(CustomChain):
     def __init__(self, functionals: list, nupdown_functionals : list, nupdowns, names=None, vaspobj:Vasp=None, basename=''):

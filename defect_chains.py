@@ -74,9 +74,9 @@ class AEXX(CustomChain):
         return self.find_aexx(structure, 0, 99)
 
 class BulkHSE(AEXX):
-    def __init__(self, vaspobj: Vasp(), bandgap:float, standard=[], override=[], final_step='5_hse' ):
+    def __init__(self, vaspobj: Vasp, bandgap:float, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, cell_relax, set_iopt_7, bulk_standard]
-        pbe = CustomFunctional(vaspobj, standard)
+        pbe = CustomFunctional(Vasp, standard)
         hse = CustomFunctional(Vasp, standard + [hse06])
         hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output])
         names = ['0_pbe', '1_hse', '2_hse_singlepoint']

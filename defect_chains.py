@@ -28,7 +28,7 @@ class AEXX(CustomChain):
         return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
 
     def get_bandgap_from_aexx(self, structure, aexx, outdir=None):
-        vasprun_location = os.path.join(str(aexx).zfill(2), self.names[-1], 'vasprun.xml')
+        vasprun_location = os.path.join(outdir, str(aexx).zfill(2), self.names[-1], 'vasprun.xml')
         try:
             vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
             band_gap = vasprun.get_band_structure().get_band_gap()['energy']

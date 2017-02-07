@@ -19,6 +19,10 @@ class CustomFunctional(object):
         self.modifications = modifications
         return
 
+class OptimizedParametersChain(CustomChain):
+    def __call__(self, structure, outdir=None, **kwargs):
+        return super().__call__(structure, outdir=outdir)
+
 class CustomChain(object):
     def __init__(self, functionals: list, names=None, vaspobj:Vasp=None, basename=''):
         '''

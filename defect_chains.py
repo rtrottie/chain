@@ -71,7 +71,10 @@ class AEXX(CustomChain):
 
 
     def __call__(self, structure, outdir=None, **kwargs):
-        return self.find_aexx(structure, 0, 99, outdir=outdir)
+        aexx = self.find_aexx(structure, 0, 99, outdir=outdir)
+        with open(os.path.join(outdir, 'INCAR.aexx'), 'w') as f:
+            f.write('AEXX = {}'.format(aexx))
+        return aexx
 
 class BulkHSE(AEXX):
     def __init__(self, vaspobj: Vasp, bandgap:float, standard=[], override=[], final_step='5_hse' ):

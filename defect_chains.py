@@ -27,7 +27,7 @@ class AEXX(CustomChain):
         self.bandgap =  bandgap
         return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
 
-    def get_bandgap_from_aexx(self, structure, aexx):
+    def get_bandgap_from_aexx(self, structure, aexx, outdir=None):
         vasprun_location = os.path.join(str(aexx).zfill(2), self.names[-1], 'vasprun.xml')
         try:
             vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
@@ -38,12 +38,12 @@ class AEXX(CustomChain):
                 return vasp
             for x in self.functionals: # Set nupdown
                 x.modifications.append(set_aexx)
-            super().__call__(structure, outdir=str(aexx).zfill(2))
+            super().__call__(structure, outdir=os.path.join(outdir, str(aexx).zfill(2)))
             vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
             band_gap = vasprun.get_band_structure().get_band_gap()['energy']
         return band_gap
 
-    def find_aexx(self, structure, aexx_low : int, aexx_high : int):
+    def find_aexx(self, structure, aexx_low : int, aexx_high : int, outdir=None):
         '''
         Does a binary search to find correct value of AEXX
         :param aexx_low:
@@ -71,7 +71,7 @@ class AEXX(CustomChain):
 
 
     def __call__(self, structure, outdir=None, **kwargs):
-        return self.find_aexx(structure, 0, 99)
+        return self.find_aexx(structure, 0, 99, outdir=outdir)
 
 class BulkHSE(AEXX):
     def __init__(self, vaspobj: Vasp, bandgap:float, standard=[], override=[], final_step='5_hse' ):

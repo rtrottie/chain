@@ -75,7 +75,7 @@ class AEXX(CustomChain):
 
 class BulkHSE(AEXX):
     def __init__(self, vaspobj: Vasp, bandgap:float, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, cell_relax, set_iopt_7, bulk_standard]
+        standard = [load_default_vasp, cell_relax, set_iopt_7, bulk_standard, load_species]
         pbe = CustomFunctional(Vasp, standard)
         hse = CustomFunctional(Vasp, standard + [hse06])
         hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output])
@@ -107,3 +107,17 @@ def bulk_standard(vasp: Vasp, structure):
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
     vasp.encut = 500
     return vasp
+
+def load_species(vasp : Vasp, structure):
+    # See vasp/functional.py:  elementName, fileName, max or min oxidation state
+    pseudoDir = '$PSEUDO_DIR'
+    vasp.add_specie = "Zn", pseudoDir + "/Zn"
+    vasp.add_specie = "O",  pseudoDir + "/O"
+    vasp.add_specie = "Al", pseudoDir + "/Al"
+    vasp.add_specie = "Cd", pseudoDir + "/Cd"
+    vasp.add_specie = "Te", pseudoDir + "/Te"
+    vasp.add_specie = "Ga", pseudoDir + "/Ga"
+    vasp.add_specie = "As", pseudoDir + "/As"
+    vasp.add_specie = "In", pseudoDir + "/In"
+    vasp.add_specie = "P", pseudoDir + "/P"
+    return(vasp)

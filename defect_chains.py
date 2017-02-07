@@ -52,9 +52,9 @@ class AEXX(CustomChain):
         '''
         aexx_center = int((aexx_high + aexx_low) / 2)
 
-        bg_low  = self.get_bandgap_from_aexx(structure, aexx_low)
-        bg_high = self.get_bandgap_from_aexx(structure, aexx_high)
-        bg_center = self.get_bandgap_from_aexx(structure, aexx_center)
+        bg_low  = self.get_bandgap_from_aexx(structure, aexx_low, outdir)
+        bg_high = self.get_bandgap_from_aexx(structure, aexx_high, outdir)
+        bg_center = self.get_bandgap_from_aexx(structure, aexx_center, outdir)
         if aexx_high - aexx_low <= 1:
             if abs(bg_low - self.bandgap) <= abs(bg_high - self.bandgap):
                 return aexx_low
@@ -65,9 +65,9 @@ class AEXX(CustomChain):
         elif bg_high < self.bandgap:
             raise Exception('Bandgap high below desired bandgap')
         elif bg_center > self.bandgap:
-            self.find_aexx(structure, aexx_low, aexx_center)
+            self.find_aexx(structure, aexx_low, aexx_center, outdir)
         elif bg_center < self.bandgap:
-            self.find_aexx(structure, aexx_center, aexx_high)
+            self.find_aexx(structure, aexx_center, aexx_high, outdir)
 
 
     def __call__(self, structure, outdir=None, **kwargs):

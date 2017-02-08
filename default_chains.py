@@ -82,7 +82,6 @@ class CustomChain(object):
         fulldir = os.path.join(outdir, name)
         return self.Extract(fulldir)
 
-
 class OptimizedParametersChain(CustomChain):
     def __init__(self, functionals: list, bandgap:float=None, names=None, vaspobj:Vasp=None, basename=''):
         '''
@@ -189,16 +188,65 @@ class OptimizedParametersChain(CustomChain):
             else: # center not converged
                 return self.get_encut(structure, encut_center, encut_high, optimal_energy, convergence_value, outdir)
 
+    def get_energy_from_kpoint(self, structure, kpoint, outdir=None, convergence_value=1e-4):
+        folder = '{0}x{0}x{0}'.format(str(kpoint).zfill(2))
+        vasprun_location = os.path.join(outdir, folder, self.names[-1], 'vasprun.xml')
+        try:
+            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+            energy = vasprun.final_energy
+        except:
+            def set_kpoint(vasp: Vasp, structure=None):
+                packing = 'Gamma'
+                vasp.kpoints = "Gamma_Mesh\n0\n{0}\n{1} {1} {1}".format(packing, kpoint)
+                vasp.ediff = convergence_value/1000
+                return vasp
+            for x in self.functionals: # Set nupdown
+                x.modifications.append(set_kpoint)
+            super().__call__(structure, outdir=os.path.join(outdir, folder))
+            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+            energy = vasprun.final_energy
+        return energy
     def get_kpoints(self, structure, kpoint, convergence_value: float, outdir: str):
-        return
+        energy_asymptote = self.get_energy_from_kpoint(structure, kpoint, outdir, convergence_value)
+        if kpoint < 4:
+            return self.get_kpoints(structure, kpoint+1, convergence_value, outdir)
+        else:
+            energy_low = self.get_energy_from_kpoint(structure, kpoint-3, outdir, convergence_value)
+            energy_asymptote_low = self.get_energy_from_kpoint(structure, kpoint-1, outdir, convergence_value)
+            if abs(energy_low - energy_asymptote) <= convergence_value and abs(energy_low - energy_asymptote_low) <= convergence_value:
+                return kpoint - 3
+            else:
+                return self.get_kpoints(structure, kpoint + 1, convergence_value, outdir)
+
+
 
     def __call__(self, structure, outdir=None, **kwargs):
+        kpoint = self.get_kpoints(structure, 2, 0.0005, outdir=os.path.join(outdir, 'get_kpoints'))
+        def set_kpoint(vasp: Vasp, structure=None):
+            packing = 'Gamma'
+            vasp.kpoints = "Gamma_Mesh\n0\n{0}\n{1} {1} {1}".format(packing, kpoint)
+            return vasp
+        for x in self.functionals: # Set nupdown
+            x.modifications.append(set_kpoint)
+
         encut = self.get_encut(structure, 300, 800, 0, 0.0005 ,outdir=os.path.join(outdir, 'get_encut'))
-        kpoints = self.get_kpoints(structure, 1, 0.0005, outdir=os.path.join(outdir, 'get_kpoints'))
+        def set_encut(vasp: Vasp, structure=None):
+            vasp.encut = encut
+            return vasp
+        for x in self.functionals: # Set nupdown
+            x.modifications.append(set_encut)
+
         aexx = self.find_aexx(structure, 0, 99, outdir=os.path.join(outdir, 'get_aexx'))
+        def set_aexx(vasp: Vasp, structure=None):
+            vasp.encut = encut
+            return vasp
+        for x in self.functionals: # Set nupdown
+            x.modifications.append(set_aexx)
+
         with open(os.path.join(outdir, 'INCAR.defaults'), 'w') as f:
             f.write('AEXX = {}'.format(aexx))
             f.write('ENCUT = {}'.format(encut))
+            f.write('KPOINTS = {}'.format(kpoint))
         return super().__call__(structure, outdir=outdir)
 
 class SpinCustomChain(CustomChain):

@@ -84,6 +84,22 @@ class CustomChain(object):
 
 
 class OptimizedParametersChain(CustomChain):
+
+    def get_bandgap_from_aexx(self, structure, aexx, outdir=None):
+        vasprun_location = os.path.join(outdir, str(aexx).zfill(2), self.names[-1], 'vasprun.xml')
+        try:
+            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+            band_gap = vasprun.get_band_structure().get_band_gap()['energy']
+        except:
+            def set_aexx(vasp: Vasp, structure=None):
+                vasp.add_keyword('AEXX', aexx/100)
+                return vasp
+            for x in self.functionals: # Set nupdown
+                x.modifications.append(set_aexx)
+            super().__call__(structure, outdir=os.path.join(outdir, str(aexx).zfill(2)))
+            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+            band_gap = vasprun.get_band_structure().get_band_gap()['energy']
+        return band_gap
     def find_aexx(self, structure, aexx_low : int, aexx_high : int, outdir=None):
         '''
         Does a binary search to find correct value of AEXX
@@ -125,8 +141,6 @@ class OptimizedParametersChain(CustomChain):
             vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
             energy = vasprun.final_energy
         return energy
-
-
     def get_encut(self, structure, encut_low : int, encut_high : int, optimal_energy : float, convergence_value : float,  outdir : str):
         '''
         Does a binary search to find optimal encut value.  Converges to value within convergence_value variable
@@ -162,13 +176,15 @@ class OptimizedParametersChain(CustomChain):
             else: # center not converged
                 return self.get_encut(structure, encut_center, encut_high, optimal_energy, convergence_value, outdir)
 
-    def get_kpoints(self, structure, encut_low: int, encut_high: int, optimal_energy: float, convergence_value: float, outdir: str):
+    def get_kpoints(self, structure, kpoint, convergence_value: float, outdir: str):
         return
 
     def __call__(self, structure, outdir=None, **kwargs):
-        encut = self.get_encut(structure, 300, 800, outdir=outdir)
-        kpoints = self.get_kpoints()
+        encut = self.get_encut(structure, 300, 800, 0, 0.0005 ,outdir=os.path.join(outdir, 'get_encut'))
+        kpoints = self.get_kpoints(structure, 1, 0.0005, outdir=os.path.join(outdir, 'get_kpoints'))
+        aexx = self.find_aexx(structure, 0, 99, outdir=os.path.join(outdir, 'get_aexx'))
         with open(os.path.join(outdir, 'INCAR.defaults'), 'w') as f:
+            f.write('AEXX = {}'.format(aexx))
             f.write('ENCUT = {}'.format(encut))
         return super().__call__(structure, outdir=outdir)
 

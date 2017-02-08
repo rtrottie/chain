@@ -76,8 +76,8 @@ class AEXX(CustomChain):
             f.write('AEXX = {}'.format(aexx))
         return aexx
 
-class BulkHSE(AEXX):
-    def __init__(self, vaspobj: Vasp, bandgap:float, standard=[], override=[], final_step='5_hse' ):
+class BulkHSE(OptimizedParametersChain):
+    def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, cell_relax, set_iopt_7, bulk_standard, load_species]
         pbe = CustomFunctional(Vasp, standard)
         hse = CustomFunctional(Vasp, standard + [hse06])
@@ -104,11 +104,11 @@ def bulk_standard(vasp: Vasp, structure):
     vasp.lwave = True
     vasp.lcharg = True
 
-    # TODO: Get these automatically
-    # x=4; y=4 ; z=4
-    # packing = 'Gamma'
-    # vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
-    # vasp.encut = 500
+    #TODO: Get these automatically
+    x=4; y=4 ; z=4
+    packing = 'Gamma'
+    vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    vasp.encut = 500
     return vasp
 
 def load_species(vasp : Vasp, structure):

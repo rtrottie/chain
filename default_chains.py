@@ -8,6 +8,7 @@ from pylada.misc import RelativePath
 from pylada.vasp.extract import Extract
 from pylada.error import ExternalRunFailed
 from pylada.vasp import Vasp
+from pymatgen.io.vasp import Vasprun
 import pylada
 import os
 import math
@@ -83,9 +84,92 @@ class CustomChain(object):
 
 
 class OptimizedParametersChain(CustomChain):
-    def get_encut(self, structure, outdir):
+    def find_aexx(self, structure, aexx_low : int, aexx_high : int, outdir=None):
+        '''
+        Does a binary search to find correct value of AEXX
+        :param aexx_low:
+        :param aexx_high:
+        :return:
+        '''
+        aexx_center = int((aexx_high + aexx_low) / 2)
+
+        bg_low  = self.get_bandgap_from_aexx(structure, aexx_low, outdir)
+        bg_high = self.get_bandgap_from_aexx(structure, aexx_high, outdir)
+        bg_center = self.get_bandgap_from_aexx(structure, aexx_center, outdir)
+        if aexx_high - aexx_low <= 1:
+            if abs(bg_low - self.bandgap) <= abs(bg_high - self.bandgap):
+                return aexx_low
+            else:
+                return aexx_high
+        elif bg_low > self.bandgap:
+            raise Exception('Bandgap low above desired bandgap')
+        elif bg_high < self.bandgap:
+            raise Exception('Bandgap high below desired bandgap')
+        elif bg_center > self.bandgap:
+            self.find_aexx(structure, aexx_low, aexx_center, outdir)
+        elif bg_center < self.bandgap:
+            self.find_aexx(structure, aexx_center, aexx_high, outdir)
+
+    def get_energy_from_encut(self, structure, encut, outdir=None):
+        vasprun_location = os.path.join(outdir, str(encut).zfill(4), self.names[-1], 'vasprun.xml')
+        try:
+            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+            energy = vasprun.final_energy
+        except:
+            def set_encut(vasp: Vasp, structure=None):
+                vasp.encut = encut
+                return vasp
+            for x in self.functionals: # Set nupdown
+                x.modifications.append(set_encut)
+            super().__call__(structure, outdir=os.path.join(outdir, str(encut).zfill(4)))
+            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+            energy = vasprun.final_energy
+        return energy
+
+
+    def get_encut(self, structure, encut_low : int, encut_high : int, optimal_energy : float, convergence_value : float,  outdir : str):
+        '''
+        Does a binary search to find optimal encut value.  Converges to value within convergence_value variable
+        Starts off incrementing encut by 500 to find asymptote
+
+        :param structure: Structure to find optimal encut value for
+        :param encut_low: Lower bound for ENCUT
+        :param encut_high: Upper bound for ENCUT
+        :param optimal_energy: Determined optimal value for energy
+        :param convergence_value: value to converge within (eV/atom)
+        :param outdir: outdir to write to
+        :return: :type int
+        '''
+        assymptote_increment = 500
+        encut_increment = 25
+        def encut_round(i: int):
+            return round(i/encut_increment)*encut_increment
+        energy_low  = self.get_energy_from_encut(structure, encut_low , outdir)
+        energy_high = self.get_energy_from_encut(structure, encut_high, outdir)
+
+        if optimal_energy >= 0:  # haven't reached assymptote
+            if abs(energy_high - energy_low) <= convergence_value:  # reached asymptote
+                return self.get_encut(structure, encut_low-assymptote_increment, encut_low+encut_increment, energy_high, convergence_value, outdir)
+            else:  # keep searching
+                return self.get_encut(structure, encut_high, energy_high + assymptote_increment, 0, convergence_value, outdir)
+        else:  # Do Binary search
+            encut_center = encut_round((energy_high+encut_low)/2)
+            energy_center = self.get_energy_from_encut(structure, encut_center, outdir)
+            if (encut_high-encut_low) == encut_increment: # Binary search is at center
+                return encut_high
+            elif abs(encut_center - optimal_energy) <= convergence_value:  # reached convergence
+                return self.get_encut(structure, encut_low, encut_center, optimal_energy, convergence_value, outdir)
+            else: # center not converged
+                return self.get_encut(structure, encut_center, encut_high, optimal_energy, convergence_value, outdir)
+
+    def get_kpoints(self, structure, encut_low: int, encut_high: int, optimal_energy: float, convergence_value: float, outdir: str):
+        return
 
     def __call__(self, structure, outdir=None, **kwargs):
+        encut = self.get_encut(structure, 300, 800, outdir=outdir)
+        kpoints = self.get_kpoints()
+        with open(os.path.join(outdir, 'INCAR.defaults'), 'w') as f:
+            f.write('ENCUT = {}'.format(encut))
         return super().__call__(structure, outdir=outdir)
 
 class SpinCustomChain(CustomChain):

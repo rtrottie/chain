@@ -83,7 +83,7 @@ class BulkHSE(OptimizedParametersChain):
         hse = CustomFunctional(Vasp, standard + [hse06])
         hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output])
         names = ['0_pbe', '1_hse', '2_hse_singlepoint']
-        super().__init__([pbe, hse, hse_single], bandgap, names=names, vaspobj=vaspobj)
+        super().__init__([pbe, hse, hse_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
 def bulk_standard(vasp: Vasp, structure):
     # Start

@@ -84,6 +84,18 @@ class CustomChain(object):
 
 
 class OptimizedParametersChain(CustomChain):
+    def __init__(self, functionals: list, bandgap:float=None, names=None, vaspobj:Vasp=None, basename=''):
+        '''
+        Runs a series of workflows
+        Args:
+            functionals (list): list of lists.  Each sublist should be a series of functions that take, and statically modify, a pylada.vasp.relax.Relax object.
+            nupdown_functionals (list) : list of lists.  Each sublist should be a series of functions that take, and statically modify, a pylada.vasp.relax.Relax object.
+            nupdowns (int list): nupdowns that will be considered
+            vaspobj: TODO
+        '''
+        self.bandgap =  bandgap
+        return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
+
 
     def get_bandgap_from_aexx(self, structure, aexx, outdir=None):
         vasprun_location = os.path.join(outdir, str(aexx).zfill(2), self.names[-1], 'vasprun.xml')

@@ -138,7 +138,7 @@ class OptimizedParametersChain(CustomChain):
         elif bg_center < self.bandgap:
             self.find_aexx(structure, aexx_center, aexx_high, outdir)
 
-    def get_energy_from_encut(self, structure, encut, outdir=None):
+    def get_energy_from_encut(self, structure, encut, outdir=None, convergence_value=1e-4):
         vasprun_location = os.path.join(outdir, str(encut).zfill(4), self.names[-1], 'vasprun.xml')
         try:
             vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
@@ -146,6 +146,7 @@ class OptimizedParametersChain(CustomChain):
         except:
             def set_encut(vasp: Vasp, structure=None):
                 vasp.encut = encut
+                vasp.ediff = convergence_value/1000
                 return vasp
             for x in self.functionals: # Set nupdown
                 x.modifications.append(set_encut)
@@ -170,8 +171,8 @@ class OptimizedParametersChain(CustomChain):
         encut_increment = 25
         def encut_round(i: int):
             return round(i/encut_increment)*encut_increment
-        energy_low  = self.get_energy_from_encut(structure, encut_low , outdir)
-        energy_high = self.get_energy_from_encut(structure, encut_high, outdir)
+        energy_low  = self.get_energy_from_encut(structure, encut_low , outdir, convergence_value)
+        energy_high = self.get_energy_from_encut(structure, encut_high, outdir, convergence_value)
 
         if optimal_energy >= 0:  # haven't reached assymptote
             if abs(energy_high - energy_low) <= convergence_value:  # reached asymptote
@@ -180,10 +181,10 @@ class OptimizedParametersChain(CustomChain):
                 return self.get_encut(structure, encut_high, energy_high + assymptote_increment, 0, convergence_value, outdir)
         else:  # Do Binary search
             encut_center = encut_round((energy_high+encut_low)/2)
-            energy_center = self.get_energy_from_encut(structure, encut_center, outdir)
+            energy_center = self.get_energy_from_encut(structure, encut_center, outdir, convergence_value)
             if (encut_high-encut_low) == encut_increment: # Binary search is at center
                 return encut_high
-            elif abs(encut_center - optimal_energy) <= convergence_value:  # reached convergence
+            elif abs(energy_center - optimal_energy) <= convergence_value:  # reached convergence
                 return self.get_encut(structure, encut_low, encut_center, optimal_energy, convergence_value, outdir)
             else: # center not converged
                 return self.get_encut(structure, encut_center, encut_high, optimal_energy, convergence_value, outdir)

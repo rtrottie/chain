@@ -167,7 +167,7 @@ class OptimizedParametersChain(CustomChain):
         :param outdir: outdir to write to
         :return: :type int
         '''
-        assymptote_increment = 500
+        assymptote_increment = 250
         encut_increment = 25
         def encut_round(i: int):
             return round(i/encut_increment)*encut_increment
@@ -178,7 +178,7 @@ class OptimizedParametersChain(CustomChain):
             if abs(energy_high - energy_low) <= convergence_value:  # reached asymptote
                 return self.get_encut(structure, encut_low-assymptote_increment, encut_low+encut_increment, energy_high, convergence_value, outdir)
             else:  # keep searching
-                return self.get_encut(structure, encut_high, energy_high + assymptote_increment, 0, convergence_value, outdir)
+                return self.get_encut(structure, encut_high, encut_high + assymptote_increment, 0, convergence_value, outdir)
         else:  # Do Binary search
             encut_center = encut_round((energy_high+encut_low)/2)
             energy_center = self.get_energy_from_encut(structure, encut_center, outdir, convergence_value)

@@ -105,10 +105,10 @@ def bulk_standard(vasp: Vasp, structure):
     vasp.lcharg = True
 
     # TODO: Get these automatically
-    x=4; y=4 ; z=4
-    packing = 'Gamma'
-    vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
-    vasp.encut = 500
+    # x=4; y=4 ; z=4
+    # packing = 'Gamma'
+    # vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    # vasp.encut = 500
     return vasp
 
 def load_species(vasp : Vasp, structure):

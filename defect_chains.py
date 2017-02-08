@@ -71,7 +71,7 @@ class AEXX(CustomChain):
 
 
     def __call__(self, structure, outdir=None, **kwargs):
-        aexx = self.find_aexx(structure, 0, 99, outdir=outdir)
+        aexx = self.find_aexx(structure, 0, 99, outdir=os.path.join(outdir, 'get_aexx'))
         with open(os.path.join(outdir, 'INCAR.aexx'), 'w') as f:
             f.write('AEXX = {}'.format(aexx))
         return aexx

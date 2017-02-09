@@ -66,7 +66,7 @@ class CustomChain(object):
         return output
 
     # Creating the workflow
-    def __call__(self, structure, outdir=None, names=None, functionals=None, previous=None, **kwargs ):
+    def call_with_output(self, structure, outdir=None, names=None, functionals=None, previous=None, **kwargs ):
         if not names:
             names = self.names
         if not functionals:
@@ -78,7 +78,13 @@ class CustomChain(object):
             print(previous)
             previous = self.run_calculation(name, workflow, structure, outdir, previous, **kwargs)
         fulldir = os.path.join(outdir, name)
-        return self.Extract(fulldir)
+        return (self.Extract(fulldir), previous)
+
+
+    def __call__(self, structure, outdir=None, names=None, functionals=None, previous=None, **kwargs ):
+        (extract, _) = self.call_with_output(structure, outdir=outdir, names=names, functionals=functionals, previous=previous)
+        return extract
+
 
 class OptimizedParametersChain(CustomChain):
     def __init__(self, functionals: list, bandgap:float=None, names=None, vaspobj:Vasp=None, basename=''):
@@ -147,7 +153,7 @@ class OptimizedParametersChain(CustomChain):
             return vasp
         for x in self.functionals: # Set nupdown
             x.modifications.append(set_encut)
-        output = super().__call__(structure, outdir=os.path.join(outdir, str(encut).zfill(4)), previous=previous)
+        (_,output) = super().call_with_output(structure, outdir=os.path.join(outdir, str(encut).zfill(4)), previous=previous)
         vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
         energy = vasprun.final_energy
         return (energy, output)
@@ -200,7 +206,7 @@ class OptimizedParametersChain(CustomChain):
             return vasp
         for x in self.functionals: # Set nupdown
             x.modifications.append(set_kpoint)
-        output = super().__call__(structure, outdir=os.path.join(outdir, folder), previous=previous)
+        (_,output) = super().call_with_output(structure, outdir=os.path.join(outdir, folder), previous=previous)
         vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
         energy = vasprun.final_energy
         return (energy, output)

@@ -392,7 +392,9 @@ def tetrahedron(vasp: Vasp, structure=None):
     vasp.ismear = -5
     return vasp
 
-
+def set_npar_2(vasp: Vasp, structure=None):
+    vasp.npar = 2
+    return vasp
 
 ##########
 # IONIC  #

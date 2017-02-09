@@ -207,7 +207,7 @@ class OptimizedParametersChain(CustomChain):
     def get_kpoints(self, structure, kpoint, convergence_value: float, outdir: str, previous=None):
         (energy_asymptote, output) = self.get_energy_from_kpoint(structure, kpoint, outdir, convergence_value, previous=previous)
         if kpoint <= 5:
-            return self.get_kpoints(structure, kpoint+1, convergence_value, outdir)
+            return self.get_kpoints(structure, kpoint+1, convergence_value, outdir, previous=output)
         else:
             (energy_low,_) = self.get_energy_from_kpoint(structure, kpoint-3, outdir, convergence_value, previous=previous)
             (energy_asymptote_low,_) = self.get_energy_from_kpoint(structure, kpoint-1, outdir, convergence_value, previous=previous)

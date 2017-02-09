@@ -418,7 +418,7 @@ def single_point(vasp: Vasp, structure=None):
 def cell_relax(vasp: Vasp, structure=None):
     vasp.isif = 3
     vasp.ibrion = 1
-    vasp.potim = 0.4
+    vasp.potim =  0.4
     return vasp
 ######################
 # CONVERGENCE LEVELS #

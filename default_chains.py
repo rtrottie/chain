@@ -184,7 +184,7 @@ class OptimizedParametersChain(CustomChain):
                 return self.get_encut(structure, encut_high, encut_high + assymptote_increment, 0, convergence_value, outdir, previous=output)
         else:  # Do Binary search
             encut_center = encut_round((encut_high+encut_low)/2)
-            (energy_center,_) = self.get_energy_from_encut(structure, encut_center, outdir, convergence_value)
+            (energy_center,_) = self.get_energy_from_encut(structure, encut_center, outdir, convergence_value, previous=output)
             if (encut_high-encut_low) == encut_increment: # Binary search is at center
                 return encut_high
             elif abs(energy_center - optimal_energy) <= convergence_value:  # reached convergence

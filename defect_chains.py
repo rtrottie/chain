@@ -91,7 +91,6 @@ def bulk_standard(vasp: Vasp, structure):
     vasp.icharg = 2
     # Electronic
     vasp.add_keyword('GGA', 'PS')
-    vasp.isym = 0
     vasp.ismear = -5
     vasp.prec = "Accurate"
     vasp.nelm = 60
@@ -108,7 +107,7 @@ def bulk_standard(vasp: Vasp, structure):
     x=2; y=2 ; z=2
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
-    vasp.encut = 500
+    vasp.encut = 800
     return vasp
 
 def load_species(vasp : Vasp, structure):

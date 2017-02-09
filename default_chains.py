@@ -208,7 +208,7 @@ class OptimizedParametersChain(CustomChain):
         return energy
     def get_kpoints(self, structure, kpoint, convergence_value: float, outdir: str):
         energy_asymptote = self.get_energy_from_kpoint(structure, kpoint, outdir, convergence_value)
-        if kpoint < 4:
+        if kpoint <= 5:
             return self.get_kpoints(structure, kpoint+1, convergence_value, outdir)
         else:
             energy_low = self.get_energy_from_kpoint(structure, kpoint-3, outdir, convergence_value)
@@ -221,7 +221,7 @@ class OptimizedParametersChain(CustomChain):
 
 
     def __call__(self, structure, outdir=None, **kwargs):
-        kpoint = self.get_kpoints(structure, 3, 0.0005, outdir=os.path.join(outdir, 'get_kpoints') )
+        kpoint = self.get_kpoints(structure, 3, 0.0005, outdir=os.path.join(outdir, 'get_kpoints'))
         def set_kpoint(vasp: Vasp, structure=None):
             packing = 'Gamma'
             vasp.kpoints = "Gamma_Mesh\n0\n{0}\n{1} {1} {1}".format(packing, kpoint)

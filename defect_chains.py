@@ -86,9 +86,6 @@ class BulkHSE(OptimizedParametersChain):
         super().__init__([hse, hse_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
 def bulk_standard(vasp: Vasp, structure):
-    # Start
-    vasp.istart = 0
-    vasp.icharg = 2
     # Electronic
     vasp.add_keyword('GGA', 'PS')
     vasp.ismear = -5

@@ -362,8 +362,6 @@ def set_algo_conj(vasp: Vasp, structure=None):
     return vasp
 
 def hse06(vasp: Vasp, structure=None):
-    vasp.istart = 1
-    vasp.icharg = 1
     vasp.nelmdl = 0
     vasp.nelm = 1000
     vasp.add_keyword('lhfcalc', True)

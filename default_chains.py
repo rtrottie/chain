@@ -155,7 +155,7 @@ class OptimizedParametersChain(CustomChain):
             x.modifications.append(set_encut)
         (_,output) = super().call_with_output(structure, outdir=os.path.join(outdir, str(encut).zfill(4)), previous=previous)
         vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
-        energy = vasprun.final_energy
+        energy = vasprun.final_energy / vasprun.final_structure.num_sites
         return (energy, output)
     def get_encut(self, structure, encut_low : int, encut_high : int, optimal_energy : float, convergence_value : float,  outdir : str, previous=None):
         '''
@@ -208,7 +208,7 @@ class OptimizedParametersChain(CustomChain):
             x.modifications.append(set_kpoint)
         (_,output) = super().call_with_output(structure, outdir=os.path.join(outdir, folder), previous=previous)
         vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
-        energy = vasprun.final_energy
+        energy = vasprun.final_energy / vasprun.final_structure.num_sites
         return (energy, output)
     def get_kpoints(self, structure, kpoint, convergence_value: float, outdir: str, previous=None):
         (energy_asymptote, output) = self.get_energy_from_kpoint(structure, kpoint, outdir, convergence_value, previous=previous)

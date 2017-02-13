@@ -100,22 +100,22 @@ class OptimizedParametersChain(CustomChain):
         return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
 
 
-    def get_bandgap_from_aexx(self, structure, aexx, outdir=None):
+    def get_bandgap_from_aexx(self, structure, aexx, outdir=None, previous=None):
         vasprun_location = os.path.join(outdir, str(aexx).zfill(2), self.names[-1], 'vasprun.xml')
-        try:
-            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
-            band_gap = vasprun.get_band_structure().get_band_gap()['energy']
-        except:
-            def set_aexx(vasp: Vasp, structure=None):
-                vasp.add_keyword('AEXX', aexx/100)
-                return vasp
-            for x in self.functionals: # Set nupdown
-                x.modifications.append(set_aexx)
-            super().__call__(structure, outdir=os.path.join(outdir, str(aexx).zfill(2)))
-            vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
-            band_gap = vasprun.get_band_structure().get_band_gap()['energy']
-        return band_gap
-    def find_aexx(self, structure, aexx_low : int, aexx_high : int, outdir=None):
+        # try:
+        #     vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+        #     band_gap = vasprun.get_band_structure().get_band_gap()['energy']
+        # except:
+        def set_aexx(vasp: Vasp, structure=None):
+            vasp.add_keyword('AEXX', aexx/100)
+            return vasp
+        for x in self.functionals: # Set nupdown
+            x.modifications.append(set_aexx)
+        (_, output) = super().call_with_output(structure, outdir=os.path.join(outdir, str(aexx).zfill(2)), previous=previous)
+        vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
+        band_gap = vasprun.get_band_structure().get_band_gap()['energy']
+        return (band_gap, output)
+    def find_aexx(self, structure, aexx_low : int, aexx_high : int, outdir=None, previous=None):
         '''
         Does a binary search to find correct value of AEXX
         :param aexx_low:
@@ -124,9 +124,9 @@ class OptimizedParametersChain(CustomChain):
         '''
         aexx_center = int((aexx_high + aexx_low) / 2)
 
-        bg_low  = self.get_bandgap_from_aexx(structure, aexx_low, outdir)
-        bg_high = self.get_bandgap_from_aexx(structure, aexx_high, outdir)
-        bg_center = self.get_bandgap_from_aexx(structure, aexx_center, outdir)
+        (bg_low, _)  = self.get_bandgap_from_aexx(structure, aexx_low, outdir, previous=previous)
+        (bg_high, _) = self.get_bandgap_from_aexx(structure, aexx_high, outdir, previous=previous)
+        (bg_center, previous) = self.get_bandgap_from_aexx(structure, aexx_center, outdir, previous=previous)
         if aexx_high - aexx_low <= 1:
             if abs(bg_low - self.bandgap) <= abs(bg_high - self.bandgap):
                 return aexx_low
@@ -137,9 +137,9 @@ class OptimizedParametersChain(CustomChain):
         elif bg_high < self.bandgap:
             raise Exception('Bandgap high below desired bandgap')
         elif bg_center > self.bandgap:
-            self.find_aexx(structure, aexx_low, aexx_center, outdir)
+            self.find_aexx(structure, aexx_low, aexx_center, outdir, previous=previous)
         elif bg_center < self.bandgap:
-            self.find_aexx(structure, aexx_center, aexx_high, outdir)
+            self.find_aexx(structure, aexx_center, aexx_high, outdir, previous=previous)
 
     def get_energy_from_encut(self, structure, encut, outdir=None, convergence_value=1e-4, previous=None):
         vasprun_location = os.path.join(outdir, str(encut).zfill(4), self.names[-1], 'vasprun.xml')

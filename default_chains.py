@@ -201,7 +201,7 @@ class OptimizedParametersChain(CustomChain):
         #     energy = vasprun.final_energy
         # except:
         def set_kpoint(vasp: Vasp, structure):
-            lengths = [sum([x ** 2 for x in structure.cell[i]]) ** (1 / 2) for i in range(3)] # using distance formula to get vector lengths
+            lengths = [sum([x ** 2 for x in structure.cell.transpose()[i]]) ** (1 / 2) for i in range(3)] # using distance formula to get vector lengths
             kpoints = [math.ceil(min(lengths) / x * kpoint) for x in lengths] # scaling number of kpoints for shorter vectors
 
             packing = 'Gamma'

@@ -12,6 +12,7 @@ from pymatgen.io.vasp import Vasprun
 import pylada
 import os
 import math
+from Classes_Pymatgen import Poscar
 
 
 class CustomFunctional(object):
@@ -193,15 +194,18 @@ class OptimizedParametersChain(CustomChain):
                 return self.get_encut(structure, encut_center, encut_high, optimal_energy, convergence_value, outdir, previous=output)
 
     def get_energy_from_kpoint(self, structure, kpoint, outdir=None, convergence_value=1e-4, previous=None):
-        folder = '{0}x{0}x{0}'.format(str(kpoint).zfill(2))
+        folder = '{0}'.format(str(kpoint).zfill(2))
         vasprun_location = os.path.join(outdir, folder, self.names[-1], 'vasprun.xml')
         # try:
         #     vasprun = Vasprun(vasprun_location, parse_projected_eigen=False)
         #     energy = vasprun.final_energy
         # except:
-        def set_kpoint(vasp: Vasp, structure=None):
+        def set_kpoint(vasp: Vasp, structure):
+            lengths = [sum([x ** 2 for x in structure.cell[i]]) ** (1 / 2) for i in range(3)] # using distance formula to get vector lengths
+            kpoints = [math.ceil(min(lengths) / x * kpoint) for x in lengths] # scaling number of kpoints for shorter vectors
+
             packing = 'Gamma'
-            vasp.kpoints = "Gamma_Mesh\n0\n{0}\n{1} {1} {1}".format(packing, kpoint)
+            vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, kpoints[0], kpoints[1], kpoints[2])
             vasp.ediff = convergence_value/1000
             return vasp
         for x in self.functionals: # Set nupdown

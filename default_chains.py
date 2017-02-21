@@ -417,7 +417,7 @@ def single_point(vasp: Vasp, structure=None):
     vasp.nsw = 0
     vasp.ediff = 1e-5
     vasp.add_keyword('lmaxmix', None)
-    vasp.add_keyword('iopt', None)
+    vasp.add_keyword('iopt', 0)
     return vasp
 
 def cell_relax(vasp: Vasp, structure=None):

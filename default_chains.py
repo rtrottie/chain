@@ -244,7 +244,7 @@ class OptimizedParametersChain(CustomChain):
         for x in self.functionals: # Set nupdown
             x.modifications.append(set_encut)
 
-        aexx = self.find_aexx(structure, 0, 99, outdir=os.path.join(outdir, 'get_aexx')) / 100
+        aexx = self.find_aexx(structure, 0, 99, outdir=os.path.join(outdir, 'get_aexx'))  / 100
         def set_aexx(vasp: Vasp, structure=None):
             vasp.encut = encut
             return vasp

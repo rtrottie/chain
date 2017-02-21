@@ -252,9 +252,9 @@ class OptimizedParametersChain(CustomChain):
             x.modifications.append(set_aexx)
 
         with open(os.path.join(outdir, 'INCAR.defaults'), 'w') as f:
-            f.write('AEXX = {}'.format(aexx))
-            f.write('ENCUT = {}'.format(encut))
-            f.write('KPOINTS = {}'.format(kpoint))
+            f.write('AEXX = {}\n'.format(aexx))
+            f.write('ENCUT = {}\n'.format(encut))
+            f.write('KPOINTS = {}\n'.format(kpoint))
         return super().__call__(structure, outdir=outdir)
 
 class SpinCustomChain(CustomChain):

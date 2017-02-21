@@ -138,9 +138,9 @@ class OptimizedParametersChain(CustomChain):
         elif bg_high < self.bandgap:
             raise Exception('Bandgap high below desired bandgap')
         elif bg_center > self.bandgap:
-            self.find_aexx(structure, aexx_low, aexx_center, outdir, previous=previous)
+            return self.find_aexx(structure, aexx_low, aexx_center, outdir, previous=previous)
         elif bg_center < self.bandgap:
-            self.find_aexx(structure, aexx_center, aexx_high, outdir, previous=previous)
+            return self.find_aexx(structure, aexx_center, aexx_high, outdir, previous=previous)
 
     def get_energy_from_encut(self, structure, encut, outdir=None, convergence_value=1e-4, previous=None):
         vasprun_location = os.path.join(outdir, str(encut).zfill(4), self.names[-1], 'vasprun.xml')

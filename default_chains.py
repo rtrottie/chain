@@ -408,7 +408,7 @@ def set_npar_2(vasp: Vasp, structure=None):
 
 def set_iopt_7(vasp: Vasp, structure=None):
     vasp.ibrion = 3
-    vasp.add_keyword('potim', 0)
+    vasp.add_keyword('potim',  0)
     vasp.add_keyword('iopt', 7)
     return vasp
 

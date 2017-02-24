@@ -13,6 +13,7 @@ import os
 import math
 from default_chains import *
 from pymatgen.io.vasp.outputs import Vasprun
+from Classes_Pymatgen import Incar
 
 class AEXX(CustomChain):
     def __init__(self, functionals: list, bandgap : float, names=None, vaspobj:Vasp=None, basename=''):
@@ -86,8 +87,17 @@ class BulkHSE(OptimizedParametersChain):
         super().__init__([hse, hse_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
 class DefectHSE(OptimizedParametersChain):
-    def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, bulk_standard, load_species, set_333, set_nkred_333, set_kpar_auto] + standard
+    def __init__(self, vaspobj: Vasp, incar: str, standard=[], override=[], final_step='5_hse' ):
+        i = Incar.from_file(incar)
+        def set_aexx(vasp: Vasp, structure=None):
+            vasp.add_keyword('AEXX', i['AEXX'])
+            return vasp
+
+        def set_encut(vasp: Vasp, structure=None):
+            vasp.add_keyword('ENCUT', i['ENCUT'])
+            return vasp
+
+        standard = [load_default_vasp, bulk_standard, load_species, set_333, set_nkred_333, set_kpar_auto, set_aexx, set_encut] + standard
         pbe = CustomFunctional(Vasp, standard)
         hse = CustomFunctional(Vasp, standard + [hse06])
         hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output])

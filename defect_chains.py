@@ -86,7 +86,7 @@ class BulkHSE(OptimizedParametersChain):
         names = ['1_hse', '2_hse_singlepoint']
         super().__init__([hse, hse_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
-class DefectHSE(OptimizedParametersChain):
+class DefectHSE(CustomChain):
     def __init__(self, vaspobj: Vasp, incar: str, standard=[], override=[], final_step='5_hse' ):
         i = Incar.from_file(incar)
         def set_aexx(vasp: Vasp, structure=None):
@@ -102,7 +102,7 @@ class DefectHSE(OptimizedParametersChain):
         hse = CustomFunctional(Vasp, standard + [hse06])
         hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output])
         names = ['1_pbe', '2_hse', '3_hse_singlepoint']
-        super().__init__([pbe, hse, hse_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
+        super().__init__([pbe, hse, hse_single], names=names, vaspobj=vaspobj)
 
 def bulk_standard(vasp: Vasp, structure):
     # Electronic

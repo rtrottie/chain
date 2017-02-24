@@ -540,6 +540,12 @@ def set_222(vasp: Vasp, structure=None):
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
     return vasp
 
+def set_333(vasp: Vasp, structure=None):
+    x=3; y=3 ; z=3
+    packing = 'Gamma'
+    vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    return vasp
+
 def set_221(vasp: Vasp, structure=None):
     x=2; y=2 ; z=1
     packing = 'Gamma'
@@ -560,6 +566,9 @@ def set_nkred_222(vasp: Vasp, structure=None):
     vasp.add_keyword('nkred', 2)
     return vasp
 
+def set_nkred_333(vasp: Vasp, structure=None):
+    vasp.add_keyword('nkred', 3)
+    return vasp
 
 def set_nkred_221(vasp: Vasp, structure=None):
     vasp.add_keyword('nkredx', 2)

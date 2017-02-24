@@ -87,10 +87,10 @@ class BulkHSE(OptimizedParametersChain):
 
 class DefectHSE(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, bulk_standard, load_species, set_npar_2]
+        standard = [load_default_vasp, bulk_standard, load_species, set_333, set_nkred_333, set_kpar_auto] + standard
         pbe = CustomFunctional(Vasp, standard)
-        hse = CustomFunctional(Vasp, standard + [hse06, set_npar_2])
-        hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output, set_npar_2])
+        hse = CustomFunctional(Vasp, standard + [hse06])
+        hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output])
         names = ['1_pbe', '2_hse', '3_hse_singlepoint']
         super().__init__([pbe, hse, hse_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 

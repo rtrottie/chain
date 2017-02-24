@@ -342,6 +342,8 @@ def set_kpar_auto(vasp: Vasp, structure=None):
                 return vasp
             else:
                 kpar = kpar -1
+    vasp.add_keyword('kpar', 1)
+    vasp.npar = int(nodes)
     return vasp
 
 def set_kpar_per_node(vasp: Vasp, structure=None):
@@ -554,7 +556,7 @@ def set_221(vasp: Vasp, structure=None):
 
 def set_441(vasp: Vasp, structure=None):
     x=4; y=4 ; z=1
-    packing  = 'Gamma'
+    packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
     return vasp
 

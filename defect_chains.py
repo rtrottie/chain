@@ -78,7 +78,7 @@ class AEXX(CustomChain):
 
 class BulkHSE(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, cell_relax, bulk_standard, load_species, set_kpar_auto_npar_2]
+        standard = [load_default_vasp, cell_relax, bulk_standard, load_species, set_npar_2, set_kpar_per_node]
         # pbe = CustomFunctional(Vasp, standard)
         hse = CustomFunctional(Vasp, standard + [hse06, set_npar_2])
         hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output, set_npar_2])

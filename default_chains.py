@@ -344,22 +344,9 @@ def set_kpar_auto(vasp: Vasp, structure=None):
                 kpar = kpar -1
     return vasp
 
-def set_kpar_auto_npar_2(vasp: Vasp, structure=None):
+def set_kpar_per_node(vasp: Vasp, structure=None):
     nodes = int(os.environ['PBS_NUM_NODES'])
-    np = int(os.environ['PBS_NP'])
-    atoms = len(structure)
-    vasp.npar = 2
-    if np / atoms > 1:
-        kpar = math.ceil(np/atoms)
-        kpoint_str = vasp.kpoints.split('\n')[3]
-        kpoints = [ int(x) for x in kpoint_str.split() ]
-        num_kpoints = kpoints[0] * kpoints[1] * kpoints[2]
-        while kpar > 1:
-            if num_kpoints % kpar == 0 and nodes % kpar ==0:
-                vasp.add_keyword('kpar', kpar)
-                return vasp
-            else:
-                kpar = kpar -1
+    vasp.add_keyword('kpar', nodes)
     return vasp
 
 ##############

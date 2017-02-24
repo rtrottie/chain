@@ -8,7 +8,9 @@ from pylada.misc import RelativePath
 from pylada.vasp.extract import Extract
 from pylada.error import ExternalRunFailed
 from pylada.vasp import Vasp
+from pylada.crytal import read,write
 from pymatgen.io.vasp import Vasprun
+from math import floor
 import pylada
 import os
 import math
@@ -16,13 +18,14 @@ from Classes_Pymatgen import Poscar
 
 
 class CustomFunctional(object):
-    def __init__(self, base: Vasp, modifications: list):
+    def __init__(self, base: Vasp, modifications: list, type='relax'):
         self.base = base
         self.modifications = modifications
+        self.type = type
         return
 
 class CustomChain(object):
-    def __init__(self, functionals: list, names=None, vaspobj:Vasp=None, basename=''):
+    def __init__(self, functionals: list, names=None, vaspobj:Vasp=None, basename='', initial_structure=None, final_structure=None):
         '''
         Runs a series of workflows
         Args:
@@ -40,6 +43,8 @@ class CustomChain(object):
         self.total_steps = len(functionals)
         self.current_step = 0
         self.basename = basename
+        self.initial_structure = initial_structure
+        self.final_strucutre = final_structure
         return
 
     def Extract(self, jobdir):
@@ -53,6 +58,16 @@ class CustomChain(object):
         return extract
 
     def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, previous, **kwargs):
+        '''
+        The important function run when __call__ is invoked
+        :param name: name (subfolder) of current run
+        :param workflow: The workflow to be run
+        :param structure: Structure that will be relaxed
+        :param outdir:  Directory for output
+        :param previous: Previous directory (for initialization)
+        :param kwargs:
+        :return:
+        '''
         vasp = workflow.base(copy=deepcopy(self.vasp))
         structure_ = structure.copy()
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
@@ -61,6 +76,19 @@ class CustomChain(object):
         ## if this calculation has not been done run it
         params = deepcopy(kwargs)
         fulldir = os.path.join(outdir, name)
+        if workflow.type == 'neb':  #TODO:  Support multiple images
+            images = vasp.images+2 # for initial and final point
+            for image in images:
+                image_dir = os.path.join(fulldir, str(image).zfill(2))
+                os.makedirs(image_dir, exist_ok=True)
+                if image == 0:
+                    write.poscar(self.initial_structure, os.path.join(image_dir, 'POSCAR'))
+                elif image == len(images)-1:
+                    write.poscar(self.final_structure, os.path.join(image_dir, 'POSCAR'))
+                elif image == floor(len(images)/2):
+                    write.poscar(self.structure_, os.path.join(image_dir, 'POSCAR'))
+
+
         output = vasp(structure_, outdir=fulldir, restart=previous ,**params)
         if not output.success:
             raise ExternalRunFailed("VASP calculation did not succeed.")
@@ -85,6 +113,13 @@ class CustomChain(object):
     def __call__(self, structure, outdir=None, names=None, functionals=None, previous=None, **kwargs ):
         (extract, _) = self.call_with_output(structure, outdir=outdir, names=names, functionals=functionals, previous=previous)
         return extract
+
+
+class TSCustomChain(CustomChain):
+    def __init__(self, functionals: list, initial_structure: Structure, final_structure: Structure = None, names=None, vaspobj:Vasp=None, basename=''):
+        self.initial = initial_structure
+        self.final = final_structure
+        return super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
 
 
 class OptimizedParametersChain(CustomChain):
@@ -590,4 +625,11 @@ def unset_nkred(vasp: Vasp, structure=None):
 
 def set_dimer(vasp: Vasp, structure=None):
     vasp.add_keyword('ICHAIN', 2)
+    vasp.add_keyword('IMAGES', 0)
+    return vasp
+
+def set_single_neb(vasp: Vasp, structure=None):
+    vasp.add_keyword('ICHAIN', 0)
+    vasp.add_keyword('IMAGES', 1)
+    vasp.add_keyword('LCLIMB', True)
     return vasp

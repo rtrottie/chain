@@ -475,6 +475,7 @@ def cell_relax(vasp: Vasp, structure=None):
     vasp.isif = 3
     vasp.ibrion = 1
     vasp.potim = 0.4
+    vasp.ediffg = -0.005
     return vasp
 ######################
 # CONVERGENCE LEVELS #

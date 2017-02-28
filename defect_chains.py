@@ -105,7 +105,7 @@ def bulk_standard(vasp: Vasp, structure):
     vasp.nelmdl = 0
     # Ionic
     vasp.nsw = 5000
-    vasp.ediffg = -0.005
+    vasp.ediffg = -0.02
     # Output
     vasp.lwave = True
     vasp.lcharg = True

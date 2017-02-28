@@ -459,6 +459,7 @@ def single_point(vasp: Vasp, structure=None):
     vasp.istart = 1
     vasp.icharg = 1
     vasp.ibrion = -1
+    vasp.nelm = 3
     vasp.nsw = 0
     vasp.ediff = 1e-5
     vasp.add_keyword('lmaxmix', None)

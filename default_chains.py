@@ -87,10 +87,12 @@ class CustomChain(object):
             # TODO: Don't force interpolation
             images = initial.interpolate(ts, inital_images, autosort_tol=0.75)[:-1] # get images up to, but not including, the TS
             images.append(ts.interpolate(final, final_images, autosort_tol=0.75)) # get images from TS
+            image_i = 0
             for image in images: # type: Structure
-                image_dir = os.path.join(fulldir, str(image).zfill(2))
+                image_dir = os.path.join(fulldir, str(image_i).zfill(2))
                 os.makedirs(image_dir, exist_ok=True)
                 image.to(fmt='poscar', filename=os.path.join(image_dir, 'POSCAR'))
+                image_i = image_i + 1
 
 
         output = vasp(structure_, outdir=fulldir, restart=previous ,**params)

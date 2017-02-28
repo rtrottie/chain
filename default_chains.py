@@ -78,7 +78,7 @@ class CustomChain(object):
         fulldir = os.path.join(outdir, name)
         if workflow.type == 'neb':  #TODO:  Support multiple images
             images = vasp.images+2 # for initial and final point
-            for image in images:
+            for image in range(images):
                 image_dir = os.path.join(fulldir, str(image).zfill(2))
                 os.makedirs(image_dir, exist_ok=True)
                 if image == 0:

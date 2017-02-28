@@ -38,9 +38,10 @@ class WSBulkChain(SpinCustomChain):
         super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj)
 
-class TSWSBulkChain(SpinCustomChain):
-    def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], final_step='5_hse' ):
+class TSWSBulkChain(TSSpinCustomChain):
+    def __init__(self, vaspobj: Vasp, nupdowns, initial, final, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7, set_single_neb]
+        override.append(set_prec_normal)
         gamma = [set_gamma, gamma_optimization]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge] + gamma + override, type='neb')
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge] + override, type='neb')
@@ -54,7 +55,7 @@ class TSWSBulkChain(SpinCustomChain):
         hse            = CustomFunctional(Vasp, standard + [hse06, set_nkred_222] + override + [single_point])
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', final_step]
         nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
-        super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],
+        super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse], initial, final,
                           nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj)
 
 class WSBulkChain_ferro(CustomChain):

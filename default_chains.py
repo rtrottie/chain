@@ -115,14 +115,6 @@ class CustomChain(object):
         (extract, _) = self.call_with_output(structure, outdir=outdir, names=names, functionals=functionals, previous=previous)
         return extract
 
-
-class TSCustomChain(CustomChain):
-    def __init__(self, functionals: list, initial_structure: Structure, final_structure: Structure = None, names=None, vaspobj:Vasp=None, basename=''):
-        self.initial = initial_structure
-        self.final = final_structure
-        return super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
-
-
 class OptimizedParametersChain(CustomChain):
     def __init__(self, functionals: list, bandgap:float=None, names=None, vaspobj:Vasp=None, basename=''):
         '''
@@ -331,6 +323,12 @@ class SpinCustomChain(CustomChain):
             for x in self.functionals: # Set nupdown
                 x.modifications.append(set_nupdown)
         return super().__call__(structure, outdir=outdir, **kwargs)
+
+class TSSpinCustomChain(SpinCustomChain):
+    def __init__(self, functionals: list, initial_structure: Structure, final_structure: Structure = None, names=None, vaspobj:Vasp=None, basename=''):
+        self.initial = initial_structure
+        self.final = final_structure
+        return super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
 
 def load_default_vasp(vasp: Vasp,structure=None):
     vasp.has_nlep = False
@@ -564,6 +562,9 @@ def full_converge(vasp: Vasp, structure=None):
     vasp.lcharg = True
     return vasp
 
+def set_prec_normal(vasp: Vasp, structure=None):
+    vasp.prec = 'normal'
+    return vasp
 
 ###########
 # KPOINTS #

@@ -85,8 +85,8 @@ class CustomChain(object):
             ts = pylada_to_pmg(structure_) # type: Structure
             final = pylada_to_pmg(self.final_strucutre) # type: Structure
             # TODO: Don't force interpolation
-            images = initial.interpolate(ts, inital_images-1, autosort_tol=0.75)[:-1] # get images up to, but not including, the TS
-            images.append(ts.interpolate(final, final_images-1, autosort_tol=0.75)) # get images from TS
+            images = initial.interpolate(ts, inital_images, autosort_tol=0.75)[:-1] # get images up to, but not including, the TS
+            images.append(ts.interpolate(final, final_images, autosort_tol=0.75)) # get images from TS
             for image in images: # type: Structure
                 image_dir = os.path.join(fulldir, str(image).zfill(2))
                 os.makedirs(image_dir, exist_ok=True)

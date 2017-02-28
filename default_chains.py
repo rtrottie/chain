@@ -8,7 +8,7 @@ from pylada.misc import RelativePath
 from pylada.vasp.extract import Extract
 from pylada.error import ExternalRunFailed
 from pylada.vasp import Vasp
-from pylada.crytal import read,write
+from pylada.crystal import read,write
 from pymatgen.io.vasp import Vasprun
 from math import floor
 import pylada

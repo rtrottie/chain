@@ -144,7 +144,7 @@ class OptimizedParametersChain(CustomChain):
         #     band_gap = vasprun.get_band_structure().get_band_gap()['energy']
         # except:
         def set_aexx(vasp: Vasp, structure=None):
-            vasp.add_keyword('AEXX', aexx/100)
+            vasp.add_keyword('aexx', aexx/100)
             return vasp
         for x in self.functionals: # Set nupdown
             x.modifications.append(set_aexx)
@@ -602,7 +602,7 @@ def set_441(vasp: Vasp, structure=None):
     return vasp
 
 def gamma_optimization(vasp: Vasp, structure = None):
-    vasp.add_keyword('AUTO_GAMMA', True)
+    vasp.add_keyword('auto_gamma', True)
     return vasp
 
 def set_nkred_222(vasp: Vasp, structure=None):
@@ -630,12 +630,12 @@ def unset_nkred(vasp: Vasp, structure=None):
 ######
 
 def set_dimer(vasp: Vasp, structure=None):
-    vasp.add_keyword('ICHAIN', 2)
-    vasp.add_keyword('IMAGES', 0)
+    vasp.add_keyword('ichain', 2)
+    vasp.add_keyword('images', 0)
     return vasp
 
 def set_single_neb(vasp: Vasp, structure=None):
-    vasp.add_keyword('ICHAIN', 0)
-    vasp.add_keyword('IMAGES', 1)
-    vasp.add_keyword('LCLIMB', True)
+    vasp.add_keyword('ichain', 0)
+    vasp.add_keyword('images', 1)
+    vasp.add_keyword('lclimb', True)
     return vasp

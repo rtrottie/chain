@@ -27,7 +27,7 @@ class CustomFunctional(object):
         return
 
 class CustomChain(object):
-    def __init__(self, functionals: list, names=None, vaspobj:Vasp=None, basename='', initial_structure=None, final_structure=None):
+    def __init__(self, functionals: list, names=None, vaspobj:Vasp=None, basename='', initial_structure=None, final_structure=None, **kwargs):
         '''
         Runs a series of workflows
         Args:
@@ -290,7 +290,7 @@ class OptimizedParametersChain(CustomChain):
         return super().__call__(structure, outdir=outdir)
 
 class SpinCustomChain(CustomChain):
-    def __init__(self, functionals: list, nupdown_functionals : list, nupdowns, names=None, vaspobj:Vasp=None, basename=''):
+    def __init__(self, functionals: list, nupdown_functionals : list, nupdowns, names=None, vaspobj:Vasp=None, basename='', **kwargs):
         '''
         Runs a series of workflows
         Args:
@@ -301,7 +301,7 @@ class SpinCustomChain(CustomChain):
         '''
         self.nupdowns =  nupdowns
         self.nupdown_functionals = nupdown_functionals
-        return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
+        return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename, **kwargs)
 
     def __call__(self, structure, outdir=None, **kwargs):
         energies = {}
@@ -328,11 +328,11 @@ class SpinCustomChain(CustomChain):
                 x.modifications.append(set_nupdown)
         return super().__call__(structure, outdir=outdir, **kwargs)
 
-class TSSpinCustomChain(SpinCustomChain):
-    def __init__(self, functionals: list, nupdown_functionals : list, initial_structure: Structure, final_structure: Structure = None, names=None, vaspobj:Vasp=None, basename='', **kwargs):
-        self.initial = initial_structure
-        self.final = final_structure
-        return super().__init__(functionals, nupdown_functionals=nupdown_functionals, names=names, vaspobj=vaspobj, basename=basename, **kwargs)
+# class TSSpinCustomChain(SpinCustomChain):
+#     def __init__(self, functionals: list, nupdown_functionals : list, initial_structure: Structure, final_structure: Structure = None, names=None, vaspobj:Vasp=None, basename='', **kwargs):
+#         self.initial = initial_structure
+#         self.final = final_structure
+#         return super().__init__(functionals, nupdown_functionals=nupdown_functionals, names=names, vaspobj=vaspobj, basename=basename, **kwargs)
 
 def load_default_vasp(vasp: Vasp,structure=None):
     vasp.has_nlep = False

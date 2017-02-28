@@ -38,7 +38,7 @@ class WSBulkChain(SpinCustomChain):
         super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj)
 
-class TSWSBulkChain(TSSpinCustomChain):
+class TSWSBulkChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp, nupdowns, initial, final, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7, set_single_neb]
         override.append(set_prec_normal)

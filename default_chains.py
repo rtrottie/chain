@@ -456,6 +456,8 @@ def set_iopt_7(vasp: Vasp, structure=None):
     return vasp
 
 def single_point(vasp: Vasp, structure=None):
+    vasp.istart = 1
+    vasp.icharg = 1
     vasp.ibrion = -1
     vasp.nsw = 0
     vasp.ediff = 1e-5

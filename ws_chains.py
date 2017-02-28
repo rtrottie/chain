@@ -49,9 +49,9 @@ class TSWSBulkChain(SpinCustomChain):
         get_nopsin_eig_gamma = CustomFunctional(Vasp, standard + [get_eigen_nospin] + gamma + override, type='neb')
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen] + override, type='neb')
         get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen] + gamma + override, type='neb')
-        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_dimer] + override, type='neb')
-        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge, set_dimer] + gamma + override, type='neb')
-        hse            = CustomFunctional(Vasp, standard + [hse06, set_nkred_222] + override + [single_point], type='neb')
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_dimer] + override)
+        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge, set_dimer] + gamma + override)
+        hse            = CustomFunctional(Vasp, standard + [hse06, set_nkred_222] + override + [single_point])
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', final_step]
         nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
         super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],

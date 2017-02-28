@@ -329,7 +329,7 @@ class SpinCustomChain(CustomChain):
         return super().__call__(structure, outdir=outdir, **kwargs)
 
 class TSSpinCustomChain(SpinCustomChain):
-    def __init__(self, functionals: list, initial_structure: Structure, final_structure: Structure = None, names=None, vaspobj:Vasp=None, basename='', **kwargs):
+    def __init__(self, functionals: list, nupdown_functionals : list, initial_structure: Structure, final_structure: Structure = None, names=None, vaspobj:Vasp=None, basename='', **kwargs):
         self.initial = initial_structure
         self.final = final_structure
         return super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename, **kwargs)

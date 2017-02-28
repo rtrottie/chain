@@ -1,15 +1,19 @@
 #!/usr/bin/env python
 
-from pylada.vasp.functional import Vasp
+from pylada.crystal import read,write
+from pymatgen.core import Structure
+from Classes_Pymatgen import Poscar
+import tempfile
 
-class NEBVasp(Vasp):
+def pylada_to_pmg(pylada_structure):
+    '''
+    Converts a pylada structure to a pymatgen structure via a temporary file
 
-    def __init__(self, copy=None, species=None, kpoints=None, **kwargs):
-        super().__init__(copy, species, kpoints, kwargs)
-        self.restart = kwargs.get('restart', None)
-        self.initial = kwargs.get('initial', None)
-        self.final   = kwargs.get('final'  , None)
-
-    def bringup(self, structure, outdir, **kwargs):
-        if self.restart:
-            Vasp.
+    :param pylada_structure: Pylada structure to convert
+    :return: Structure
+    '''
+    with tempfile.NamedTemporaryFile() as tmp:
+        name = tmp.name
+        write.poscar(pylada_structure, name, vasp5=True)
+        pymatgen_structure = Poscar.from_file(name).structure # pymatgen.core.Structure
+    return pymatgen_structure

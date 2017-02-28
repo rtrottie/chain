@@ -10,7 +10,9 @@ from pylada.error import ExternalRunFailed
 from pylada.vasp import Vasp
 from pylada.crystal import read,write
 from pymatgen.io.vasp import Vasprun
-from math import floor
+from pymatgen.core import Structure
+from Pylada_Classes import pylada_to_pmg
+from math import floor, ceil
 import pylada
 import os
 import math
@@ -76,17 +78,18 @@ class CustomChain(object):
         ## if this calculation has not been done run it
         params = deepcopy(kwargs)
         fulldir = os.path.join(outdir, name)
-        if workflow.type == 'neb':  #TODO:  Support multiple images
-            images = vasp.images+2 # for initial and final point
-            for image in range(images):
+        if workflow.type == 'neb':
+            inital_images =  ceil((vasp.images - 1) / 2) + 1
+            final_images  = floor((vasp.images - 1) / 2) + 1
+            initial = pylada_to_pmg(self.initial_structure) # type: Structure
+            ts = pylada_to_pmg(structure_) # type: Structure
+            final = pylada_to_pmg(self.final_strucutre) # type: Structure
+            images = initial.interpolate(ts, inital_images-1, autosort_tol=0.75)[:-1] # get images up to, but not including, the TS
+            images.append(ts.interpolate(final, final_images-1, autosort_tol=0.75)) # get images from TS
+            for image in images: # type: Structure
                 image_dir = os.path.join(fulldir, str(image).zfill(2))
                 os.makedirs(image_dir, exist_ok=True)
-                if image == 0:
-                    write.poscar(self.initial_structure, os.path.join(image_dir, 'POSCAR'))
-                elif image == len(images)-1:
-                    write.poscar(self.final_structure, os.path.join(image_dir, 'POSCAR'))
-                elif image == floor(len(images)/2):
-                    write.poscar(self.structure_, os.path.join(image_dir, 'POSCAR'))
+                image.to(fmt='poscar', filename=os.path.join(image_dir, 'POSCAR'))
 
 
         output = vasp(structure_, outdir=fulldir, restart=previous ,**params)

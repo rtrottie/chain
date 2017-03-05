@@ -96,6 +96,16 @@ class DefectHSE(CustomChain):
         names = ['1_pbe', '2_pbe_singlepoint', '3_hse', '4_hse_singlepoint']
         super().__init__([pbe, pbe_single, hse, hse_single], names=names, vaspobj=vaspobj )
 
+class DefectHSE_large(CustomChain):
+    def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
+        standard = [load_default_vasp, bulk_standard, load_species, set_222, set_nkred_222, set_kpar_auto, set_iopt_7] + standard
+        pbe = CustomFunctional(Vasp, standard)
+        pbe_single = CustomFunctional(Vasp, standard + [single_point, all_output])
+        hse = CustomFunctional(Vasp, standard + [hse06])
+        hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output])
+        names = ['1_pbe', '2_pbe_singlepoint', '3_hse', '4_hse_singlepoint']
+        super().__init__([pbe, pbe_single, hse, hse_single], names=names, vaspobj=vaspobj )
+
 def bulk_standard(vasp: Vasp, structure):
     # Electronic
     vasp.add_keyword('GGA', 'PS')

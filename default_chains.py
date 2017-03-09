@@ -213,7 +213,7 @@ class OptimizedParametersChain(CustomChain):
         (energy_high, output) = self.get_energy_from_encut(structure, encut_high, outdir, convergence_value, previous=previous)
 
         if optimal_energy >= 0:  # haven't reached assymptote
-            if abs(energy_high - energy_low) <= convergence_value:  # reached asymptote
+            if abs(energy_high - energy_low) <= convergence_value*len(structure):  # reached asymptote
                 return self.get_encut(structure, encut_low-assymptote_increment, encut_low+encut_increment, energy_high, convergence_value, outdir, previous=output)
             else:  # keep searching
                 return self.get_encut(structure, encut_high, encut_high + assymptote_increment, 0, convergence_value, outdir, previous=output)
@@ -222,7 +222,7 @@ class OptimizedParametersChain(CustomChain):
             (energy_center,_) = self.get_energy_from_encut(structure, encut_center, outdir, convergence_value, previous=output)
             if (encut_high-encut_low) == encut_increment: # Binary search is at center
                 return encut_high
-            elif abs(energy_center - optimal_energy) <= convergence_value:  # reached convergence
+            elif abs(energy_center - optimal_energy) <= convergence_value*len(structure):  # reached convergence
                 return self.get_encut(structure, encut_low, encut_center, optimal_energy, convergence_value, outdir, previous=output)
             else: # center not converged
                 return self.get_encut(structure, encut_center, encut_high, optimal_energy, convergence_value, outdir, previous=output)
@@ -255,7 +255,7 @@ class OptimizedParametersChain(CustomChain):
         else:
             (energy_low,_) = self.get_energy_from_kpoint(structure, kpoint-3, outdir, convergence_value, previous=output)
             (energy_asymptote_low,_) = self.get_energy_from_kpoint(structure, kpoint-1, outdir, convergence_value, previous=output)
-            if abs(energy_low - energy_asymptote) <= convergence_value and abs(energy_low - energy_asymptote_low) <= convergence_value:
+            if abs(energy_low - energy_asymptote) <= convergence_value*len(structure) and abs(energy_low - energy_asymptote_low) <= convergence_value*len(structure):
                 return kpoint - 3
             else:
                 return self.get_kpoints(structure, kpoint + 1, convergence_value, outdir, previous=output)

@@ -424,7 +424,6 @@ def hse06(vasp: Vasp, structure=None):
     vasp.precfock = 'Fast'
     vasp.add_keyword('hfscreen', 0.2)
     vasp.algo = 'All'
-    vasp.ismear = 0
     vasp.npar = None
     vasp.ldau = False
     vasp.lwave = True
@@ -433,7 +432,6 @@ def hse06(vasp: Vasp, structure=None):
 
 def no_hse06(vasp: Vasp, structure=None):
     vasp.add_keyword('lhfcalc', False)
-    vasp.ismear =  -5
     vasp.algo = 'Normal'
     vasp.ldau = True
     return vasp
@@ -619,15 +617,18 @@ def gamma_optimization(vasp: Vasp, structure = None):
 
 def set_nkred_222(vasp: Vasp, structure=None):
     vasp.add_keyword('nkred', 2)
+    vasp.ismear = 0
     return vasp
 
 def set_nkred_333(vasp: Vasp, structure=None):
     vasp.add_keyword('nkred', 3)
+    vasp.ismear = 0
     return vasp
 
 def set_nkred_221(vasp: Vasp, structure=None):
     vasp.add_keyword('nkredx', 2)
     vasp.add_keyword('nkredy', 2)
+    vasp.ismear = 0
     return vasp
 
 def unset_nkred(vasp: Vasp, structure=None):

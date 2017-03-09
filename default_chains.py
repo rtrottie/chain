@@ -271,7 +271,7 @@ class OptimizedParametersChain(CustomChain):
         for x in self.functionals: # Set nupdown
             x.modifications.append(set_kpoint)
 
-        encut = self.get_encut(structure, 300, 800, 0, 0.0005 ,outdir=os.path.join(outdir, 'get_encut'))
+        encut = self.get_encut(structure, 350, 850, 0, 0.0005 ,outdir=os.path.join(outdir, 'get_encut'))
         def set_encut(vasp: Vasp, structure=None):
             vasp.encut = encut
             return vasp

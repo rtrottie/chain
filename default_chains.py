@@ -203,7 +203,7 @@ class OptimizedParametersChain(CustomChain):
         :param optimal_energy: Determined optimal value for energy
         :param convergence_value: value to converge within (eV/atom)
         :param outdir: outdir to write to
-        :return: :type int
+        :return: :type  int
         '''
         assymptote_increment = 250
         encut_increment = 25

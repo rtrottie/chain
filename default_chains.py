@@ -622,7 +622,7 @@ def set_nkred_222(vasp: Vasp, structure=None):
 
 def set_nkred_333(vasp: Vasp, structure=None):
     vasp.add_keyword('nkred', 3)
-    vasp.ismear = 0
+    vasp.ismear =  0
     return vasp
 
 def set_nkred_221(vasp: Vasp, structure=None):

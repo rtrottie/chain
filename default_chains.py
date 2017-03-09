@@ -263,10 +263,13 @@ class OptimizedParametersChain(CustomChain):
 
 
     def __call__(self, structure, outdir=None, **kwargs):
-        kpoint = self.get_kpoints(structure, 3, 0.0002, outdir=os.path.join(outdir, 'get_kpoints'))
-        def set_kpoint(vasp: Vasp, structure=None):
+        kpoint = self.get_kpoints(structure, 3, 0.0001, outdir=os.path.join(outdir, 'get_kpoints'))
+        def set_kpoint(vasp: Vasp, structure):
+            lengths = [sum([x ** 2 for x in structure.cell.transpose()[i]]) ** (1 / 2) for i in range(3)] # using distance formula to get vector lengths
+            kpoints = [math.ceil(min(lengths) / x * kpoint) for x in lengths] # scaling number of kpoints for shorter vectors
+
             packing = 'Gamma'
-            vasp.kpoints = "Gamma_Mesh\n0\n{0}\n{1} {1} {1}".format(packing, kpoint)
+            vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, kpoints[0], kpoints[1], kpoints[2])
             return vasp
         for x in self.functionals: # Set nupdown
             x.modifications.append(set_kpoint)

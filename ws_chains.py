@@ -112,7 +112,13 @@ class WSSurfaceChain_gamma_dimer(WSSurfaceChain):
     def __init__(self, vaspobj : Vasp):
         return  super().__init__(vaspobj, standard=[set_gamma, gamma_optimization, set_dimer], override=[unset_nkred])
 
-
+class WSBulkPBE(OptimizedParametersChain):
+    def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
+        standard = [load_default_vasp, cell_relax, ws_bulk, load_optimized_U_species, set_kpar_per_node, set_npar_2]
+        pbe = CustomFunctional(Vasp, standard)
+        pbe_single = CustomFunctional(Vasp, standard + [single_point, all_output])
+        names = ['1_pbe', '2_pbe_singlepoint']
+        super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
 spins = {
     'Sc' : 1,

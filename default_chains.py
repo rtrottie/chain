@@ -365,6 +365,7 @@ def load_default_vasp(vasp: Vasp,structure=None):
     vasp.convergence = 1.0e-5
     vasp.algo = "Normal"
     vasp.lorbit=11
+    vasp.nsw = 5000
     return(vasp)
 
 def all_output(vasp, structure=None):

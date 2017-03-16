@@ -17,6 +17,9 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "O",  pseudoDir + "/O"
     vasp.add_specie = "Al", pseudoDir + "/Al"
     vasp.add_specie = "H", pseudoDir + "/H"
+    
+    vasp.add_specie = "Sr", pseudoDir + "/Sr_sv"
+    vasp.add_specie = "La", pseudoDir + "/La" # TODO Determine U
     return(vasp)
 
 class WSBulkChain(SpinCustomChain):

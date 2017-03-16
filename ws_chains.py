@@ -167,6 +167,7 @@ def ws_bulk(vasp: Vasp, structure):
     vasp.sigma = 0.01
     vasp.ldau = True
     vasp.maxmix = 200
+    vasp.isym = 0
     return vasp
 
 def ws_surface(vasp: Vasp, structure):

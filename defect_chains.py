@@ -148,4 +148,5 @@ def load_species(vasp : Vasp, structure):
     vasp.add_specie = "As", pseudoDir + "/As"
     vasp.add_specie = "In", pseudoDir + "/In"
     vasp.add_specie = "P", pseudoDir + "/P"
+    vasp.add_specie = "Bi", pseudoDir + "/Bi_d"
     return(vasp)

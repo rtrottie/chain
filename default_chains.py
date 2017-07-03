@@ -495,7 +495,7 @@ def single_point_hse(vasp: Vasp, structure=None):
     vasp.nsw = 0
     vasp.ediff = 1e-5
     vasp.ismear = -5
-    vasp.algo = Damped
+    vasp.algo = 'Damped'
     vasp.add_keyword('lmaxmix', None)
     vasp.add_keyword('iopt', 0)
     return vasp

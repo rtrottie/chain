@@ -482,6 +482,19 @@ def single_point(vasp: Vasp, structure=None):
     vasp.add_keyword('iopt', 0)
     return vasp
 
+def single_point_hse(vasp: Vasp, structure=None):
+    vasp.istart = 1
+    vasp.icharg = 1
+    vasp.ibrion = -1
+    vasp.nelmin = 3
+    vasp.nsw = 0
+    vasp.ediff = 1e-5
+    vasp.ismear = -5
+    vasp.algo = Damped
+    vasp.add_keyword('lmaxmix', None)
+    vasp.add_keyword('iopt', 0)
+    return vasp
+
 def cell_relax(vasp: Vasp, structure=None):
     vasp.isif = 3
     vasp.ibrion = 1

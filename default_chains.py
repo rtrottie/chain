@@ -458,6 +458,10 @@ def set_npar_2(vasp: Vasp, structure=None):
     vasp.npar = 2
     return vasp
 
+def set_npar_1(vasp: Vasp, structure=None):
+    vasp.npar = 1
+    return vasp
+
 def set_isym_0(vasp: Vasp, structure=None):
     vasp.isym =  0
     return vasp

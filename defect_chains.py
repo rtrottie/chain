@@ -88,7 +88,7 @@ class BulkPBE(OptimizedParametersChain):
 
 class BulkHSE(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, cell_relax, bulk_standard, load_species, set_kpar_per_node, set_npar_1]
+        standard = [load_default_vasp, cell_relax, bulk_standard, load_species, set_kpar_per_node, set_npar_2]
         # pbe = CustomFunctional(Vasp, standard)
         hse = CustomFunctional(Vasp, standard + [hse06])
         hse_single = CustomFunctional(Vasp, standard + [hse06, single_point_hse, all_output])

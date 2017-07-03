@@ -118,7 +118,7 @@ class DefectHSE_large(CustomChain):
 def bulk_standard(vasp: Vasp, structure):
     # Electronic
     vasp.add_keyword('GGA', 'PS')
-    vasp.ismear = -5
+    vasp.ismear = 0
     vasp.prec = "Accurate"
     vasp.nelm = 60
     vasp.ediff = 1e-5

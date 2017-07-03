@@ -437,6 +437,7 @@ def hse06(vasp: Vasp, structure=None):
     vasp.ldau = False
     vasp.lwave = True
     vasp.lcharg = True
+    vasp.ismear = 0
     return vasp
 
 def no_hse06(vasp: Vasp, structure=None):

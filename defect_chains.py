@@ -91,7 +91,7 @@ class BulkHSE(OptimizedParametersChain):
         standard = [load_default_vasp, cell_relax, bulk_standard, load_species, set_npar_2, set_kpar_per_node]
         # pbe = CustomFunctional(Vasp, standard)
         hse = CustomFunctional(Vasp, standard + [hse06, set_npar_2])
-        hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output, set_npar_2])
+        hse_single = CustomFunctional(Vasp, standard + [hse06, single_point_hse, all_output, set_npar_2])
         names = ['1_hse', '2_hse_singlepoint']
         super().__init__([hse, hse_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
@@ -118,7 +118,7 @@ class DefectHSE_large(CustomChain):
 def bulk_standard(vasp: Vasp, structure):
     # Electronic
     vasp.add_keyword('GGA', 'PS')
-    vasp.ismear = 0
+    vasp.ismear = -5
     vasp.prec = "Accurate"
     vasp.nelm = 60
     vasp.ediff = 1e-5

@@ -111,7 +111,7 @@ class DefectHSE_large(CustomChain):
         pbe = CustomFunctional(Vasp, standard)
         pbe_single = CustomFunctional(Vasp, standard + [single_point, all_output])
         hse = CustomFunctional(Vasp, standard + [hse06])
-        hse_single = CustomFunctional(Vasp, standard + [hse06, single_point, all_output])
+        hse_single = CustomFunctional(Vasp, standard + [hse06, single_point_hse, all_output])
         names = ['1_pbe', '2_pbe_singlepoint', '3_hse', '4_hse_singlepoint']
         super().__init__([pbe, pbe_single, hse, hse_single], names=names, vaspobj=vaspobj )
 

@@ -593,11 +593,11 @@ def full_converge(vasp: Vasp, structure=None):
     # Electronic
     vasp.prec = "Accurate"
     vasp.nelm = 200
-    vasp.ediff = 1e-5
+    vasp.ediff = 1e-6
     vasp.nelmdl = 0
     # Ionic
     vasp.nsw = 5000
-    vasp.ediffg = -0.03
+    vasp.ediffg = -0.01
     # Output
     vasp.lwave = True
     vasp.lcharg = True

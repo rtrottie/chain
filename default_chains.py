@@ -321,7 +321,6 @@ class SpinCustomChain(CustomChain):
                 energy = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
                 print('NUPDOWN check {} found \n    energy: {}'.format(nup, energy))
                 energies[nup] = energy
-                break
             except:  # if the directory does not have the information, run vasp
                 def set_nupdown(vasp: Vasp, structure=None):
                     vasp.nupdown = nup

@@ -316,8 +316,11 @@ class SpinCustomChain(CustomChain):
         for nup in self.nupdowns:  # Check energies of various spin configurations
             nupdown_outdir = os.path.join(outdir, str(nup))
             names = [ str(x) for x in range(len(self.nupdown_functionals)) ]
+            energy = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
             try: # Load answer from directory if it is present
-                energies[nup] = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
+                energy = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
+                print('NUPDOWN check () found \n    energy: {}'.format(nup, energy))
+                energies[nup] = energy
                 break
             except:  # if the directory does not have the information, run vasp
                 def set_nupdown(vasp: Vasp, structure=None):
@@ -326,7 +329,9 @@ class SpinCustomChain(CustomChain):
                 for x in self.nupdown_functionals: # Set nupdown
                     x.modifications.append(set_nupdown)
                 super().__call__(structure, outdir=nupdown_outdir, functionals=self.nupdown_functionals, names=names)
-                energies[nup] = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
+                energy = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
+                print('NUPDOWN check () Complete \n    energy: {}'.format(nup, energy))
+                energies[nup] = energy
         if energies:
             nup = min(energies.keys(), key=(lambda key: energies[key]) )
             def set_nupdown(vasp: Vasp, structure=None):

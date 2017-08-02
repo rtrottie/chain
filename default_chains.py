@@ -313,6 +313,7 @@ class SpinCustomChain(CustomChain):
 
     def __call__(self, structure, outdir=None, **kwargs):
         energies = {}
+        print('Checking NUPDOWNS {}'.format(self.nupdowns))
         for nup in self.nupdowns:  # Check energies of various spin configurations
             nupdown_outdir = os.path.join(outdir, str(nup))
             names = [ str(x) for x in range(len(self.nupdown_functionals)) ]

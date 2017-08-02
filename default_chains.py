@@ -317,7 +317,6 @@ class SpinCustomChain(CustomChain):
         for nup in self.nupdowns:  # Check energies of various spin configurations
             nupdown_outdir = os.path.join(outdir, str(nup))
             names = [ str(x) for x in range(len(self.nupdown_functionals)) ]
-            energy = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
             try: # Load answer from directory if it is present
                 energy = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
                 print('NUPDOWN check {} found \n    energy: {}'.format(nup, energy))

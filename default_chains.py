@@ -432,7 +432,7 @@ def set_algo_conj(vasp: Vasp, structure=None):
 
 def set_algo_damp(vasp: Vasp, structure=None):
     vasp.algo = "Damped"
-    vasp.add_keyword('time', 0.25)
+    vasp.add_keyword('time', 0.5)
     return vasp
 
 def hse06(vasp: Vasp, structure=None):

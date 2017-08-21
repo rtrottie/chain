@@ -449,10 +449,18 @@ def hse06(vasp: Vasp, structure=None):
     vasp.ismear = 0
     return vasp
 
+
 def no_hse06(vasp: Vasp, structure=None):
     vasp.add_keyword('lhfcalc', False)
     vasp.algo = 'Normal'
     vasp.ldau = True
+    return vasp
+
+def scan(vasp: Vasp, structure=None):
+    vasp.add_keyword('metagga', 'SCAN')
+    vasp.add_keyword('lhfcalc', False)
+    vasp.algo = 'Normal'
+    vasp.ldau = False
     return vasp
 
 def set_dos(vasp: Vasp, structure=None):
@@ -693,3 +701,29 @@ def set_single_neb(vasp: Vasp, structure=None):
     vasp.add_keyword('images', 1)
     vasp.add_keyword('lclimb', True)
     return vasp
+
+
+##########
+# POTCAR #
+##########
+
+def no_U(vasp: Vasp, structure : Structure):
+    pseudoDir = '$PSEUDO_DIR'
+    vasp.add_specie = "Sc", pseudoDir + "/Sc_sv"
+    vasp.add_specie = "Ti", pseudoDir + "/Ti_pv"
+    vasp.add_specie = "V", pseudoDir + "/V_pv"
+    vasp.add_specie = "Cr", pseudoDir + "/Cr_pv"
+    vasp.add_specie = "Mn", pseudoDir + "/Mn_pv"
+    vasp.add_specie = "Fe", pseudoDir + "/Fe_pv"
+    vasp.add_specie = "Co", pseudoDir + "/Co_pv"
+    vasp.add_specie = "Ni", pseudoDir + "/Ni_pv"
+    vasp.add_specie = "Cu", pseudoDir + "/Cu_pv"
+    vasp.add_specie = "Zn", pseudoDir + "/Zn"
+    vasp.add_specie = "O", pseudoDir + "/O"
+    vasp.add_specie = "Al", pseudoDir + "/Al"
+    vasp.add_specie = "H", pseudoDir + "/H"
+
+    vasp.add_specie = "Sr", pseudoDir + "/Sr_sv"
+    vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
+    vasp.add_specie = "La", pseudoDir + "/La"
+    return (vasp)

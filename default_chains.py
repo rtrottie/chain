@@ -461,6 +461,7 @@ def scan(vasp: Vasp, structure=None):
     vasp.add_keyword('lhfcalc', False)
     vasp.algo = 'Normal'
     vasp.ldau = False
+    no_U(vasp, structure)
     return vasp
 
 def set_dos(vasp: Vasp, structure=None):

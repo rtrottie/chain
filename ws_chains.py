@@ -124,6 +124,14 @@ class WSBulkPBE(OptimizedParametersChain):
         names = ['1_pbe', '2_pbe_singlepoint']
         super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
+class WSBulkSCAN(OptimizedParametersChain):
+    def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
+        standard = [load_default_vasp, cell_relax, ws_bulk, scan]
+        pbe = CustomFunctional(Vasp, standard)
+        pbe_single = CustomFunctional(Vasp, standard + [single_point, all_output])
+        names = ['1_pbe', '2_pbe_singlepoint']
+        super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
+
 spins = {
     'Sc' : 1,
     'Ti' : 2,

@@ -435,6 +435,12 @@ def set_algo_damp(vasp: Vasp, structure=None):
     vasp.add_keyword('time', 0.5)
     return vasp
 
+def set_algo_damp075(vasp: Vasp, structure=None):
+    vasp.algo = "Damped"
+    vasp.add_keyword('time', 0.75)
+    return vasp
+
+
 def hse06(vasp: Vasp, structure=None):
     vasp.nelmdl = 0
     vasp.nelm = 1000

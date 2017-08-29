@@ -408,12 +408,12 @@ def set_kpar_by_core(vasp: Vasp, structure=None):
     np = int(os.environ['PBS_NP'])
     atoms = len(structure)
     if np / atoms > 1:
-        kpar = math.ceil(np/atoms)
+        kpar = math.ceil(np/math.sqrt(atoms))
         kpoint_str = vasp.kpoints.split('\n')[3]
         kpoints = [ int(x) for x in kpoint_str.split() ]
         num_kpoints = kpoints[0] * kpoints[1] * kpoints[2]
         while kpar > 1:
-            if num_kpoints % kpar == 0 and np % kpar ==0:
+            if (num_kpoints % kpar == 0) and (np % kpar == 0):
                 vasp.add_keyword('kpar', kpar)
                 return vasp
             else:

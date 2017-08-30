@@ -131,7 +131,7 @@ class WSSurfaceChain_gamma_dimer(WSSurfaceChain):
 
 class WSBulkPBE(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, cell_relax, ws_bulk, load_optimized_U_species]
+        standard = [load_default_vasp, cell_relax, ws_bulk, load_optimized_U_species, set_kpar_by_core]
         pbe = CustomFunctional(Vasp, standard)
         pbe_single = CustomFunctional(Vasp, standard + [single_point, all_output])
         names = ['1_pbe', '2_pbe_singlepoint']
@@ -139,7 +139,7 @@ class WSBulkPBE(OptimizedParametersChain):
 
 class WSBulkSCAN(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, cell_relax, ws_bulk, scan]
+        standard = [load_default_vasp, cell_relax, ws_bulk, scan, set_kpar_by_core]
         pbe = CustomFunctional(Vasp, standard)
         pbe_single = CustomFunctional(Vasp, standard + [single_point, all_output])
         names = ['1_pbe', '2_pbe_singlepoint']

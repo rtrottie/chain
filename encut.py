@@ -51,6 +51,10 @@ def set_650(vasp: Vasp, structure=None):
     return vasp
 
 def set_700(vasp: Vasp, structure=None):
+    vasp.encut = 700
+    return vasp
+
+def set_750(vasp: Vasp, structure=None):
     vasp.encut = 750
     return vasp
 
@@ -63,5 +67,5 @@ def set_850(vasp: Vasp, structure=None):
     return vasp
 
 def set_900(vasp: Vasp, structure=None):
-    vasp.encut = 950
+    vasp.encut = 900
     return vasp

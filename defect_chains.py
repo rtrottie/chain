@@ -77,7 +77,6 @@ class AEXX(CustomChain):
             f.write('AEXX = {}'.format(aexx))
         return aexx
 
-
 class BulkPBE(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, cell_relax, bulk_standard, load_species, set_kpar_per_node, set_npar_2]
@@ -136,6 +135,35 @@ def bulk_standard(vasp: Vasp, structure):
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
     return vasp
 
+def mnte_standard(vasp: Vasp, structure):
+    # Electronic
+    vasp.add_keyword('METAGGA', 'SCAN')
+    vasp.ismear = -5
+    vasp.prec = "Accurate"
+    vasp.nelm = 60
+    vasp.ediff = 1e-5
+    vasp.nelmdl = 0
+    # Ionic
+    vasp.nsw = 5000
+    vasp.ediffg = -0.01
+    # Output
+    vasp.lwave = True
+    vasp.lcharg = True
+
+    #TODO: Get these automatically
+    x=24; y='' ; z=''
+    packing = 'Auto'
+    vasp.kpoints = "Automatic\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    return vasp
+
+class DefectMnTeSCAN(CustomChain):
+    def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
+        standard = [load_default_vasp, mnte_standard, load_species, set_kpar_auto, set_iopt_7, set_isym_0] + standard
+        scan = CustomFunctional(Vasp, standard)
+        scan_single = CustomFunctional(Vasp, standard + [single_point, all_output])
+        names = ['1_scan', '2_scan_singlepoint']
+        super().__init__([scan, scan_single], names=names, vaspobj=vaspobj )
+
 def load_species(vasp : Vasp, structure):
     # See vasp/functional.py:  elementName, fileName, max or min oxidation state
     pseudoDir = '$PSEUDO_DIR'
@@ -148,5 +176,32 @@ def load_species(vasp : Vasp, structure):
     vasp.add_specie = "As", pseudoDir + "/As"
     vasp.add_specie = "In", pseudoDir + "/In"
     vasp.add_specie = "P", pseudoDir + "/P"
+    vasp.add_specie = "Te", pseudoDir + "/Te"
     vasp.add_specie = "Bi", pseudoDir + "/Bi_d"
+    vasp.add_specie = "Mn_+", pseudoDir + "/Mn_pv"
+    vasp.add_specie = "Mn_-", pseudoDir + "/Mn_pv"
     return(vasp)
+
+def load_species_mnte_dummy_fe(vasp : Vasp, structure):
+    # See vasp/functional.py:  elementName, fileName, max or min oxidation state
+    pseudoDir = '$PSEUDO_DIR'
+    vasp.add_specie = "Te", pseudoDir + "/Te"
+    vasp.add_specie = "Bi", pseudoDir + "/Bi_d"
+    vasp.add_specie = "Mn", pseudoDir + "/Mn_pv"
+    vasp.add_specie = "Fe", pseudoDir + "/Mn_pv"
+    return(vasp)
+
+spins = {
+    'Mn' :  5,
+    'Fe' : -5,
+    'Te' : 0
+}
+
+
+def set_spin(vasp, structure):
+    vasp.ispin = 2
+    vasp.magmom = True
+    for a in structure:
+        if a.type in spins:
+            a.magmom = spins[a.type]
+    return vasp

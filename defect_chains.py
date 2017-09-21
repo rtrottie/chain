@@ -143,6 +143,7 @@ def mnte_standard(vasp: Vasp, structure):
     vasp.nelm = 60
     vasp.ediff = 1e-5
     vasp.nelmdl = 0
+    vasp.ispin = 2
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.01

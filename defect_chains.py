@@ -144,6 +144,7 @@ def mnte_standard(vasp: Vasp, structure):
     vasp.ediff = 1e-5
     vasp.nelmdl = 0
     vasp.add_keyword('KPAR', 2)
+    vasp.ispin = 2
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.01

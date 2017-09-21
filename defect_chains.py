@@ -143,7 +143,7 @@ def mnte_standard(vasp: Vasp, structure):
     vasp.nelm = 60
     vasp.ediff = 1e-5
     vasp.nelmdl = 0
-    vasp.ispin = 2
+    vasp.add_keyword('KPAR', 2)
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.01
@@ -159,7 +159,7 @@ def mnte_standard(vasp: Vasp, structure):
 
 class DefectMnTeSCAN(CustomChain):
     def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, mnte_standard, load_species_mnte_dummy_fe, set_kpar_auto, set_iopt_7, set_isym_0] + standard
+        standard = [load_default_vasp, mnte_standard, load_species_mnte_dummy_fe, set_iopt_7, set_isym_0] + standard
         scan = CustomFunctional(Vasp, standard)
         scan_single = CustomFunctional(Vasp, standard + [single_point, all_output])
         names = ['1_scan', '2_scan_singlepoint']

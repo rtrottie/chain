@@ -158,6 +158,24 @@ def mnte_standard(vasp: Vasp, structure):
     vasp.kpoints = "Automatic\n0\n{}\n{} {} {}".format(packing, x, y, z)
     return vasp
 
+
+
+def set_spin(vasp, structure):
+    spins = {
+        'Mn': 5,
+        'Fe': -5,
+        'Te': 0
+    }
+    vasp.ispin = 2
+    vasp.magmom = True
+    for i in range(len(structure)):
+        a = structure[i]
+        if a.type in spins:
+            a.magmom = spins[a.type]
+        if a.type == 'Fe':
+            structure[i].type = 'Mn'
+    return vasp
+
 class DefectMnTeSCAN(CustomChain):
     def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, mnte_standard, set_spin, load_species_mnte_dummy_fe, set_iopt_7, set_isym_0] + standard
@@ -189,21 +207,7 @@ def load_species_mnte_dummy_fe(vasp : Vasp, structure):
     pseudoDir = '$PSEUDO_DIR'
     vasp.add_specie = "Te", pseudoDir + "/Te"
     vasp.add_specie = "Mn", pseudoDir + "/Mn_pv"
+    vasp.add_specie = "Fe", pseudoDir + "/Mn_pv"
     return(vasp)
 
-spins = {
-    'Mn' :  5,
-    'Fe' : -5,
-    'Te' : 0
-}
 
-def set_spin(vasp, structure):
-    vasp.ispin = 2
-    vasp.magmom = True
-    for i in range(len(structure)):
-        a = structure[i]
-        if a.type in spins:
-            a.magmom = spins[a.type]
-        if a.type == 'Fe':
-            structure[i].type = 'Mn'
-    return vasp

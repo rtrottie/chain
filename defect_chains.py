@@ -200,7 +200,7 @@ spins = {
 def set_spin(vasp, structure):
     vasp.ispin = 2
     vasp.magmom = True
-    for i in len(structure):
+    for i in range(len(structure)):
         a = structure[i]
         if a.type in spins:
             a.magmom = spins[a.type]

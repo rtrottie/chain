@@ -160,7 +160,7 @@ def mnte_standard(vasp: Vasp, structure):
 
 class DefectMnTeSCAN(CustomChain):
     def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, mnte_standard, load_species_mnte_dummy_fe, set_iopt_7, set_isym_0] + standard
+        standard = [load_default_vasp, mnte_standard, set_spin, load_species_mnte_dummy_fe, set_iopt_7, set_isym_0] + standard
         scan = CustomFunctional(Vasp, standard)
         scan_single = CustomFunctional(Vasp, standard + [single_point, all_output])
         names = ['1_scan', '2_scan_singlepoint']
@@ -188,9 +188,7 @@ def load_species_mnte_dummy_fe(vasp : Vasp, structure):
     # See vasp/functional.py:  elementName, fileName, max or min oxidation state
     pseudoDir = '$PSEUDO_DIR'
     vasp.add_specie = "Te", pseudoDir + "/Te"
-    vasp.add_specie = "Bi", pseudoDir + "/Bi_d"
     vasp.add_specie = "Mn", pseudoDir + "/Mn_pv"
-    vasp.add_specie = "Fe", pseudoDir + "/Mn_pv"
     return(vasp)
 
 spins = {

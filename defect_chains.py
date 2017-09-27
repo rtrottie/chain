@@ -205,4 +205,6 @@ def set_spin(vasp, structure):
     for a in structure:
         if a.type in spins:
             a.magmom = spins[a.type]
+        if a.type == 'Fe':
+            a.type = 'Mn'
     return vasp

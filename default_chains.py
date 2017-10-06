@@ -475,7 +475,7 @@ def hse06(vasp: Vasp, structure=None):
     vasp.lwave = True
     vasp.lcharg = True
     vasp.ismear = 0
-    vasp.add_keyword('metagga', None)
+    vasp.add_keyword('metagga', False)
     return vasp
 
 

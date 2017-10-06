@@ -475,6 +475,7 @@ def hse06(vasp: Vasp, structure=None):
     vasp.lwave = True
     vasp.lcharg = True
     vasp.ismear = 0
+    vasp.add_keyword('metagga', None)
     return vasp
 
 
@@ -490,6 +491,13 @@ def scan(vasp: Vasp, structure=None):
     vasp.algo = 'Normal'
     vasp.ldau = False
     no_U(vasp, structure)
+    return vasp
+
+def ggau(vasp: Vasp, structure=None):
+    vasp.add_keyword('metagga', None)
+    vasp.add_keyword('lhfcalc', False)
+    vasp.algo = 'Normal'
+    vasp.ldau = True
     return vasp
 
 def set_dos(vasp: Vasp, structure=None):

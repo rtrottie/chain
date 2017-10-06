@@ -13,6 +13,7 @@ import os
 import math
 from default_chains import *
 from pymatgen.io.vasp.outputs import Vasprun
+from ws_chains import load_optimized_U_species
 from Classes_Pymatgen import Incar
 
 class AEXX(CustomChain):
@@ -145,6 +146,7 @@ def mnte_standard(vasp: Vasp, structure):
     vasp.nelmdl = 0
     vasp.add_keyword('KPAR', 2)
     vasp.ispin = 2
+    vasp.encut=800
     # Ionic
     vasp.nsw = 5000
     vasp.ediffg = -0.01
@@ -176,13 +178,24 @@ def set_spin(vasp, structure):
             structure[i].type = 'Mn'
     return vasp
 
+# class DefectMnTeSCAN(CustomChain):
+#     def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
+#         standard = [load_default_vasp, mnte_standard, set_spin, load_species_mnte_dummy_fe, set_iopt_7, set_isym_0] + standard
+#         scan = CustomFunctional(Vasp, standard)
+#         scan_single = CustomFunctional(Vasp, standard + [single_point, all_output])
+#         names = ['1_scan', '2_scan_singlepoint']
+#         super().__init__([scan, scan_single], names=names, vaspobj=vaspobj )
+
 class DefectMnTeSCAN(CustomChain):
     def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, mnte_standard, set_spin, load_species_mnte_dummy_fe, set_iopt_7, set_isym_0] + standard
         scan = CustomFunctional(Vasp, standard)
         scan_single = CustomFunctional(Vasp, standard + [single_point, all_output])
-        names = ['1_scan', '2_scan_singlepoint']
-        super().__init__([scan, scan_single], names=names, vaspobj=vaspobj )
+        dftu = CustomFunctional(Vasp, standard + [ggau, load_optimized_U_species])
+        dftu_single = CustomFunctional(Vasp, standard + [all_output, ggau, load_optimized_U_species, single_point])
+        hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp, set_nkred_222, all_output] + override)
+        names = ['1_scan', '2_scan_singlepoint', '3_hse_singlepoint', '4_ggau', '5_ggau_single']
+        super().__init__([scan, scan_single, hse, dftu, dftu_single], names=names, vaspobj=vaspobj )
 
 def load_species(vasp : Vasp, structure):
     # See vasp/functional.py:  elementName, fileName, max or min oxidation state

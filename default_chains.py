@@ -718,7 +718,7 @@ def set_nkred_221(vasp: Vasp, structure=None):
     vasp.add_keyword('nkredx', 2)
     vasp.add_keyword('nkredy', 2)
     vasp.add_keyword('kpar', 1)
-    vasp.ismear = 0
+    vasp.ismear =  0
     return vasp
 
 def unset_nkred(vasp: Vasp, structure=None):

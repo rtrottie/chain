@@ -705,17 +705,20 @@ def gamma_optimization(vasp: Vasp, structure = None):
 def set_nkred_222(vasp: Vasp, structure=None):
     vasp.add_keyword('nkred', 2)
     vasp.ismear = 0
+    vasp.add_keyword('kpar', 1)
     return vasp
 
 def set_nkred_333(vasp: Vasp, structure=None):
     vasp.add_keyword('nkred', 3)
+    vasp.add_keyword('kpar', 1)
     vasp.ismear =  0
     return vasp
 
 def set_nkred_221(vasp: Vasp, structure=None):
     vasp.add_keyword('nkredx', 2)
     vasp.add_keyword('nkredy', 2)
-    vasp.ismear = 0
+    vasp.add_keyword('kpar', 1)
+    vasp.ismear =  0
     return vasp
 
 def unset_nkred(vasp: Vasp, structure=None):

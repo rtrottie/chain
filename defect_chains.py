@@ -188,7 +188,7 @@ def set_spin(vasp, structure):
 
 class DefectMnTeSCAN(CustomChain):
     def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, mnte_standard, set_spin, load_species_mnte_dummy_fe, set_iopt_7, set_isym_0] + standard
+        standard = [load_default_vasp, mnte_standard, set_spin, load_species_mnte_dummy_fe, set_iopt_7, set_isym_0, set_222] + standard
         scan = CustomFunctional(Vasp, standard)
         scan_single = CustomFunctional(Vasp, standard + [single_point, all_output])
         dftu = CustomFunctional(Vasp, standard + [ggau, load_optimized_U_species])

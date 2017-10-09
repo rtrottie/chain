@@ -155,7 +155,7 @@ def mnte_standard(vasp: Vasp, structure):
     vasp.lcharg = True
 
     #TODO: Get these automatically
-    x=22; y='' ; z=''
+    x=22v; y='' ; z=''
     packing = 'Auto'
     vasp.kpoints = "Automatic\n0\n{}\n{} {} {}".format(packing, x, y, z)
     return vasp

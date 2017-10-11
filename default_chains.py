@@ -442,7 +442,6 @@ def set_algo_all(vasp: Vasp, structure=None):
 
 def set_algo_fast(vasp: Vasp, structure=None):
     vasp.algo = "Fast"
-    vasp.add_keyword('nsim', 8)
     return vasp
 
 def set_algo_conj(vasp: Vasp, structure=None):

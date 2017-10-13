@@ -149,7 +149,7 @@ def mnte_standard(vasp: Vasp, structure):
     vasp.encut=800
     # Ionic
     vasp.nsw = 5000
-    vasp.ediffg = -0.01
+    vasp.ediffg = -0.02
     # Output
     vasp.lwave = True
     vasp.lcharg = True

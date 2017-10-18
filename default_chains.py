@@ -441,6 +441,7 @@ def set_algo_all(vasp: Vasp, structure=None):
     return vasp
 
 def set_algo_fast(vasp: Vasp, structure=None):
+    vasp.add_keyword('nsim', 8)
     vasp.algo = "Fast"
     return vasp
 
@@ -774,3 +775,17 @@ def no_U(vasp: Vasp, structure : Structure):
     vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
     vasp.add_specie = "La", pseudoDir + "/La"
     return (vasp)
+
+##############
+# VIBRATIONS #
+##############
+
+def vibrations_disp(vasp: Vasp, structure : Structure):
+    vasp.ibrion = 5
+    vasp.istart = 1
+    vasp.icharg = 1
+    vasp.nelmin = 3
+    vasp.nsw = 0
+    vasp.ediff = 1e-8
+    vasp.add_keyword('iopt', 0)
+    return vasp

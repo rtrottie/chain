@@ -91,7 +91,7 @@ class WSBulkChain_anti(CustomChain):
         return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse], names=names)
 
 class WSSurfaceChain(CustomChain):
-    def __init__(self, vaspobj: Vasp, standard = [], override = []):
+    def __init__(self, vaspobj: Vasp, standard = [], override = [], additional_names=[], addition_steps=[]):
         spin = ferro_spin
         standard = [load_default_vasp, ws_standard, ws_surface, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7, set_kpar_auto] + standard
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast] + override)
@@ -104,7 +104,7 @@ class WSSurfaceChain(CustomChain):
         return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge], names=names, vaspobj=vaspobj)
 
 class WSSurfaceChain_hse(CustomChain):
-    def __init__(self, vaspobj: Vasp, standard = [], override = []):
+    def __init__(self, vaspobj: Vasp, standard = [], override = [], additional_names=[], addition_steps=[]):
         spin = ferro_spin
         standard = [load_default_vasp, ws_standard, ws_surface, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7, set_kpar_auto] + standard
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast] + override)
@@ -115,11 +115,20 @@ class WSSurfaceChain_hse(CustomChain):
         hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp035, set_nkred_221, all_output] + override)
 #        dos = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp, set_nkred_221, tetrahedron, all_output, set_dos] + override)
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_hse']
-        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse], names=names, vaspobj=vaspobj)
+        additional_functionals = []
+        for i, step in enumerate(addition_steps):
+            names += additional_names[i]
+            additional_functionals = CustomFunctional(Vasp, standard + [step] + override)
+        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse]+additional_functionals, names=names, vaspobj=vaspobj)
 
 class WSSurfaceChain_unit(WSSurfaceChain):
     def __init__(self, vaspobj: Vasp):
         return  super().__init__(vaspobj, standard=[set_kpoints_auto_20])
+
+class WSSurfaceChain_unit_vib(WSSurfaceChain):
+    def __init__(self, vaspobj: Vasp):
+        additional_steps = [vibrations_disp, set_algo_fast]
+        return  super().__init__(vaspobj, standard=[set_kpoints_auto_20], addition_steps=additional_steps, additional_names=['vibration'])
 
 class WSSurfaceChain_gamma(WSSurfaceChain):
     def __init__(self, vaspobj : Vasp):

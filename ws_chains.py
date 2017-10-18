@@ -119,7 +119,7 @@ class WSSurfaceChain_hse(CustomChain):
 
 class WSSurfaceChain_unit(WSSurfaceChain):
     def __init__(self, vaspobj: Vasp):
-        return  super().__init__(vaspobj, standard=[set_441])
+        return  super().__init__(vaspobj, standard=[set_kpoints_auto_20])
 
 class WSSurfaceChain_gamma(WSSurfaceChain):
     def __init__(self, vaspobj : Vasp):

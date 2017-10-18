@@ -666,6 +666,12 @@ def set_prec_normal(vasp: Vasp, structure=None):
 # KPOINTS #
 ###########
 
+def set_kpoints_auto_20(vasp: Vasp, structure=None):
+    x=20
+    packing = 'Auto'
+    vasp.kpoints = "Automatic\n0\n{}\n{}".format(packing, x)
+    return vasp
+
 def set_gamma(vasp: Vasp, structure=None):
     x=1; y=1 ; z=1
     packing = 'Gamma'

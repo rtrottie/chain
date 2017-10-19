@@ -104,7 +104,7 @@ class WSSurfaceChain(CustomChain):
         additional_functionals = []
         for i, step in enumerate(addition_steps):
             names += additional_names[i]
-            additional_functionals += CustomFunctional(Vasp, standard + step + override)
+            additional_functionals += [CustomFunctional(Vasp, standard + step + override)]
         return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge] + additional_functionals, names=names, vaspobj=vaspobj)
 
 class WSSurfaceChain_hse(CustomChain):

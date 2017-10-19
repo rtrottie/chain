@@ -101,7 +101,11 @@ class WSSurfaceChain(CustomChain):
         final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output ] + override)
 #        dos = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp, set_nkred_221, tetrahedron, all_output, set_dos] + override)
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge']
-        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge], names=names, vaspobj=vaspobj)
+        additional_functionals = []
+        for i, step in enumerate(addition_steps):
+            names += additional_names[i]
+            additional_functionals += CustomFunctional(Vasp, standard + step + override)
+        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge] + additional_functionals, names=names, vaspobj=vaspobj)
 
 class WSSurfaceChain_hse(CustomChain):
     def __init__(self, vaspobj: Vasp, standard = [], override = [], additional_names=[], addition_steps=[]):
@@ -118,7 +122,7 @@ class WSSurfaceChain_hse(CustomChain):
         additional_functionals = []
         for i, step in enumerate(addition_steps):
             names += additional_names[i]
-            additional_functionals = CustomFunctional(Vasp, standard + [step] + override)
+            additional_functionals += CustomFunctional(Vasp, standard + step + override)
         return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse]+additional_functionals, names=names, vaspobj=vaspobj)
 
 class WSSurfaceChain_unit(WSSurfaceChain):
@@ -127,8 +131,8 @@ class WSSurfaceChain_unit(WSSurfaceChain):
 
 class WSSurfaceChain_unit_vib(WSSurfaceChain):
     def __init__(self, vaspobj: Vasp):
-        additional_steps = [vibrations_disp, set_algo_fast]
-        return  super().__init__(vaspobj, standard=[set_kpoints_auto_20], addition_steps=additional_steps, additional_names=['vibration'])
+        additional_steps = [[vibrations_disp, set_algo_fast]]
+        return  super().__init__(vaspobj, standard=[set_kpoints_auto_20], addition_steps=additional_steps, additional_names=['5_vibration'])
 
 class WSSurfaceChain_gamma(WSSurfaceChain):
     def __init__(self, vaspobj : Vasp):

@@ -119,11 +119,11 @@ class WSSurfaceChain_hse(CustomChain):
         hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp035, set_nkred_221, all_output] + override)
 #        dos = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp, set_nkred_221, tetrahedron, all_output, set_dos] + override)
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_hse']
-        additional_functionals = []
+        functionals    = [pre_converge,      bad_converge,       get_nopsin_eig, get_eigenvalues,     final_converge,     hse]
         for i, step in enumerate(addition_steps):
-            names += additional_names[i]
-            additional_functionals += [CustomFunctional(Vasp, standard + step + override)]
-        return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse]+additional_functionals, names=names, vaspobj=vaspobj)
+            names += [additional_names[i]]
+            functionals += [CustomFunctional(Vasp, standard + step + override)]
+        return super().__init__(functionals, names=names, vaspobj=vaspobj)
 
 class WSSurfaceChain_unit(WSSurfaceChain):
     def __init__(self, vaspobj: Vasp):

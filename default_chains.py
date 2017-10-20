@@ -422,6 +422,10 @@ def set_kpar_by_core(vasp: Vasp, structure=None):
     vasp.npar = int(nodes)
     return vasp
 
+def unset_kpar(vasp: Vasp, structure=None):
+    vasp.add_keyword('kpar', 1)
+    return vasp
+
 ##############
 # ELECTRONIC #
 ##############

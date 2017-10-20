@@ -204,7 +204,7 @@ class DefectMnTeSCAN(CustomChain):
         scan_single = CustomFunctional(Vasp, standard + [single_point, all_output])
         dftu = CustomFunctional(Vasp, standard + [set_algo_fast, ggau, load_optimized_U_species])
         dftu_single = CustomFunctional(Vasp, standard + [all_output, ggau, load_optimized_U_species, single_point])
-        hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp, set_nkred_222, all_output] + override)
+        hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp, set_npar_2, unset_kpar, all_output] + override)
         names = ['1_scan', '2_scan_singlepoint', '3_hse_singlepoint', '4_ggau', '5_ggau_single']
         super().__init__([scan, scan_single, hse, dftu, dftu_single], names=names, vaspobj=vaspobj )
 

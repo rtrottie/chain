@@ -141,7 +141,7 @@ def mnte_standard(vasp: Vasp, structure):
     vasp.add_keyword('METAGGA', 'SCAN')
     vasp.ismear = -5
     vasp.prec = "Accurate"
-    vasp.nelm = 60
+    vasp.nelm = 200
     vasp.ediff = 1e-5
     vasp.nelmdl = 0
     vasp.add_keyword('KPAR', 2)

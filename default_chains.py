@@ -789,7 +789,8 @@ def vibrations_disp(vasp: Vasp, structure : Structure):
     vasp.istart = 1
     vasp.icharg = 1
     vasp.nelmin = 3
-    vasp.nsw = 0
+    vasp.nsw = 1
+    vasp.potim = 0.015
     vasp.ediff = 1e-8
     vasp.add_keyword('iopt', 0)
     return vasp

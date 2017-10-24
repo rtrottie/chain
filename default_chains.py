@@ -481,6 +481,7 @@ def hse06(vasp: Vasp, structure=None):
     vasp.lcharg = True
     vasp.ismear = 0
     vasp.add_keyword('metagga', False)
+    vasp.add_keyword('ncore', 8)
     return vasp
 
 

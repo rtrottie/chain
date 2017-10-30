@@ -440,6 +440,17 @@ def set_algo_normal(vasp: Vasp, structure=None):
     vasp.algo = "Normal"
     return vasp
 
+def set_algo_normal_optimal_converge(vasp: Vasp, structure=None):
+    '''
+
+    :param vasp: Vasp
+    :param structure:
+    :return:
+    '''
+    vasp.algo = "Normal"
+    vasp.add_keyword('nsim', 1)
+    return vasp
+
 def set_algo_all(vasp: Vasp, structure=None):
     vasp.algo = "All"
     return vasp

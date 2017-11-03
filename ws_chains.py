@@ -55,7 +55,7 @@ class WSBulkChain_small(SpinCustomChain):
         get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen] + gamma + override)
         final_converge = CustomFunctional(Vasp, standard + [full_converge] + override)
         final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge] + gamma + override)
-        names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', final_step]
+        names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge']
         nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
         super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge],
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj)

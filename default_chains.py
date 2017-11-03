@@ -440,6 +440,17 @@ def set_algo_normal(vasp: Vasp, structure=None):
     vasp.algo = "Normal"
     return vasp
 
+def set_algo_normal_optimal_converge(vasp: Vasp, structure=None):
+    '''
+
+    :param vasp: Vasp
+    :param structure:
+    :return:
+    '''
+    vasp.algo = "Normal"
+    vasp.add_keyword('nsim', 1)
+    return vasp
+
 def set_algo_all(vasp: Vasp, structure=None):
     vasp.algo = "All"
     return vasp
@@ -466,6 +477,11 @@ def set_algo_damp075(vasp: Vasp, structure=None):
 def set_algo_damp035(vasp: Vasp, structure=None):
     vasp.algo = "Damped"
     vasp.add_keyword('time', 0.35)
+    return vasp
+
+def set_algo_damp025(vasp: Vasp, structure=None):
+    vasp.algo = "Damped"
+    vasp.add_keyword('time', 0.25)
     return vasp
 
 def hse06(vasp: Vasp, structure=None):

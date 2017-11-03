@@ -200,11 +200,11 @@ class DefectMnTeSCAN_noHSE(CustomChain):
 class DefectMnTeSCAN(CustomChain):
     def __init__(self, vaspobj: Vasp, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, mnte_standard, set_spin, load_species_mnte_dummy_fe, set_iopt_7, set_isym_0, set_222, set_kpar_auto] + standard
-        scan = CustomFunctional(Vasp, standard + [set_algo_damp])
-        scan_single = CustomFunctional(Vasp, standard + [single_point, all_output])
+        scan = CustomFunctional(Vasp, standard + [set_algo_normal_optimal_converge])
+        scan_single = CustomFunctional(Vasp, standard + [single_point, all_output, set_algo_normal_optimal_converge])
         dftu = CustomFunctional(Vasp, standard + [set_algo_fast, ggau, load_optimized_U_species])
         dftu_single = CustomFunctional(Vasp, standard + [all_output, ggau, load_optimized_U_species, single_point])
-        hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp, set_npar_2, unset_kpar, all_output, set_ncore_12, set_nkred_222] + override)
+        hse = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp025, set_npar_2, unset_kpar, all_output, set_ncore_12, set_nkred_222] + override)
         names = ['1_scan', '2_scan_singlepoint', '3_hse_singlepoint', '4_ggau', '5_ggau_single']
         super().__init__([scan, scan_single, hse, dftu, dftu_single], names=names, vaspobj=vaspobj )
 

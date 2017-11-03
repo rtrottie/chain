@@ -42,6 +42,25 @@ class WSBulkChain(SpinCustomChain):
         super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj)
 
+class WSBulkChain_small(SpinCustomChain):
+    def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], final_step='5_hse' ):
+        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_444, set_iopt_7]
+        gamma = [set_gamma, gamma_optimization]
+        pre_converge   = CustomFunctional(Vasp, standard + [awful_converge] + gamma + override)
+        bad_converge   = CustomFunctional(Vasp, standard + [rough_converge] + override)
+        bad_converge_gamma   = CustomFunctional(Vasp, standard + [rough_converge] + gamma + override)
+        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin] + override)
+        get_nopsin_eig_gamma = CustomFunctional(Vasp, standard + [get_eigen_nospin] + gamma + override)
+        get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen] + override)
+        get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen] + gamma + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge] + override)
+        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge] + gamma + override)
+        # hse            = CustomFunctional(Vasp, standard + [hse06, set_algo_damp, set_nkred_222] + override + [single_point])
+        names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', final_step]
+        nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
+        super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],
+                         nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj)
+
 class TSWSBulkChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp, nupdowns, initial, final, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7, set_single_neb]

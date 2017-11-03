@@ -703,6 +703,12 @@ def set_333(vasp: Vasp, structure=None):
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
     return vasp
 
+def set_444(vasp: Vasp, structure=None):
+    x=2; y=2 ; z=2
+    packing = 'Gamma'
+    vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    return vasp
+
 def set_221(vasp: Vasp, structure=None):
     x=2; y=2 ; z=1
     packing = 'Gamma'

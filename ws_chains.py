@@ -213,7 +213,7 @@ def ferro_spin(vasp, structure):
 
 def ws_bulk(vasp: Vasp, structure):
     vasp.prec = 'Accurate'
-    vasp.encut = 500
+    vasp.encut = 600
     vasp.ediff = 1e-6
     vasp.ispin = 2
     vasp.magmom = True

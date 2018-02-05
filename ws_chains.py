@@ -20,6 +20,8 @@ def load_optimized_U_species(vasp : Vasp, structure):
     
     vasp.add_specie = "Sr", pseudoDir + "/Sr_sv"
     vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
+    vasp.add_specie = "Bi", pseudoDir + "/Bi_d"
+    vasp.add_specie = "Ge", pseudoDir + "/Ge_d"
     vasp.add_specie = "Sb", pseudoDir + "/Sb"
     vasp.add_specie = "Ca", pseudoDir + "/Ca_pv"
     vasp.add_specie = "In", pseudoDir + "/In_d"

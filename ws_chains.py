@@ -139,7 +139,7 @@ class WSSurfaceChain(SpinCustomChain):
         get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal] + override + gamma)
         final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output] + override + gamma)
         nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
-        super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],
+        super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, dos],
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj)
         return super().__init__(functionals, names=names, vaspobj=vaspobj)
 

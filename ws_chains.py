@@ -117,21 +117,30 @@ class WSBulkChain_anti(CustomChain):
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_hse']
         return super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse], names=names)
 
-class WSSurfaceChain(CustomChain):
-    def __init__(self, vaspobj: Vasp, standard = [], override = [], additional_names=[], addition_steps=[]):
+class WSSurfaceChain(SpinCustomChain):
+    def __init__(self, vaspobj: Vasp, nupdowns, standard=[], override=[], additional_names=[], addition_steps=[]):
         spin = ferro_spin
+        gamma = [set_gamma, gamma_optimization]
         standard = [load_default_vasp, ws_standard, ws_surface, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7, set_kpar_auto] + standard
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast] + override)
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal] + override)
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal] + override)
         final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output ] + override)
-#        dos = CustomFunctional(Vasp, standard + [single_point, hse06, set_algo_damp, set_nkred_221, tetrahedron, all_output, set_dos] + override)
-        names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge']
-        functionals = [pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge]
+        dos = CustomFunctional(Vasp, standard + [single_point, full_converge, set_algo_normal, set_nkred_221, tetrahedron, all_output, set_dos] + override)
+        names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_dos']
+        functionals = [pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, dos]
         for i, step in enumerate(addition_steps):
             names += [additional_names[i]]
             functionals += [CustomFunctional(Vasp, standard + step + override)]
+
+        bad_converge_gamma = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override + gamma)
+        get_nopsin_eig_gamma = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal] + override + gamma)
+        get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal] + override + gamma)
+        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output] + override + gamma)
+        nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
+        super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],
+                         nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj)
         return super().__init__(functionals, names=names, vaspobj=vaspobj)
 
 class WSSurfaceChain_hse(CustomChain):

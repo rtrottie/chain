@@ -419,7 +419,6 @@ def set_kpar_by_core(vasp: Vasp, structure=None):
             else:
                 kpar = kpar -1
     vasp.add_keyword('kpar', 1)
-    vasp.npar = int(nodes)
     return vasp
 
 def unset_kpar(vasp: Vasp, structure=None):

@@ -47,6 +47,7 @@ class CustomChain(object):
         self.basename = basename
         self.initial_structure = initial_structure
         self.final_strucutre = final_structure
+        self.kwargs = kwargs
         return
 
     def Extract(self, jobdir):
@@ -79,6 +80,10 @@ class CustomChain(object):
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
         for modification in workflow.modifications:
             vasp = modification(vasp, structure_)
+        if 'encut' in self.kwargs:
+            vasp.encut = self.kwargs['encut']
+        if 'kpoints' in self.kwargs:
+            vasp.kpoints = vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
         ## if this calculation has not been done run it
         params = deepcopy(kwargs)
         fulldir = os.path.join(outdir, name)

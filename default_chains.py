@@ -336,7 +336,13 @@ class SpinCustomChain(CustomChain):
                     return vasp
                 for x in self.nupdown_functionals: # Set nupdown
                     x.modifications.append(set_nupdown)
+                kpoints = None
+                if 'kpoints' in self.kwargs:
+                    kpoints = self.kwargs['kpoints']
+                    del self.kwargs['kpoints']
                 super().__call__(structure, outdir=nupdown_outdir, functionals=self.nupdown_functionals, names=names)
+                if kpoints:
+                    self.kwargs['kpoints'] = kpoints
                 energy = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
                 print('NUPDOWN check {} Complete \n    energy: {}'.format(nup, energy))
                 energies[nup] = energy

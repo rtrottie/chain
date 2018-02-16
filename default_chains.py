@@ -62,7 +62,7 @@ class CustomChain(object):
     def Extract_final(self):
         outdir = os.getcwd()
         name = self.names[-1]
-        return Extract(os.path.join(outdir, name))
+        return Extract(os.path.join(outdir, self.basename, name))
 
     def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, previous, **kwargs):
         '''

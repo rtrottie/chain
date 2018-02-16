@@ -59,6 +59,11 @@ class CustomChain(object):
         extract.success=success
         return extract
 
+    def Extract_final(self):
+        outdir = os.getcwd()
+        name = self.names[-1]
+        return Extract(os.path.join(outdir, name))
+
     def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, previous, **kwargs):
         '''
         The important function run when __call__ is invoked

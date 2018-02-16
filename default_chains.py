@@ -59,10 +59,9 @@ class CustomChain(object):
         extract.success=success
         return extract
 
-    def Extract_final(self):
-        outdir = os.getcwd()
+    def Extract_final(self, jobdir):
         name = self.names[-1]
-        return Extract(os.path.join(outdir, self.basename, name))
+        return Extract(os.path.join(jobdir, self.basename, name))
 
     def run_calculation(self, name, workflow: CustomFunctional, structure, outdir, previous, **kwargs):
         '''

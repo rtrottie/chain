@@ -34,7 +34,7 @@ def load_optimized_U_species(vasp : Vasp, structure):
 
 class WSBulkChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7]
+        standard = [load_default_vasp, ws_standard, herc_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7]
         gamma = [set_gamma, gamma_optimization]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
@@ -73,7 +73,7 @@ class WSBulkChain_auto(SpinCustomChain):
 
 class WSBulkChain_small(SpinCustomChain):
     def __init__(self, vaspobj: Vasp, nupdowns, standard=[], override=[], final_step='5_hse'):
-        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_444, set_iopt_7]
+        standard = [load_default_vasp, ws_standard, herc_bulk, load_optimized_U_species, rough_converge, set_444, set_iopt_7]
         gamma = [set_gamma, gamma_optimization]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
@@ -91,7 +91,7 @@ class WSBulkChain_small(SpinCustomChain):
 
 class TSWSBulkChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp, nupdowns, initial, final, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7, set_single_neb]
+        standard = [load_default_vasp, ws_standard, herc_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7, set_single_neb]
         override.append(set_prec_normal)
         gamma = [set_gamma, gamma_optimization]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge] + override + gamma, type='neb')
@@ -112,7 +112,7 @@ class TSWSBulkChain(SpinCustomChain):
 class WSBulkChain_ferro(CustomChain):
     def __init__(self, vaspobj: Vasp):
         spin = ferro_spin
-        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
+        standard = [load_default_vasp, ws_standard, herc_bulk, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization])
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge])
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin])
@@ -126,7 +126,7 @@ class WSBulkChain_ferro(CustomChain):
 class WSBulkChain_anti(CustomChain):
     def __init__(self, vaspobj: Vasp):
         spin = anti_spin
-        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
+        standard = [load_default_vasp, ws_standard, herc_bulk, load_optimized_U_species, spin, rough_converge, set_222, set_iopt_7]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization])
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge])
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal])
@@ -141,7 +141,7 @@ class WSSurfaceChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp, nupdowns, standard=[], override=[], additional_names=[], addition_steps=[]):
         spin = ferro_spin
         gamma = [set_gamma, gamma_optimization]
-        standard = [load_default_vasp, ws_standard, ws_surface, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7, set_kpar_auto] + standard
+        standard = [load_default_vasp, ws_standard, herc_surface, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7, set_kpar_auto] + standard
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast] + override)
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal] + override)
@@ -164,7 +164,7 @@ class WSSurfaceChain(SpinCustomChain):
 class WSSurfaceChain_hse(CustomChain):
     def __init__(self, vaspobj: Vasp, standard = [], override = [], additional_names=[], addition_steps=[]):
         spin = ferro_spin
-        standard = [load_default_vasp, ws_standard, ws_surface, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7, set_kpar_auto] + standard
+        standard = [load_default_vasp, ws_standard, herc_surface, load_optimized_U_species, spin, rough_converge, set_221, set_iopt_7, set_kpar_auto] + standard
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast] + override)
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal] + override)
@@ -198,7 +198,7 @@ class WSSurfaceChain_gamma_dimer(WSSurfaceChain):
 
 class WSBulkPBE(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, cell_relax, ws_bulk, load_optimized_U_species, set_kpar_by_core]
+        standard = [load_default_vasp, cell_relax, herc_bulk, load_optimized_U_species, set_kpar_by_core]
         pbe = CustomFunctional(Vasp, standard)
         pbe_single = CustomFunctional(Vasp, standard + [all_output])
         names = ['1_pbe', '2_pbe_reconverge']
@@ -206,7 +206,7 @@ class WSBulkPBE(OptimizedParametersChain):
 
 class WSBulkSCAN(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, cell_relax, ws_bulk, scan, set_kpar_by_core]
+        standard = [load_default_vasp, cell_relax, herc_bulk, scan, set_kpar_by_core]
         pbe = CustomFunctional(Vasp, standard)
         pbe_single = CustomFunctional(Vasp, standard + [all_output])
         names = ['1_scan', '2_scan_reconverge']
@@ -247,7 +247,7 @@ def ferro_spin(vasp, structure):
             a.magmom = spins[a.type]
     return vasp
 
-def ws_bulk(vasp: Vasp, structure):
+def herc_bulk(vasp: Vasp, structure):
     vasp.prec = 'Accurate'
     vasp.encut =  600
     vasp.ediff = 1e-6
@@ -259,7 +259,18 @@ def ws_bulk(vasp: Vasp, structure):
     vasp.isym = 0
     return vasp
 
-def ws_surface(vasp: Vasp, structure):
-    ws_bulk(vasp, structure)
+def herc_surface(vasp: Vasp, structure):
+    herc_bulk(vasp, structure)
     vasp.encut = 800
+    return vasp
+
+def ws_bulk(vasp: Vasp, structure):
+    vasp.prec = 'Accurate'
+    vasp.ediff = 1e-6
+    vasp.ispin = 2
+    vasp.magmom = True
+    vasp.sigma = 0.01
+    vasp.ldau = True
+    vasp.maxmix = 200
+    vasp.isym = 0
     return vasp

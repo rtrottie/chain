@@ -369,7 +369,6 @@ def load_default_vasp(vasp: Vasp,structure=None):
     else:
         kpoints_density = 4000
         vasp.kpoints=pylada.gen_kpts(structure,kpoints_density)
-    vasp.first_trial = { "kpoints": "\n0\nAuto\n12", "encut": 400.0 }
     vasp.program = '$VASP_PYLADA'   # default vasp program
     vasp.npar       = int(os.environ['PBS_NUM_NODES'])
     vasp.prec       = "accurate"

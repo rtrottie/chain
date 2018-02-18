@@ -78,12 +78,12 @@ class CustomChain(object):
         vasp = workflow.base(copy=deepcopy(self.vasp))
         structure_ = structure.copy()
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
-        for modification in workflow.modifications:
-            vasp = modification(vasp, structure_)
         if 'encut' in self.kwargs:
             vasp.encut = self.kwargs['encut']
         if 'kpoints' in self.kwargs:
             vasp.kpoints = vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
+        for modification in workflow.modifications:
+            vasp = modification(vasp, structure_)
         ## if this calculation has not been done run it
         params = deepcopy(kwargs)
         fulldir = os.path.join(outdir, name)

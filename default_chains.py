@@ -476,6 +476,10 @@ def set_kpar_by_core(vasp: Vasp, structure=None):
     vasp.add_keyword('kpar', 1)
     return vasp
 
+def set_kpar_2(vasp: Vasp, structure=None):
+    vasp.add_keyword('kpar', 2)
+    return vasp
+
 def unset_kpar(vasp: Vasp, structure=None):
     vasp.add_keyword('kpar', 1)
     return vasp

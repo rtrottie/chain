@@ -359,6 +359,7 @@ class SurfaceFromBulkChain(CustomChain):
 
     def __call__(self, structure, outdir=None, names=None, functionals=None, previous=None, **kwargs):
         from Generate_Surface import get_bottom, get_SD_along_vector
+        from Helpers import pyl_to_pmg
         if not functionals:
             functionals = self.functionals
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
@@ -366,7 +367,15 @@ class SurfaceFromBulkChain(CustomChain):
             CustomFunctional(functional.base, functional.modifications + [no_relax], functional.type) for
             functional in functionals[-3:]]
         structure_frozen_bot = structure.copy()
+        sd_bottom = get_SD_along_vector(pyl_to_pmg(structure), 2, get_bottom(structure, region='bot_cd'))
+        for (atom, sd) in zip(structure_frozen_bot, sd_bottom):
+            if sd[0]:
+                atom.freeze = 'xyz'
         structure_frozen_top = structure.copy()
+        sd_top = get_SD_along_vector(pyl_to_pmg(structure), 2, get_bottom(structure, region='top_cd'))
+        for (atom, sd) in zip(structure_frozen_top, sd_top):
+            if sd[0]:
+                atom.freeze = 'xyz'
 
 
 
@@ -375,18 +384,10 @@ class SurfaceFromBulkChain(CustomChain):
                                                     functionals=sp_functionals, previous=previous)
 
         # Frozen Bottom
-        sd_bottom = get_SD_along_vector(structure, 2, get_bottom(structure, region='bot_cd'))
-        for (atom, sd) in zip(structure_frozen_bot, sd_bottom):
-            if sd[0]:
-                atom.freeze = 'xyz'
         (bottom, clevage) = self.call_with_output(structure_frozen_bot, outdir=os.path.join(outdir, 'bottom'),
                                                   names=names, functionals=functionals, previous=clevage)
 
         # Frozen Top
-        sd_top = get_SD_along_vector(structure, 2, get_bottom(structure, region='top_cd'))
-        for (atom, sd) in zip(structure_frozen_top, sd_top):
-            if sd[0]:
-                atom.freeze = 'xyz'
         (bottom, clevage) = self.call_with_output(structure_frozen_top, outdir=os.path.join(outdir, 'top'),
                                                   names=names, functionals=functionals, previous=clevage)
 

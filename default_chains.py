@@ -81,7 +81,7 @@ class CustomChain(object):
         if 'encut' in self.kwargs:
             vasp.encut = self.kwargs['encut']
         if 'kpoints' in self.kwargs:
-            vasp.kpoints = vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
+            vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
         for modification in workflow.modifications:
             vasp = modification(vasp, structure_)
         ## if this calculation has not been done run it

@@ -364,14 +364,14 @@ class SurfaceFromBulkChain(CustomChain):
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
         sp_functionals = [
             CustomFunctional(functional.base, functional.modifications + [no_relax], functional.type) for
-            functional in functionals]
+            functional in functionals[-3:]]
         structure_frozen_bot = structure.copy()
         structure_frozen_top = structure.copy()
 
 
 
         # Clevage Energy
-        (clevage, previous) = self.call_with_output(structure, outdir=outdir, names=names,
+        (clevage, previous) = self.call_with_output(structure, outdir=outdir, names=self.names[-3:],
                                                     functionals=sp_functionals, previous=previous)
 
         # Frozen Bottom

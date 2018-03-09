@@ -213,7 +213,7 @@ class WSBulkToSurfacePBE(SurfaceFromBulkChain):
             incar = {f[0].strip(): float(f[1]) for f in lines}
             print(incar_settings)
             print(incar)
-            kpts = (incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(s).lattice.abc)
+            kpts = (incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc)
 
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast] + override)
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)

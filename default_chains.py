@@ -404,11 +404,12 @@ class SurfaceFromBulkChain(CustomChain):
 def load_default_vasp(vasp: Vasp,structure=None):
     vasp.has_nlep = False
     vasp.maxiter = 100
-    if structure==None:
-        vasp.kpoints="\n0\nAuto\n14"
-    else:
-        kpoints_density = 4000
-        vasp.kpoints=pylada.gen_kpts(structure,kpoints_density)
+    if not vasp.kpoints:
+        if structure==None:
+            vasp.kpoints="\n0\nAuto\n14"
+        else:
+            kpoints_density = 4000
+            vasp.kpoints=pylada.gen_kpts(structure,kpoints_density)
     vasp.program = '$VASP_PYLADA'   # default vasp program
     vasp.npar       = int(os.environ['PBS_NUM_NODES'])
     vasp.prec       = "accurate"

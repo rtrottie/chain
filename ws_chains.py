@@ -211,8 +211,6 @@ class WSBulkToSurfacePBE(SurfaceFromBulkChain):
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
-            print(incar_settings)
-            print(incar)
             kpts = (incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc)
 
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast] + override)

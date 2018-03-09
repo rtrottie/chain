@@ -367,12 +367,13 @@ class SurfaceFromBulkChain(CustomChain):
             CustomFunctional(functional.base, functional.modifications + [no_relax], functional.type) for
             functional in functionals[-3:]]
         structure_frozen_bot = structure.copy()
-        sd_bottom = get_SD_along_vector(pyl_to_pmg(structure), 2, get_bottom(structure, region='bot_cd'))
+        pmg_s = pyl_to_pmg(structure)
+        sd_bottom = get_SD_along_vector(pmg_s, 2, get_bottom(pmg_s, region='bot_cd'))
         for (atom, sd) in zip(structure_frozen_bot, sd_bottom):
             if sd[0]:
                 atom.freeze = 'xyz'
         structure_frozen_top = structure.copy()
-        sd_top = get_SD_along_vector(pyl_to_pmg(structure), 2, get_bottom(structure, region='top_cd'))
+        sd_top = get_SD_along_vector(pmg_s, 2, get_bottom(pmg_s, region='top_cd'))
         for (atom, sd) in zip(structure_frozen_top, sd_top):
             if sd[0]:
                 atom.freeze = 'xyz'

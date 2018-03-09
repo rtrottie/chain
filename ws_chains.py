@@ -204,18 +204,23 @@ class WSBulkPBE(OptimizedParametersChain):
         names = ['1_pbe', '2_pbe_reconverge']
         super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
-class WSBulkToSurfacePBE(OptimizedParametersChain):
-    def __init__(self, vaspobj: Vasp, bandgap: float = None, standard=[], override=[], structure_loc='2_pbe_reconverge', incar_settings='../INCAR.defaults'):
-        standard = [load_default_vasp, cell_relax, herc_bulk, load_optimized_U_species, set_kpar_by_core]
-        pbe = CustomFunctional(Vasp, standard)
-        pbe_single = CustomFunctional(Vasp, standard + [all_output])
+class WSBulkToSurfacePBE(SurfaceFromBulkChain):
+    def __init__(self, vaspobj: Vasp, bulk_structure, bandgap: float = None, standard=[], override=[], incar_settings='../INCAR.defaults'):
+        from Helpers import pyl_to_pmg
+        standard = [load_default_vasp, cell_relax, ws_bulk, load_optimized_U_species, set_kpar_by_core]
+        with open(incar_settings) as f:
+            lines = [line.strip().split('=') for line in f.readlines()]
+            incar = {f[0]: float(f[1]) for f in lines}
+            kpts = (incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(s).lattice.abc)
+
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast] + override)
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_normal] + override)
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal] + override)
         final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output ] + override)
-        names = ['1_pbe', '2_pbe_reconverge']
-        super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
+        names = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge']
+        functionals = [pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge]
+        super().__init__(functionals, bandgap=bandgap, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
 
 class WSBulkSCAN(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):

@@ -358,13 +358,25 @@ class SpinCustomChain(CustomChain):
 class SurfaceFromBulkChain(CustomChain):
 
     def __call__(self, structure, outdir=None, names=None, functionals=None, previous=None, **kwargs):
-        from Generate_Surface import get_bottom
+        from Generate_Surface import get_bottom, get_SD_along_vector
         if not functionals:
             functionals = self.functionals
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
         sp_functionals = [
             CustomFunctional(functional.base, functional.modifications + [single_point], functional.type) for
             functional in functionals]
+        sd_bottom = get_SD_along_vector(structure, 2, get_bottom(structure, region='bot_cd'))
+        sd_top = get_SD_along_vector(structure, 2, get_bottom(structure, region='top_cd'))
+        structure_frozen_bot = structure.copy()
+        structure_frozen_top = structure.copy()
+        for (atom, sd) in zip(structure_frozen_bot, sd_bottom):
+            if sd[0]:
+                atom.freeze = 'xyz'
+        for (atom, sd) in zip(structure_frozen_top, sd_top):
+            if sd[0]:
+                atom.freeze = 'xyz'
+
+
 
         # Clevage Energy
         (clevage, previous) = self.call_with_output(structure, outdir=outdir, names=names,

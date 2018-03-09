@@ -365,16 +365,8 @@ class SurfaceFromBulkChain(CustomChain):
         sp_functionals = [
             CustomFunctional(functional.base, functional.modifications + [single_point], functional.type) for
             functional in functionals]
-        sd_bottom = get_SD_along_vector(structure, 2, get_bottom(structure, region='bot_cd'))
-        sd_top = get_SD_along_vector(structure, 2, get_bottom(structure, region='top_cd'))
         structure_frozen_bot = structure.copy()
         structure_frozen_top = structure.copy()
-        for (atom, sd) in zip(structure_frozen_bot, sd_bottom):
-            if sd[0]:
-                atom.freeze = 'xyz'
-        for (atom, sd) in zip(structure_frozen_top, sd_top):
-            if sd[0]:
-                atom.freeze = 'xyz'
 
 
 
@@ -383,10 +375,18 @@ class SurfaceFromBulkChain(CustomChain):
                                                     functionals=sp_functionals, previous=previous)
 
         # Frozen Bottom
+        sd_bottom = get_SD_along_vector(structure, 2, get_bottom(structure, region='bot_cd'))
+        for (atom, sd) in zip(structure_frozen_bot, sd_bottom):
+            if sd[0]:
+                atom.freeze = 'xyz'
         (bottom, clevage) = self.call_with_output(structure_frozen_bot, outdir=os.path.join(outdir, 'bottom'),
                                                   names=names, functionals=functionals, previous=clevage)
 
         # Frozen Top
+        sd_top = get_SD_along_vector(structure, 2, get_bottom(structure, region='top_cd'))
+        for (atom, sd) in zip(structure_frozen_top, sd_top):
+            if sd[0]:
+                atom.freeze = 'xyz'
         (bottom, clevage) = self.call_with_output(structure_frozen_top, outdir=os.path.join(outdir, 'top'),
                                                   names=names, functionals=functionals, previous=clevage)
 

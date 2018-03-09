@@ -355,6 +355,32 @@ class SpinCustomChain(CustomChain):
                 x.modifications.append(set_nupdown)
         return super().__call__(structure, outdir=outdir, **kwargs)
 
+class SurfaceFromBulkChain(CustomChain):
+
+    def __call__(self, structure, outdir=None, names=None, functionals=None, previous=None, **kwargs):
+        from Generate_Surface import get_bottom
+        if not functionals:
+            functionals = self.functionals
+        outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
+        sp_functionals = [
+            CustomFunctional(functional.base, functional.modifications + [single_point], functional.type) for
+            functional in functionals]
+
+        # Clevage Energy
+        (clevage, previous) = self.call_with_output(structure, outdir=outdir, names=names,
+                                                    functionals=sp_functionals, previous=previous)
+
+        # Frozen Bottom
+        (bottom, clevage) = self.call_with_output(structure_frozen_bot, outdir=os.path.join(outdir, 'bottom'),
+                                                  names=names, functionals=functionals, previous=clevage)
+
+        # Frozen Top
+        (bottom, clevage) = self.call_with_output(structure_frozen_top, outdir=os.path.join(outdir, 'top'),
+                                                  names=names, functionals=functionals, previous=clevage)
+
+        return clevage
+
+
 # class TSSpinCustomChain(SpinCustomChain):
 #     def __init__(self, functionals: list, nupdown_functionals : list, initial_structure: Structure, final_structure: Structure = None, names=None, vaspobj:Vasp=None, basename='', **kwargs):
 #         self.initial = initial_structure

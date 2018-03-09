@@ -363,7 +363,7 @@ class SurfaceFromBulkChain(CustomChain):
             functionals = self.functionals
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
         sp_functionals = [
-            CustomFunctional(functional.base, functional.modifications + [single_point], functional.type) for
+            CustomFunctional(functional.base, functional.modifications + [no_relax], functional.type) for
             functional in functionals]
         structure_frozen_bot = structure.copy()
         structure_frozen_top = structure.copy()
@@ -621,6 +621,16 @@ def single_point(vasp: Vasp, structure=None):
     vasp.nsw = 0
     vasp.ediff = 1e-5
     vasp.ediffg = vasp.ediffg*1.5
+    vasp.add_keyword('lmaxmix', None)
+    vasp.add_keyword('iopt', 0)
+    return vasp
+
+def no_relax(vasp: Vasp, structure=None):
+    vasp.ibrion = -1
+    vasp.nelmin = 3
+    vasp.nsw = 0
+    vasp.ediff = 1e-5
+    vasp.nelm = 9999
     vasp.add_keyword('lmaxmix', None)
     vasp.add_keyword('iopt', 0)
     return vasp

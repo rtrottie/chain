@@ -210,7 +210,7 @@ class WSBulkToSurfacePBE(SurfaceFromBulkChain):
         standard = [load_default_vasp, cell_relax, ws_bulk, load_optimized_U_species, set_kpar_by_core]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
-            incar = {f[0].split(): float(f[1]) for f in lines}
+            incar = {f[0].strip(): float(f[1]) for f in lines}
             print(incar_settings)
             print(incar)
             kpts = (incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(s).lattice.abc)

@@ -610,6 +610,14 @@ def set_isym_0(vasp: Vasp, structure=None):
     vasp.isym =  0
     return vasp
 
+def set_nelm_9999(vasp: Vasp, structure=None):
+    vasp.nelm =  9999
+    return vasp
+
+def set_nelm_200(vasp: Vasp, structure=None):
+    vasp.nelm =  200
+    return vasp
+
 ##########
 # IONIC  #
 ##########

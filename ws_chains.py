@@ -208,7 +208,7 @@ class WSBulkPBE(OptimizedParametersChain):
 class WSBulkToSurfacePBE(SurfaceFromBulkChain):
     def __init__(self, vaspobj: Vasp, bulk_structure, bandgap: float = None, standard=[], override=[], incar_settings='../INCAR.defaults'):
         from Helpers import pyl_to_pmg
-        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2]
+        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}

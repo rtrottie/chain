@@ -645,7 +645,6 @@ def no_relax(vasp: Vasp, structure=None):
     vasp.nelmin = 3
     vasp.nsw = 0
     vasp.ediff = 1e-5
-    vasp.nelm = 9999
     vasp.add_keyword('lmaxmix', None)
     vasp.add_keyword('iopt', 0)
     return vasp

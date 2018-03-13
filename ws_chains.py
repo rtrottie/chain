@@ -208,7 +208,7 @@ class WSBulkPBE(OptimizedParametersChain):
 class WSBulkToSurfacePBE(SurfaceFromBulkChain):
     def __init__(self, vaspobj: Vasp, bulk_structure, bandgap: float = None, standard=[], override=[], incar_settings='../INCAR.defaults'):
         from Helpers import pyl_to_pmg
-        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7]
+        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7, idipol_3]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
@@ -218,7 +218,7 @@ class WSBulkToSurfacePBE(SurfaceFromBulkChain):
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast, set_nelm_200] + override)
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_fast, set_nelm_200] + override)
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal, set_nelm_9999] + override)
-        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999] + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999, surface_final] + override)
         names = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge']
         functionals = [pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge]
         super().__init__(functionals, bandgap=bandgap, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)

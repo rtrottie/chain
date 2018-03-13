@@ -368,12 +368,12 @@ class SurfaceFromBulkChain(CustomChain):
             functional in functionals[-3:]]
         structure_frozen_bot = structure.copy()
         pmg_s = pyl_to_pmg(structure)
-        sd_bottom = get_SD_along_vector(pmg_s, 2, get_bottom(pmg_s, region='bot_cd'))
+        sd_bottom = get_SD_along_vector(pmg_s, 2, get_bottom(pmg_s, region='bot'))
         for (atom, sd) in zip(structure_frozen_bot, sd_bottom):
             if sd[0]:
                 atom.freeze = 'xyz'
         structure_frozen_top = structure.copy()
-        sd_top = get_SD_along_vector(pmg_s, 2, get_bottom(pmg_s, region='top_cd'))
+        sd_top = get_SD_along_vector(pmg_s, 2, get_bottom(pmg_s, region='top'))
         for (atom, sd) in zip(structure_frozen_top, sd_top):
             if sd[0]:
                 atom.freeze = 'xyz'
@@ -896,4 +896,17 @@ def vibrations_disp(vasp: Vasp, structure : Structure):
     vasp.potim = 0.015
     vasp.ediff = 1e-8
     vasp.add_keyword('iopt', 0)
+    return vasp
+
+#############
+## SURFACE ##
+#############
+
+def idipol_3(vasp: Vasp, structure : Structure):
+    vasp.idipol = 3
+    return vasp
+
+def surface_final(vasp: Vasp, structure : Structure):
+    vasp.ldipol = True
+    vasp.idipol = 3
     return vasp

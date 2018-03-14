@@ -218,8 +218,8 @@ class WSBulkToSurfacePBE(SurfaceFromBulkChain):
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast, set_nelm_200] + override)
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_fast, set_nelm_200] + override)
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal, set_nelm_9999] + override)
-        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999, surface_final] + override)
-        ldipol = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999] + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999] + override)
+        ldipol = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999, surface_final] + override)
         names = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_ldipol']
         functionals = [pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
         super().__init__(functionals, bandgap=bandgap, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)

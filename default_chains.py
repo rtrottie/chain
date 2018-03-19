@@ -903,10 +903,10 @@ def vibrations_disp(vasp: Vasp, structure : Structure):
 #############
 
 def idipol_3(vasp: Vasp, structure : Structure):
-    vasp.idipol = 3
+    vasp.add_keyword('idipol', 3)
     return vasp
 
 def surface_final(vasp: Vasp, structure : Structure):
-    vasp.ldipol = True
-    vasp.idipol = 3
+    vasp.add_keyword('idipol', 3)
+    vasp.add_keyword('ldipol', True)
     return vasp

@@ -357,11 +357,14 @@ class SpinCustomChain(CustomChain):
 
 class SurfaceFromBulkChain(CustomChain):
 
+    to_run = -3
+
     def Extract(self, jobdir):
         extract = MassExtract(jobdir)
         success={}
         last = self.names[-1]
-        for name in [last, os.path.join('bottom', last), os.path.join('top', last)]:
+        folders = self.names[self.to_run:] + [ os.path.join('bottom', x) for x in self.names ] + [ os.path.join('top', x) for x in self.names ]
+        for name in folders:
             #import pdb; pdb.set_trace()
             success[name]=Extract(jobdir+'/'+name).success
         success=all(success.values())
@@ -376,7 +379,7 @@ class SurfaceFromBulkChain(CustomChain):
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
         sp_functionals = [
             CustomFunctional(functional.base, functional.modifications + [no_relax], functional.type) for
-            functional in functionals[-3:]]
+            functional in functionals[self.to_run:]]
         structure_frozen_bot = structure.copy()
         pmg_s = pyl_to_pmg(structure)
         sd_bottom = get_SD_along_vector(pmg_s, 2, get_bottom(pmg_s, region='bot'))

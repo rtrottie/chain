@@ -357,6 +357,17 @@ class SpinCustomChain(CustomChain):
 
 class SurfaceFromBulkChain(CustomChain):
 
+    def Extract(self, jobdir):
+        extract = MassExtract(jobdir)
+        success={}
+        last = self.names[-1]
+        for name in [last, os.path.join('bottom', last), os.path.join('top', last)]:
+            #import pdb; pdb.set_trace()
+            success[name]=Extract(jobdir+'/'+name).success
+        success=all(success.values())
+        extract.success=success
+        return extract
+
     def __call__(self, structure, outdir=None, names=None, functionals=None, previous=None, **kwargs):
         from Generate_Surface import get_bottom, get_SD_along_vector
         from Helpers import pyl_to_pmg

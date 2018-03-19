@@ -357,12 +357,13 @@ class SpinCustomChain(CustomChain):
 
 class SurfaceFromBulkChain(CustomChain):
 
-    to_run = -3
+    to_run = -4
 
     def Extract(self, jobdir):
-        extract = MassExtract(jobdir)
+        # extract = MassExtract(jobdir)
         success={}
         last = self.names[-1]
+        lasts = [last, os.path.join('bottom', last), os.path.join('top', last)]
         folders = self.names[self.to_run:] + [ os.path.join('bottom', x) for x in self.names ] + [ os.path.join('top', x) for x in self.names ]
         for name in folders:
             #import pdb; pdb.set_trace()

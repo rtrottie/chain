@@ -457,7 +457,11 @@ def set_kpar_auto(vasp: Vasp, structure=None):
         kpar = math.ceil(np/atoms)
         kpoint_str = vasp.kpoints.split('\n')[3]
         kpoints = [ int(x) for x in kpoint_str.split() ]
-        num_kpoints = kpoints[0] * kpoints[1] * kpoints[2]
+        if len(kpoints) > 1:
+            num_kpoints = kpoints[0] * kpoints[1] * kpoints[2]
+        else:
+            density = kpoints[0]
+            num_kpoints = math.ceil(density / np.linalg.norm(structure.cell[:,0])) * math.ceil(density / np.linalg.norm(structure.cell[:,1])) * math.ceil(density / np.linalg.norm(structure.cell[:,2]))
         while kpar > 1:
             if num_kpoints % kpar == 0 and nodes % kpar ==0:
                 vasp.add_keyword('kpar', kpar)

@@ -16,6 +16,7 @@ from math import floor, ceil
 import pylada
 import os
 import math
+import numpy as np
 from Classes_Pymatgen import Poscar
 
 
@@ -451,10 +452,10 @@ def all_output(vasp, structure=None):
 
 def set_kpar_auto(vasp: Vasp, structure=None):
     nodes = int(os.environ['PBS_NUM_NODES'])
-    np = int(os.environ['PBS_NP'])
+    procs = int(os.environ['PBS_NP'])
     atoms = len(structure)
-    if np / atoms > 1:
-        kpar = math.ceil(np/atoms)
+    if procs / atoms > 1:
+        kpar = math.ceil(procs/atoms)
         kpoint_str = vasp.kpoints.split('\n')[3]
         kpoints = [ int(x) for x in kpoint_str.split() ]
         if len(kpoints) > 1:

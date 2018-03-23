@@ -361,7 +361,7 @@ class SurfaceFromBulkChain(CustomChain):
     to_run = -4
 
     def Extract(self, jobdir):
-        # extract = MassExtract(jobdir)
+        extract = MassExtract(jobdir)
         success={}
         last = self.names[-1]
         lasts = [last, os.path.join('bottom', last), os.path.join('top', last)]

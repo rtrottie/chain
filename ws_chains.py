@@ -250,6 +250,12 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
         surf_folder = root / str(i).zfill(2)
         surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings)
         surf_folder.params['structure'] = pmg_to_pyl(surface).copy()
+        with open(surf_folder.name, 'w') as f:
+            f.write('''
+surface
+surface_cut {}
+surface_termination  None
+'''.format(i))
 
         # Frozen Surfaces
 
@@ -267,6 +273,12 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
                     atom.freeze = 'xyz'
 
             froz_folder.params['structure'] = surface_frozen_pyl.copy()
+            with open(surf_folder.name, 'w') as f:
+                f.write('''
+surface
+surface_cut {}
+surface_termination  {}
+'''.format(i, frozen_region))
 
 
 

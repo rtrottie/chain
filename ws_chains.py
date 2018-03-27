@@ -254,8 +254,8 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
             f.write('''
 surface
 surface_cut {}
-surface_termination  None
-'''.format(i))
+surface_termination  {}
+'''.format(i, 'None'))
 
         # Frozen Surfaces
 

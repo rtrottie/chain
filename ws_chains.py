@@ -222,7 +222,7 @@ class WSBulkToSurfacePBE(CustomChain):
         ldipol = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999, surface_final] + override)
         names = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_ldipol']
         functionals = [pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
-        super().__init__(functionals, bandgap=bandgap, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
+        super().__init__(functionals, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
 
 class WSBulkToFrozenSurfacePBE(CustomChain):
     def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults'):
@@ -239,7 +239,7 @@ class WSBulkToFrozenSurfacePBE(CustomChain):
         ldipol = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999, surface_final] + override)
         names = ['2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_ldipol']
         functionals = [get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
-        super().__init__(functionals, bandgap=bandgap, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
+        super().__init__(functionals, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
 
 def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
     from Generate_Surface import Generate_Surface

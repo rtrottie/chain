@@ -205,8 +205,8 @@ class WSBulkPBE(OptimizedParametersChain):
         names = ['1_pbe', '2_pbe_reconverge']
         super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
-class WSBulkToSurfacePBE(SurfaceFromBulkChain):
-    def __init__(self, vaspobj: Vasp, bulk_structure, bandgap: float = None, standard=[], override=[], incar_settings='../INCAR.defaults'):
+class WSBulkToSurfacePBE(CustomChain):
+    def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults'):
         from Helpers import pyl_to_pmg
         standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7, idipol_3]
         with open(incar_settings) as f:
@@ -223,6 +223,52 @@ class WSBulkToSurfacePBE(SurfaceFromBulkChain):
         names = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_ldipol']
         functionals = [pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
         super().__init__(functionals, bandgap=bandgap, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
+
+class WSBulkToFrozenSurfacePBE(CustomChain):
+    def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults'):
+        from Helpers import pyl_to_pmg
+        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, idipol_3, no_relax]
+        with open(incar_settings) as f:
+            lines = [line.strip().split('=') for line in f.readlines()]
+            incar = {f[0].strip(): float(f[1]) for f in lines}
+            kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc))
+
+        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_fast, set_nelm_200] + override)
+        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal, set_nelm_9999] + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999] + override)
+        ldipol = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999, surface_final] + override)
+        names = ['2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_ldipol']
+        functionals = [get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
+        super().__init__(functionals, bandgap=bandgap, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
+
+def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
+    from Generate_Surface import Generate_Surface
+    from Helpers import pyl_to_pmg, pmg_to_pyl
+    from Generate_Surface import get_bottom, get_SD_along_vector
+    for i, surface in enumerate(Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, 8, vacuum=8, orth=True)):
+        # Frozen Surface
+        surf_folder = root / str(i).zfill(2)
+        surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings)
+        surf_folder.params['structure'] = pmg_to_pyl(surface).copy()
+
+        # Frozen Surfaces
+
+        for frozen_region in ['top', 'bot']:
+
+            froz_folder = surf_folder / frozen_region
+            froz_folder.functional = WSBulkToSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings)
+
+            surface_frozen = surface.copy()
+            surface_frozen_pyl = pmg_to_pyl(surface_frozen)
+            sd = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, region=frozen_region))
+
+            for (atom, sd) in zip(surface_frozen_pyl, sd):
+                if sd[0]:
+                    atom.freeze = 'xyz'
+
+            froz_folder.params['structure'] = surface_frozen_pyl.copy()
+
+
 
 class WSBulkSCAN(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):

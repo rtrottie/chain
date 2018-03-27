@@ -253,7 +253,7 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
 
         # Frozen Surfaces
 
-        for frozen_region in ['top', 'bot']:
+        for frozen_region in ['top', 'bottom']:
 
             froz_folder = surf_folder / frozen_region
             froz_folder.functional = WSBulkToSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings)

@@ -273,7 +273,7 @@ surface_termination  {}
                     atom.freeze = 'xyz'
 
             froz_folder.params['structure'] = surface_frozen_pyl.copy()
-            with os.path.join(froz_folder.name[1:], 'DATABASE') as f:
+            with open(os.path.join(froz_folder.name[1:], 'DATABASE'), 'w') as f:
                 f.write('''
 surface
 surface_cut {}

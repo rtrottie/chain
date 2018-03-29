@@ -255,6 +255,8 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
 surface
 surface_cut {}
 surface_termination  {}
+convergence_study
+convergence_type surface
 '''.format(i, 'None'))
 
         # Frozen Surfaces
@@ -278,8 +280,6 @@ surface_termination  {}
 surface
 surface_cut {}
 surface_termination  {}
-convergence_study
-convergence_type surface
 '''.format(i, frozen_region))
 
 

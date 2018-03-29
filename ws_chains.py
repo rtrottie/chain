@@ -278,6 +278,8 @@ surface_termination  {}
 surface
 surface_cut {}
 surface_termination  {}
+convergence_study
+convergence_type surface
 '''.format(i, frozen_region))
 
 

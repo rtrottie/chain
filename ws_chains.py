@@ -275,6 +275,7 @@ convergence_type surface
                     atom.freeze = 'xyz'
 
             froz_folder.params['structure'] = surface_frozen_pyl.copy()
+            os.makedirs(froz_folder.name[1:], exist_ok=True)
             with open(os.path.join(froz_folder.name[1:], 'DATABASE'), 'w') as f:
                 f.write('''
 surface

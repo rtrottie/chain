@@ -214,12 +214,12 @@ class WSBulkToSurfacePBE(CustomChain):
             incar = {f[0].strip(): float(f[1]) for f in lines}
             kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc))
 
-        pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast] + override)
-        bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast, set_nelm_200] + override)
-        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_fast, set_nelm_200] + override)
-        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal, set_nelm_9999] + override)
-        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999] + override)
-        ldipol = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999, surface_final] + override)
+        pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast, set_nelm_200] + override)
+        bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
+        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_fast] + override)
+        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal] + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output] + override)
+        ldipol = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, surface_final] + override)
         names = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_ldipol']
         functionals = [pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
         super().__init__(functionals, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
@@ -242,6 +242,13 @@ class WSBulkToFrozenSurfacePBE(CustomChain):
         super().__init__(functionals, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
 
 def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
+    '''
+
+    :param root: root directory of run
+    :param bulk_structure: pylada bulk strucutre
+    :param incar_settings: location of INCAR.defaults
+    :return:
+    '''
     from Generate_Surface import Generate_Surface
     from Helpers import pyl_to_pmg, pmg_to_pyl
     from Generate_Surface import get_bottom, get_SD_along_vector

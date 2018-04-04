@@ -208,18 +208,18 @@ class WSBulkPBE(OptimizedParametersChain):
 class WSBulkToSurfacePBE(CustomChain):
     def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults'):
         from Helpers import pyl_to_pmg
-        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7, idipol_3]
+        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7, idipol_3, set_algo_normal, set_nelm_200]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
             kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc))
 
-        pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization, set_algo_fast, set_nelm_200] + override)
-        bad_converge = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
-        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_fast] + override)
-        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal] + override)
-        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_normal, all_output] + override)
-        ldipol = CustomFunctional(Vasp, standard + [full_converge, set_algo_normal, all_output, surface_final] + override)
+        pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization] + override)
+        bad_converge = CustomFunctional(Vasp, standard + [rough_converge] + override)
+        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin] + override)
+        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen] + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
+        ldipol = CustomFunctional(Vasp, standard + [full_converge, all_output, surface_final] + override)
         names = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_ldipol']
         functionals = [pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
         super().__init__(functionals, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)

@@ -14,6 +14,8 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Co", pseudoDir + "/Co_pv", U("dudarev", "d", 3.75) # Wolverton 2+
     vasp.add_specie = "Ni",  pseudoDir + "/Ni_pv", U("dudarev", "d", 4.4) # Wolverton 2+
     vasp.add_specie = "Cu", pseudoDir + "/Cu_pv", U("dudarev", "d" , 5.0) # FERE
+    vasp.add_specie = "Cu", pseudoDir + "/Cu_pv", U("dudarev", "d" , 5.0) # FERE
+    vasp.add_specie = "Ce", pseudoDir + "/Ce", U("dudarev", "f" , 3.0) # Wolverton Ceria Paper
     vasp.add_specie = "Zn", pseudoDir + "/Zn",                            
     vasp.add_specie = "O",  pseudoDir + "/O"
     vasp.add_specie = "Al", pseudoDir + "/Al"

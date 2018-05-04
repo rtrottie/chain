@@ -36,7 +36,7 @@ def load_optimized_U_species(vasp : Vasp, structure):
     return(vasp)
 
 class WSBulkChain(SpinCustomChain):
-    def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], final_step='5_hse' ):
+    def __init__(self, vaspobj: Vasp(), nupdowns=None, standard=[], override=[], final_step='5_hse' ):
         standard = [load_default_vasp, ws_standard, herc_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7]
         gamma = [set_gamma, gamma_optimization]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)

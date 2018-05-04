@@ -308,7 +308,7 @@ class OptimizedParametersChain(CustomChain):
         return super().__call__(structure, outdir=outdir)
 
 class SpinCustomChain(CustomChain):
-    def __init__(self, functionals: list, nupdown_functionals : list, nupdowns, names=None, vaspobj:Vasp=None, basename='', **kwargs):
+    def __init__(self, functionals: list, nupdown_functionals : list, nupdowns=None, names=None, vaspobj:Vasp=None, basename='', **kwargs):
         '''
         Runs a series of workflows
         Args:

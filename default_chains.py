@@ -815,7 +815,7 @@ def set_333(vasp: Vasp, structure=None):
     return vasp
 
 def set_444(vasp: Vasp, structure=None):
-    x=2; y=2 ; z=2
+    x=4; y=4 ; z=4
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
     return vasp

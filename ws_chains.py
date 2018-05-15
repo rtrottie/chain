@@ -56,7 +56,7 @@ class WSBulkChain(SpinCustomChain):
 
 class WSBulkChain_auto(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
-        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_iopt_7, set_kpar_auto]
+        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_iopt_7, set_kpar_auto, set_spin]
         gamma = [set_gamma, gamma_optimization]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
@@ -201,7 +201,7 @@ class WSSurfaceChain_gamma_dimer(WSSurfaceChain):
 
 class WSBulkPBE(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
-        standard = [load_default_vasp, cell_relax, herc_bulk, load_optimized_U_species, set_kpar_by_core]
+        standard = [load_default_vasp, cell_relax, herc_bulk, load_optimized_U_species, set_kpar_by_core, set_spin]
         pbe = CustomFunctional(Vasp, standard)
         pbe_single = CustomFunctional(Vasp, standard + [all_output])
         names = ['1_pbe', '2_pbe_reconverge']
@@ -308,6 +308,7 @@ spins = {
     'V'  : 3,
     'Cr' : 4,
     'Mn' : 5,
+    'Mn3p' : 5,
     'Fe' : 4,
     'Co' : 3,
     'Ni' : 2,
@@ -316,8 +317,21 @@ spins = {
     'O'  :  0,
     'Al' : 0,
     'H'  : 0
-
 }
+
+def set_spin(vasp: Vasp, structure):
+    magmom = []
+    for atom in structure:
+        if atom.type in spins:
+            try:
+                magmom.append(spins[atom.type]*atom.spin_dir)
+            except AttributeError:
+                magmom.append(spins[atom.type])
+        else:
+            magmom.append(0)
+    vasp.ispin=2
+    vasp.magmom = magmom
+    return vasp
 
 def ws_standard(vasp: Vasp, structure):
     vasp.isym = 0

@@ -329,7 +329,6 @@ def set_spin(vasp: Vasp, structure):
                 magmom.append(spins[atom.type])
         else:
             magmom.append(0)
-    vasp.ispin=2
     magmom_shortened = ''
     prev_spin = magmom[0]
     num_spins = 0
@@ -337,11 +336,12 @@ def set_spin(vasp: Vasp, structure):
         if spin == prev_spin:
             num_spins += 1
         else:
-            magmom_shortened += '{}*{} '.format(prev_spin, num_spins)
+            magmom_shortened += '{}*{} '.format(num_spins, prev_spin)
             prev_spin = spin
             num_spins = 1
-    magmom_shortened += '{}*{} '.format(prev_spin, num_spins)
+    magmom_shortened += '{}*{} '.format(num_spins, prev_spin)
 
+    vasp.ispin=2
     vasp.magmom = magmom_shortened
     return vasp
 

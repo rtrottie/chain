@@ -330,7 +330,19 @@ def set_spin(vasp: Vasp, structure):
         else:
             magmom.append(0)
     vasp.ispin=2
-    vasp.magmom = magmom
+    magmom_shortened = ''
+    prev_spin = magmom[0]
+    num_spins = 0
+    for spin in magmom:
+        if spin == prev_spin:
+            num_spins += 1
+        else:
+            magmom_shortened += '{}*{} '.format(prev_spin, num_spins)
+            prev_spin = spin
+            num_spins = 1
+    magmom_shortened += '{}*{} '.format(prev_spin, num_spins)
+
+    vasp.magmom = magmom_shortened
     return vasp
 
 def ws_standard(vasp: Vasp, structure):

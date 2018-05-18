@@ -259,6 +259,7 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
         surf_folder = root / str(i).zfill(2)
         surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings)
         surf_folder.params['structure'] = pmg_to_pyl(surface).copy()
+        os.makedirs(surf_folder.name[1:], exist_ok=True)
         with open(os.path.join(surf_folder.name[1:], 'DATABASE'), 'w') as f:
             f.write('''
 surface

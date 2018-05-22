@@ -75,7 +75,7 @@ class WSBulkChain_auto(SpinCustomChain):
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj, **kwargs)
 
 class WSBulkChainNoNUPDOWN(CustomChain):
-    def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
+    def __init__(self, vaspobj=Vasp(), standard=[], override=[], **kwargs):
         standard = [load_default_vasp, ws_standard, ws_surface, load_optimized_U_species, rough_converge, set_iopt_7, set_kpar_auto, set_kpoints_auto_20()]
         gamma = [set_gamma, gamma_optimization]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)
@@ -86,9 +86,8 @@ class WSBulkChainNoNUPDOWN(CustomChain):
         sp = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
 
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_single_point']
-        nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
         super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, sp],
-                         nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj, **kwargs)
+                         names=names, vaspobj=vaspobj, **kwargs)
 class WSBulkChain_small(SpinCustomChain):
     def __init__(self, vaspobj: Vasp, nupdowns, standard=[], override=[], final_step='5_hse'):
         standard = [load_default_vasp, ws_standard, herc_bulk, load_optimized_U_species, rough_converge, set_444, set_iopt_7]

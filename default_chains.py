@@ -638,6 +638,16 @@ def set_nelm_200(vasp: Vasp, structure=None):
     vasp.nelm =  200
     return vasp
 
+def set_nospin(vasp: Vasp, structure=None):
+    '''
+
+    :param vasp: Vasp
+    :param structure:
+    :return:
+    '''
+    vasp.ispin = 1
+    return vasp
+
 ##########
 # IONIC  #
 ##########

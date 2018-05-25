@@ -101,7 +101,7 @@ class WSSurfaceIntermediateChain(SpinCustomChain):
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen] + override)
         get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen] + gamma + override)
         final_converge = CustomFunctional(Vasp, standard + [full_converge,all_output] + override)
-        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge] + gamma + override)
+        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge, set_low_ediffg] + gamma + override)
         sp = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
 
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_single_point']

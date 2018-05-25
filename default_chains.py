@@ -698,6 +698,11 @@ def cell_relax(vasp: Vasp, structure=None):
     vasp.potim = 0.4
     vasp.ediffg = -0.005
     return vasp
+
+def set_low_ediffg(vasp: Vasp, structure=None):
+    vasp.ediffg = -0.05
+    return vasp
+
 ######################
 # CONVERGENCE LEVELS #
 ######################

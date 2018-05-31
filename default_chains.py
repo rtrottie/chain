@@ -814,7 +814,7 @@ def set_kpoints_auto_20(vasp: Vasp, structure=None):
     else:
         density = kpoints[0]
         num_kpoints = math.ceil(density / np.linalg.norm(structure.cell[:,0])) * math.ceil(density / np.linalg.norm(structure.cell[:,1])) * math.ceil(density / np.linalg.norm(structure.cell[:,2]))
-    if num_kpoints < 4 and vasp.ismear==-5:
+    if num_kpoints < 4:
         vasp.ismear=0
     return vasp
 

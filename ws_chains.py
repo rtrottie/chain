@@ -286,8 +286,8 @@ class WSBulkToFrozenSurfacePBE(CustomChain):
             kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc))
 
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_fast, set_nelm_200] + override)
-        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_normal, set_nelm_9999] + override)
-        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999] + override)
+        get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_algo_damp025, set_nelm_9999] + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, set_algo_normal, all_output, set_nelm_9999] + override)
         ldipol = CustomFunctional(Vasp, standard + [full_converge, set_algo_fast, all_output, set_nelm_9999, surface_final] + override)
         names = ['2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_ldipol']
         functionals = [get_nopsin_eig, get_eigenvalues, final_converge, ldipol]

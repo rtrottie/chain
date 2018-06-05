@@ -679,9 +679,11 @@ def single_point(vasp: Vasp, structure=None):
 
 def no_relax(vasp: Vasp, structure=None):
     vasp.ibrion = -1
-    vasp.nelmin = 3
-    vasp.nsw = 0
+    vasp.nelmin = 5
+    vasp.nsw = 5000
+    vasp.nelm = 200
     vasp.ediff = 1e-5
+    vasp.ediffg = 1e-4
     vasp.add_keyword('lmaxmix', None)
     vasp.add_keyword('iopt', 0)
     return vasp

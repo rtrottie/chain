@@ -305,7 +305,9 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='',
     from Helpers import pyl_to_pmg, pmg_to_pyl
     from Generate_Surface import get_bottom, get_SD_along_vector
     small_surfaces = Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, 3, vacuum=8, orth=True)
+    print(len(small_surfaces))
     for i, surface in enumerate(Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, depth, vacuum=8, orth=False)):
+        print(i)
         # Frozen Surface
         surface_small = small_surfaces[i]
         surf_folder = root / label / str(i).zfill(2)

@@ -307,7 +307,7 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
     small_surfaces = Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, 3, vacuum=8, orth=True)
     for i, surface in enumerate(Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, 8, vacuum=8, orth=True)):
         # Frozen Surface
-        small_surface = small_surfaces[i]
+        surface_small = small_surfaces[i]
         surf_folder = root / str(i).zfill(2)
         surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings)
         surf_folder.params['structure'] = pmg_to_pyl(surface).copy()

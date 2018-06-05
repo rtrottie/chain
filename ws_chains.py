@@ -293,7 +293,7 @@ class WSBulkToFrozenSurfacePBE(CustomChain):
         functionals = [get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
         super().__init__(functionals, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
 
-def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
+def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='.', depth=8, frozen_depth=2):
     '''
 
     :param root: root directory of run
@@ -305,10 +305,10 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None):
     from Helpers import pyl_to_pmg, pmg_to_pyl
     from Generate_Surface import get_bottom, get_SD_along_vector
     small_surfaces = Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, 3, vacuum=8, orth=True)
-    for i, surface in enumerate(Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, 8, vacuum=8, orth=True)):
+    for i, surface in enumerate(Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, depth, vacuum=8, orth=True)):
         # Frozen Surface
         surface_small = small_surfaces[i]
-        surf_folder = root / str(i).zfill(2)
+        surf_folder = root / label / str(i).zfill(2)
         surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings)
         surf_folder.params['structure'] = pmg_to_pyl(surface).copy()
         os.makedirs(surf_folder.name[1:], exist_ok=True)
@@ -331,8 +331,8 @@ convergence_type surface
 
             surface_frozen = surface.copy()
             surface_frozen_pyl = pmg_to_pyl(surface_frozen)
-            sd = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, region=frozen_region))
-            sd_small = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, region=frozen_region))
+            sd = get_SD_along_vector(surface_frozen, frozen_depth, get_bottom(surface_frozen, region=frozen_region))
+            sd_small = get_SD_along_vector(surface_frozen, frozen_depth, get_bottom(surface_frozen, region=frozen_region))
             for (atom, sd) in zip(surface_frozen_pyl, sd):
                 if sd[0]:
                     atom.freeze = 'xyz'

@@ -293,7 +293,7 @@ class WSBulkToFrozenSurfacePBE(CustomChain):
         functionals = [get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
         super().__init__(functionals, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
 
-def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='.', depth=8, frozen_depth=2):
+def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='.', depth=8, frozen_depth=2, override=[]):
     '''
 
     :param root: root directory of run
@@ -309,7 +309,7 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='.'
         # Frozen Surface
         surface_small = small_surfaces[i]
         surf_folder = root / label / str(i).zfill(2)
-        surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings)
+        surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings, override=override)
         surf_folder.params['structure'] = pmg_to_pyl(surface).copy()
         os.makedirs(surf_folder.name[1:], exist_ok=True)
         surface.to('poscar', os.path.join(surf_folder.name[1:], 'surface.vasp'))

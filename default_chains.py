@@ -349,12 +349,14 @@ class SpinCustomChain(CustomChain):
                 energies[nup] = energy
         if energies:
             nup = min(energies.keys(), key=(lambda key: energies[key]) )
+            nupdown_outdir = os.path.join(outdir, str(nup))
             def set_nupdown(vasp: Vasp, structure=None):
                 vasp.nupdown = nup
                 return vasp
             for x in self.functionals: # Set nupdown
                 x.modifications.append(set_nupdown)
-        return super().__call__(structure, outdir=outdir, **kwargs)
+            (_, lowest) = super().call_with_output(structure, outdir=nupdown_outdir, functionals=self.nupdown_functionals, names=names)
+        return super().__call__(structure, outdir=outdir, previous=lowest, **kwargs)
 
 class SurfaceFromBulkChain(CustomChain):
 

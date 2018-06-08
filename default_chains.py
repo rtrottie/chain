@@ -680,7 +680,8 @@ def single_point(vasp: Vasp, structure=None):
     return vasp
 
 def no_relax(vasp: Vasp, structure=None):
-    vasp.ibrion = -1
+    vasp.ibrion = 3
+    vasp.potim = 0
     vasp.nelmin = 5
     vasp.nsw = 5000
     vasp.nelm = 200

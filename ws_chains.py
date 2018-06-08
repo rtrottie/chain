@@ -265,13 +265,13 @@ class WSBulkPBE(OptimizedParametersChain):
         super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
 
 class WSBulkToSurfacePBE(CustomChain):
-    def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults'):
+    def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults', kpt_modifier=1):
         from Helpers import pyl_to_pmg
         standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7, idipol_3, set_algo_normal, set_nelm_200]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
-            kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc))
+            kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc)) / kpt_modifier
 
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization] + override)
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge] + override)
@@ -301,7 +301,7 @@ class WSBulkToFrozenSurfacePBE(CustomChain):
         functionals = [get_nopsin_eig, get_eigenvalues, final_converge, ldipol]
         super().__init__(functionals, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
 
-def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='', depth=8, frozen_depth=2, override=[]):
+def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='', depth=8, frozen_depth=2, override=[], kpt_modifier=1):
     '''
 
     :param root: root directory of run
@@ -317,7 +317,9 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='',
         # Frozen Surface
         surface_small = small_surfaces[i]
         surf_folder = root / label / str(i).zfill(2)
-        surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings, override=override)
+        surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure,
+                                                          incar_settings=incar_settings, override=override,
+                                                          kpt_modifier=kpt_modifier)
         surf_folder.params['structure'] = pmg_to_pyl(surface).copy()
         os.makedirs(surf_folder.name[1:], exist_ok=True)
         surface.to('poscar', os.path.join(surf_folder.name[1:], 'surface.vasp'))
@@ -336,7 +338,9 @@ convergence_type surface
         for frozen_region in ['top', 'bottom']:
 
             froz_folder = surf_folder / frozen_region
-            froz_folder.functional = WSBulkToSurfacePBE(Vasp(), bulk_structure=bulk_structure, incar_settings=incar_settings)
+            froz_folder.functional = WSBulkToSurfacePBE(Vasp(), bulk_structure=bulk_structure,
+                                                        incar_settings=incar_settings, override=override,
+                                                        kpt_modifier=kpt_modifier)
 
             surface_frozen = surface.copy()
             surface_frozen_pyl = pmg_to_pyl(surface_frozen)

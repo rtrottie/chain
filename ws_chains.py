@@ -271,7 +271,7 @@ class WSBulkToSurfacePBE(CustomChain):
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
-            kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc)) / kpt_modifier
+            kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc)/ kpt_modifier)
 
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization] + override)
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge] + override)
@@ -291,7 +291,7 @@ class WSBulkToFrozenSurfacePBE(CustomChain):
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
-            kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc)) / kpt_modifier
+            kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc) / kpt_modifier)
 
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_fast, set_nelm_200] + override)
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_nelm_200] + override)

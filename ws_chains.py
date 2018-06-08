@@ -5,6 +5,7 @@ def load_optimized_U_species(vasp : Vasp, structure):
     # See vasp/functional.py:  elementName, fileName, max or min oxidation state
     pseudoDir = '$PSEUDO_DIR'
     vasp.add_specie = "Sc", pseudoDir + "/Sc_sv", U("dudarev", "d", 3)    # FERE
+    vasp.add_specie = "Y", pseudoDir + "/Y_sv", U("dudarev", "d", 3)    # FERE
     vasp.add_specie = "Ti", pseudoDir + "/Ti_pv", U("dudarev", "d", 4.35) # Wolverton 3+
     vasp.add_specie = "V",  pseudoDir + "/V_pv",  U("dudarev", "d", 4.9)  # Wolverton 2+
     vasp.add_specie = "Cr", pseudoDir + "/Cr_pv", U("dudarev", "d", 3.04) # Wolverton 3+
@@ -14,6 +15,7 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Co", pseudoDir + "/Co_pv", U("dudarev", "d", 3.75) # Wolverton 2+
     vasp.add_specie = "Ni",  pseudoDir + "/Ni_pv", U("dudarev", "d", 4.4) # Wolverton 2+
     vasp.add_specie = "Cu", pseudoDir + "/Cu_pv", U("dudarev", "d" , 5.0) # FERE
+    vasp.add_specie = "Nb", pseudoDir + "/Nb_pv", U("dudarev", "d" , 3.0) # FERE
     vasp.add_specie = "Ce", pseudoDir + "/Ce", U("dudarev", "f" , 3.0) # Wolverton Ceria Paper
     vasp.add_specie = "Zn", pseudoDir + "/Zn",
     vasp.add_specie = "Ga", pseudoDir + "/Ga",
@@ -22,14 +24,18 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "H", pseudoDir + "/H"
     
     vasp.add_specie = "Sr", pseudoDir + "/Sr_sv"
+    vasp.add_specie = "Cd", pseudoDir + "/Cd"
     vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
     vasp.add_specie = "Bi", pseudoDir + "/Bi_d"
     vasp.add_specie = "Ge", pseudoDir + "/Ge_d"
+    vasp.add_specie = "Se", pseudoDir + "/Se"
     vasp.add_specie = "Sb", pseudoDir + "/Sb"
+    vasp.add_specie = "Na", pseudoDir + "/Na_pv"
     vasp.add_specie = "Ca", pseudoDir + "/Ca_pv"
     vasp.add_specie = "In", pseudoDir + "/In_d"
     vasp.add_specie = "K", pseudoDir + "/K_sv"
     vasp.add_specie = "Mg", pseudoDir + "/Mg"
+    vasp.add_specie = "Sn", pseudoDir + "/Sn_d"
     vasp.add_specie = "Li", pseudoDir + "/Li_sv"
 
     vasp.add_specie = "La", pseudoDir + "/La" # TODO Determine U

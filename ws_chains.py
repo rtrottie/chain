@@ -284,14 +284,14 @@ class WSBulkToSurfacePBE(CustomChain):
         super().__init__(functionals, names=names, vaspobj=vaspobj, encut=incar['ENCUT'], kpoints=kpts)
 
 class WSBulkToFrozenSurfacePBE(CustomChain):
-    def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults'):
+    def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults', kpt_modifier=1):
         from Helpers import pyl_to_pmg
         standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, idipol_3, no_relax]
         override += [no_relax]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
-            kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc))
+            kpts = math.ceil((incar['KPOINTS'] - 0.25) * max(pyl_to_pmg(bulk_structure).lattice.abc)) / kpt_modifier
 
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_fast, set_nelm_200] + override)
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen, set_nelm_200] + override)

@@ -330,7 +330,7 @@ surface_cut {}
 surface_termination  {}
 convergence_study
 convergence_type surface
-{}
+misc_labels {}
 '''.format(i, 'None', label))
 
         # Frozen Surfaces
@@ -358,7 +358,7 @@ convergence_type surface
 surface
 surface_cut {}
 surface_termination  {}
-{}
+misc_labels {}
 '''.format(i, frozen_region, label))
 
 

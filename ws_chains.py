@@ -312,10 +312,10 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='',
     from Generate_Surface import Generate_Surface
     from Helpers import pyl_to_pmg, pmg_to_pyl
     from Generate_Surface import get_bottom, get_SD_along_vector
-    small_surfaces = Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, 3, vacuum=8, orth=True)
+    # small_surfaces = Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, 3, vacuum=8, orth=True)
     for i, surface in enumerate(Generate_Surface(pyl_to_pmg(bulk_structure), 1, 1, 1, depth, vacuum=8, orth=False)):
         # Frozen Surface
-        surface_small = small_surfaces[i]
+        # surface_small = small_surfaces[i]
         surf_folder = root / label / str(i).zfill(2)
         surf_folder.functional = WSBulkToFrozenSurfacePBE(Vasp(), bulk_structure=bulk_structure,
                                                           incar_settings=incar_settings, override=override,
@@ -344,15 +344,15 @@ convergence_type surface
 
             surface_frozen = surface.copy()
             surface_frozen_pyl = pmg_to_pyl(surface_frozen)
-            sd = get_SD_along_vector(surface_frozen, frozen_depth, get_bottom(surface_frozen, region=frozen_region))
-            sd_small = get_SD_along_vector(surface_frozen, frozen_depth, get_bottom(surface_frozen, region=frozen_region))
+            sd = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, region=frozen_region))
+            # sd_small = get_SD_along_vector(surface_frozen, frozen_depth, get_bottom(surface_frozen, region=frozen_region))
             for (atom, sd) in zip(surface_frozen_pyl, sd):
                 if sd[0]:
                     atom.freeze = 'xyz'
 
             froz_folder.params['structure'] = surface_frozen_pyl.copy()
             os.makedirs(froz_folder.name[1:], exist_ok=True)
-            Poscar(surface_small, selective_dynamics=sd_small).write_file(os.path.join(froz_folder.name[1:], 'surface.small.vasp'))
+            # Poscar(surface_small, selective_dynamics=sd_small).write_file(os.path.join(froz_folder.name[1:], 'surface.small.vasp'))
             with open(os.path.join(froz_folder.name[1:], 'DATABASE'), 'w') as f:
                 f.write('''
 surface

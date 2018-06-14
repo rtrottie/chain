@@ -308,6 +308,7 @@ def make_surfaces_to_pylada(root, bulk_structure, incar_settings=None, label='',
     :param incar_settings: location of INCAR.defaults
     :return:
     '''
+    from pylada.crystal import write
     from Generate_Surface import Generate_Surface
     from Helpers import pyl_to_pmg, pmg_to_pyl
     from Generate_Surface import get_bottom, get_SD_along_vector
@@ -344,13 +345,13 @@ misc_labels {}
             surface_frozen = surface.copy()
             print(surface_frozen)
             sd = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, length=frozen_depth, region=frozen_region))
-            Poscar(surface_frozen, selective_dynamics=sd).write_file(os.path.join(froz_folder.name[1:], 'surface.small.vasp'))
+            # Poscar(surface_frozen, selective_dynamics=sd).write_file(os.path.join(froz_folder.name[1:], 'surface.vasp'))
             surface_frozen_pyl = pmg_to_pyl(surface_frozen)
             # sd_small = get_SD_along_vector(surface_frozen, frozen_depth, get_bottom(surface_frozen, region=frozen_region))
             for (atom, sd) in zip(surface_frozen_pyl, sd):
                 if sd[0]:
                     atom.freeze = 'xyz'
-
+            write.poscar(surface_frozen_pyl, os.path.join(froz_folder.name[1:], 'surface.vasp', vasp5=True))
             froz_folder.params['structure'] = surface_frozen_pyl.copy()
             os.makedirs(froz_folder.name[1:], exist_ok=True)
             Poscar(surface_frozen, selective_dynamics=sd).write_file(os.path.join(froz_folder.name[1:], 'surface.small.vasp'))

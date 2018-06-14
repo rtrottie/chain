@@ -343,7 +343,7 @@ misc_labels {}
 
             surface_frozen = surface.copy()
             surface_frozen_pyl = pmg_to_pyl(surface_frozen)
-            sd = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, region=frozen_region))
+            sd = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, length=frozen_depth, region=frozen_region))
             # sd_small = get_SD_along_vector(surface_frozen, frozen_depth, get_bottom(surface_frozen, region=frozen_region))
             for (atom, sd) in zip(surface_frozen_pyl, sd):
                 if sd[0]:

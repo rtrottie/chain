@@ -343,7 +343,7 @@ misc_labels {}
                                                         kpt_modifier=kpt_modifier)
 
             surface_frozen = surface.copy()
-            print(surface_frozen)
+            # print(surface_frozen)
             sd = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, length=frozen_depth, region=frozen_region))
             # Poscar(surface_frozen, selective_dynamics=sd).write_file(os.path.join(froz_folder.name[1:], 'surface.vasp'))
             surface_frozen_pyl = pmg_to_pyl(surface_frozen)

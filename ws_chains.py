@@ -287,7 +287,6 @@ class WSBulkToFrozenSurfacePBE(CustomChain):
     def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults', kpt_modifier=1):
         from Helpers import pyl_to_pmg
         standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, idipol_3, no_relax]
-        override += [no_relax]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}

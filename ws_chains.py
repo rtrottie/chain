@@ -267,7 +267,7 @@ class WSBulkPBE(OptimizedParametersChain):
 class WSBulkToSurfacePBE(CustomChain):
     def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults', kpt_modifier=1):
         from Helpers import pyl_to_pmg
-        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7, idipol_3, set_algo_normal, set_nelm_200]
+        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7, idipol_3, set_algo_normal, set_nelm_200, set_iopt_7]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
@@ -275,7 +275,7 @@ class WSBulkToSurfacePBE(CustomChain):
 
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization] + override)
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge] + override)
-        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin] + override)
+        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, no_relax] + override)
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen] + override)
         final_converge = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
         ldipol = CustomFunctional(Vasp, standard + [full_converge, all_output, surface_final] + override)
@@ -287,7 +287,6 @@ class WSBulkToFrozenSurfacePBE(CustomChain):
     def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults', kpt_modifier=1):
         from Helpers import pyl_to_pmg
         standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, idipol_3, no_relax]
-        override += [no_relax]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
@@ -344,7 +343,7 @@ misc_labels {}
 
             surface_frozen = surface.copy()
             surface_frozen_pyl = pmg_to_pyl(surface_frozen)
-            sd = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, region=frozen_region))
+            sd = get_SD_along_vector(surface_frozen, 2, get_bottom(surface_frozen, length=frozen_depth, region=frozen_region))
             # sd_small = get_SD_along_vector(surface_frozen, frozen_depth, get_bottom(surface_frozen, region=frozen_region))
             for (atom, sd) in zip(surface_frozen_pyl, sd):
                 if sd[0]:

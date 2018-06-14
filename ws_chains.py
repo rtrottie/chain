@@ -267,7 +267,7 @@ class WSBulkPBE(OptimizedParametersChain):
 class WSBulkToSurfacePBE(CustomChain):
     def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults', kpt_modifier=1):
         from Helpers import pyl_to_pmg
-        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7, idipol_3, set_algo_normal, set_nelm_200]
+        standard = [load_default_vasp, ws_bulk, load_optimized_U_species, set_kpar_2, set_iopt_7, idipol_3, set_algo_normal, set_nelm_200, set_iopt_7]
         with open(incar_settings) as f:
             lines = [line.strip().split('=') for line in f.readlines()]
             incar = {f[0].strip(): float(f[1]) for f in lines}
@@ -275,7 +275,7 @@ class WSBulkToSurfacePBE(CustomChain):
 
         pre_converge = CustomFunctional(Vasp, standard + [awful_converge, set_gamma, gamma_optimization] + override)
         bad_converge = CustomFunctional(Vasp, standard + [rough_converge] + override)
-        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin] + override)
+        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin, no_relax] + override)
         get_eigenvalues = CustomFunctional(Vasp, standard + [get_eigen] + override)
         final_converge = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
         ldipol = CustomFunctional(Vasp, standard + [full_converge, all_output, surface_final] + override)

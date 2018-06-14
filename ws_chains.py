@@ -352,7 +352,7 @@ misc_labels {}
 
             froz_folder.params['structure'] = surface_frozen_pyl.copy()
             os.makedirs(froz_folder.name[1:], exist_ok=True)
-            # Poscar(surface_small, selective_dynamics=sd_small).write_file(os.path.join(froz_folder.name[1:], 'surface.small.vasp'))
+            Poscar(surface_frozen, selective_dynamics=sd).write_file(os.path.join(froz_folder.name[1:], 'surface.small.vasp'))
             with open(os.path.join(froz_folder.name[1:], 'DATABASE'), 'w') as f:
                 f.write('''
 surface

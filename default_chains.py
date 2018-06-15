@@ -85,7 +85,7 @@ class CustomChain(object):
             vasp.encut = self.kwargs['encut']
         if 'kpoints' in self.kwargs:
             vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
-            density = vasp.kpoints
+            density = self.kwargs['kpoints']
             num_kpoints = math.ceil(density / np.linalg.norm(structure.cell[:, 0])) * math.ceil(density / np.linalg.norm(structure.cell[:, 1])) * math.ceil(density / np.linalg.norm(structure.cell[:, 2]))
             if num_kpoints < 4 and (vasp.ismear == -4 or vasp.ismear == -5 or vasp.ismear == 'metal' or vasp.ismear == 'tetra'):
                 vasp.ismear = 0

@@ -86,7 +86,9 @@ class CustomChain(object):
         if 'kpoints' in self.kwargs:
             vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
             density = self.kwargs['kpoints']
-            num_kpoints = math.ceil(density / np.linalg.norm(structure.cell[:, 0])) * math.ceil(density / np.linalg.norm(structure.cell[:, 1])) * math.ceil(density / np.linalg.norm(structure.cell[:, 2]))
+            num_kpoints = math.floor(density / np.linalg.norm(structure.cell[:, 0])+0.5) * \
+                          math.floor(density / np.linalg.norm(structure.cell[:, 1])+0.5) * \
+                          math.floor(density / np.linalg.norm(structure.cell[:, 2])+0.5)
             print('ISMEAR: |{}|'.format(vasp.ismear))
             if num_kpoints < 4:
                 if (vasp.ismear == -4 or vasp.ismear == -5 or vasp.ismear == 'metal' or vasp.ismear == 'tetra'):

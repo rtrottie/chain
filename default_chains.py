@@ -79,12 +79,16 @@ class CustomChain(object):
         vasp = workflow.base(copy=deepcopy(self.vasp))
         structure_ = structure.copy()
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
+        for modification in workflow.modifications:
+            vasp = modification(vasp, structure_)
         if 'encut' in self.kwargs:
             vasp.encut = self.kwargs['encut']
         if 'kpoints' in self.kwargs:
             vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
-        for modification in workflow.modifications:
-            vasp = modification(vasp, structure_)
+            density = vasp.kpoints
+            num_kpoints = math.ceil(density / np.linalg.norm(structure.cell[:, 0])) * math.ceil(density / np.linalg.norm(structure.cell[:, 1])) * math.ceil(density / np.linalg.norm(structure.cell[:, 2]))
+            if num_kpoints < 4 and (vasp.ismear == -4 or vasp.ismear == -5 or vasp.ismear == 'metal' or vasp.ismear == 'tetra'):
+                vasp.ismear = 0
         ## if this calculation has not been done run it
         params = deepcopy(kwargs)
         fulldir = os.path.join(outdir, name)
@@ -649,6 +653,7 @@ def set_nospin(vasp: Vasp, structure=None):
     '''
     vasp.ispin = 1
     return vasp
+
 
 ##########
 # IONIC  #

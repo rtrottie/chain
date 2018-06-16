@@ -354,7 +354,7 @@ misc_labels {}
             for (atom, sd) in zip(surface_frozen_pyl, sd):
                 if sd[0]:
                     atom.freeze = 'xyz'
-            os.makedirs(froz_folder.name[1:])
+            os.makedirs(froz_folder.name[1:], exist_ok=True)
             write.poscar(surface_frozen_pyl, os.path.join(froz_folder.name[1:], 'surface.vasp'), vasp5=True)
             froz_folder.params['structure'] = surface_frozen_pyl.copy()
             os.makedirs(froz_folder.name[1:], exist_ok=True)

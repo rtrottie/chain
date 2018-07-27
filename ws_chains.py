@@ -392,13 +392,16 @@ spins = {
 def set_spin(vasp: Vasp, structure):
     magmom = []
     for atom in structure:
-        if atom.type in spins:
-            try:
-                magmom.append(spins[atom.type]*atom.spin_dir)
-            except AttributeError:
-                magmom.append(spins[atom.type])
-        else:
-            magmom.append(0)
+        try:
+            magmom.append(atom.magmom)
+        except:
+            if atom.type in spins:
+                try:
+                    magmom.append(spins[atom.type]*atom.spin_dir)
+                except AttributeError:
+                    magmom.append(spins[atom.type])
+            else:
+                magmom.append(0)
     magmom_shortened = ''
     prev_spin = magmom[0]
     num_spins = 0

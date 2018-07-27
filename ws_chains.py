@@ -394,10 +394,11 @@ spins = {
 }
 
 def set_spin(vasp: Vasp, structure):
+    import math
     magmom = []
     for atom in structure:
         try:
-            magmom.append(atom.magmom)
+            magmom.append(math.round(atom.magmom,1))
         except:
             if atom.type in spins:
                 try:

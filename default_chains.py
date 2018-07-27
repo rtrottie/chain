@@ -81,14 +81,15 @@ class CustomChain(object):
         outdir = os.getcwd() if outdir is None else RelativePath(outdir).path
         if 'encut' in self.kwargs:
             vasp.encut = self.kwargs['encut']
+        num_kpoints = 99999
         if 'kpoints' in self.kwargs:
             vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
+            density = self.kwargs['kpoints']
+            num_kpoints = math.floor(density / np.linalg.norm(structure.cell[:, 0])+0.5) * \
+                          math.floor(density / np.linalg.norm(structure.cell[:, 1])+0.5) * \
+                          math.floor(density / np.linalg.norm(structure.cell[:, 2])+0.5)
         for modification in workflow.modifications:
             vasp = modification(vasp, structure_)
-            density = self.kwargs['kpoints']
-        num_kpoints = math.floor(density / np.linalg.norm(structure.cell[:, 0])+0.5) * \
-                      math.floor(density / np.linalg.norm(structure.cell[:, 1])+0.5) * \
-                      math.floor(density / np.linalg.norm(structure.cell[:, 2])+0.5)
         print('ISMEAR: |{}|'.format(vasp.ismear))
         if num_kpoints < 4:
             if (vasp.ismear == -4 or vasp.ismear == -5 or vasp.ismear == 'metal' or vasp.ismear == 'tetra'):

@@ -9,6 +9,7 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Ti", pseudoDir + "/Ti_pv", U("dudarev", "d", 4.35) # Wolverton 3+
     vasp.add_specie = "V",  pseudoDir + "/V_pv",  U("dudarev", "d", 4.9)  # Wolverton 2+
     vasp.add_specie = "Cr", pseudoDir + "/Cr_pv", U("dudarev", "d", 3.04) # Wolverton 3+
+    vasp.add_specie = "Zr", pseudoDir + "/Zr_sv", U("dudarev", "d", 3) # FERE
     vasp.add_specie = "Mn", pseudoDir + "/Mn_pv", U("dudarev", "d", 2.98) # Wolverton 2+
     vasp.add_specie = "Mn3p", pseudoDir + "/Mn_pv", U("dudarev", "d", 4.54) # Wolverton 3+
     vasp.add_specie = "Fe", pseudoDir + "/Fe_pv", U("dudarev", "d", 4.04) # Wolverton 2+,
@@ -26,6 +27,8 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Sr", pseudoDir + "/Sr_sv"
     vasp.add_specie = "Si", pseudoDir + "/Si"
     vasp.add_specie = "Cd", pseudoDir + "/Cd"
+    vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
+    vasp.add_specie = "Be", pseudoDir + "/Be"
     vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
     vasp.add_specie = "Bi", pseudoDir + "/Bi_d"
     vasp.add_specie = "Ge", pseudoDir + "/Ge_d"
@@ -351,6 +354,7 @@ misc_labels {}
             for (atom, sd) in zip(surface_frozen_pyl, sd):
                 if sd[0]:
                     atom.freeze = 'xyz'
+            os.makedirs(froz_folder.name[1:], exist_ok=True)
             write.poscar(surface_frozen_pyl, os.path.join(froz_folder.name[1:], 'surface.vasp'), vasp5=True)
             froz_folder.params['structure'] = surface_frozen_pyl.copy()
             os.makedirs(froz_folder.name[1:], exist_ok=True)

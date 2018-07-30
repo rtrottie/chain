@@ -682,11 +682,13 @@ def set_iopt_1(vasp: Vasp, structure=None):
 def single_point(vasp: Vasp, structure=None):
     vasp.istart = 1
     vasp.icharg = 1
-    vasp.ibrion = -1
+    vasp.ibrion = 3
+    vasp.potim = 0
     vasp.nelmin = 3
-    vasp.nsw = 0
+    vasp.nsw = 5000
+    vasp.nelm = 30
     vasp.ediff = 1e-5
-    vasp.ediffg = vasp.ediffg*1.5
+    vasp.ediffg = 1e-5
     vasp.add_keyword('lmaxmix', None)
     vasp.add_keyword('iopt', 0)
     return vasp
@@ -709,6 +711,7 @@ def single_point_hse(vasp: Vasp, structure=None):
     vasp.ibrion = -1
     vasp.nelmin = 3
     vasp.nsw = 0
+    vasp.potim = 0
     vasp.ediff = 1e-5
     vasp.ismear = -5
     vasp.algo = 'Damped'

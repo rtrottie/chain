@@ -336,12 +336,19 @@ class SpinCustomChain(CustomChain):
         energies = {}
         print('Checking NUPDOWNS {}'.format(self.nupdowns))
         for nup in self.nupdowns:  # Check energies of various spin configurations
-            nupdown_outdir = os.path.join(outdir, str(nup))
+            nupdown_outdir = os.path.join(outdir, 'nupdown_check', str(nup))
+            nupdown_outdir_orig = os.path.join(outdir, str(nup))
             names = [ str(x) for x in range(len(self.nupdown_functionals)) ]
             try: # Load answer from directory if it is present
-                energy = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
-                print('NUPDOWN check {} found \n    energy: {}'.format(nup, energy))
-                energies[nup] = energy
+                try:
+                    energy = float(self.Extract(os.path.join(nupdown_outdir, names[-1])).energy)
+                    print('NUPDOWN check {} found \n    energy: {}'.format(nup, energy))
+                    energies[nup] = energy
+                except:
+                    energy = float(self.Extract(os.path.join(nupdown_outdir_orig, names[-1])).energy)
+                    print('NUPDOWN check {} found \n    energy: {}'.format(nup, energy))
+                    energies[nup] = energy
+
             except:  # if the directory does not have the information, run vasp
                 def set_nupdown(vasp: Vasp, structure=None):
                     vasp.nupdown = nup

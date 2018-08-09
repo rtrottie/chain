@@ -45,6 +45,51 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "La", pseudoDir + "/La" # TODO Determine U
     return(vasp)
 
+
+def load_FERE_species(vasp: Vasp, structure):
+    # See vasp/functional.py:  elementName, fileName, max or min oxidation state
+    pseudoDir = '$PSEUDO_DIR'
+    vasp.add_specie = "Sc", pseudoDir + "/Sc_sv", U("dudarev", "d", 3)  # FERE
+    vasp.add_specie = "Y", pseudoDir + "/Y_sv", U("dudarev", "d", 3)  # FERE
+    # vasp.add_specie = "Ti", pseudoDir + "/Ti_pv", U("dudarev", "d", 4.35)  # Wolverton 3+
+    # vasp.add_specie = "V", pseudoDir + "/V_pv", U("dudarev", "d", 4.9)  # Wolverton 2+
+    # vasp.add_specie = "Cr", pseudoDir + "/Cr_pv", U("dudarev", "d", 3.04)  # Wolverton 3+
+    vasp.add_specie = "Zr", pseudoDir + "/Zr_sv", U("dudarev", "d", 3)  # FERE
+    # vasp.add_specie = "Mn", pseudoDir + "/Mn_pv", U("dudarev", "d", 2.98)  # Wolverton 2+
+    # vasp.add_specie = "Mn3p", pseudoDir + "/Mn_pv", U("dudarev", "d", 4.54)  # Wolverton 3+
+    vasp.add_specie = "Fe", pseudoDir + "/Fe_pv", U("dudarev", "d", 3)  # FERE
+    vasp.add_specie = "Co", pseudoDir + "/Co_pv", U("dudarev", "d", 3)  # Wolverton 2+
+    vasp.add_specie = "Ni", pseudoDir + "/Ni_pv", U("dudarev", "d", 3)  # FERE
+    vasp.add_specie = "Cu", pseudoDir + "/Cu_pv", U("dudarev", "d", 5.0)  # FERE
+    vasp.add_specie = "Nb", pseudoDir + "/Nb_pv", U("dudarev", "d", 3.0)  # FERE
+    vasp.add_specie = "Ce", pseudoDir + "/Ce", U("dudarev", "f", 3.0)  # Wolverton Ceria Paper
+    vasp.add_specie = "Zn", pseudoDir + "/Zn",
+    vasp.add_specie = "Ga", pseudoDir + "/Ga",
+    vasp.add_specie = "O", pseudoDir + "/O"
+    vasp.add_specie = "Al", pseudoDir + "/Al"
+    vasp.add_specie = "H", pseudoDir + "/H"
+
+    vasp.add_specie = "Sr", pseudoDir + "/Sr_sv"
+    vasp.add_specie = "Si", pseudoDir + "/Si"
+    vasp.add_specie = "Cd", pseudoDir + "/Cd"
+    vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
+    vasp.add_specie = "Be", pseudoDir + "/Be"
+    vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
+    vasp.add_specie = "Bi", pseudoDir + "/Bi_d"
+    vasp.add_specie = "Ge", pseudoDir + "/Ge_d"
+    vasp.add_specie = "Se", pseudoDir + "/Se"
+    vasp.add_specie = "Sb", pseudoDir + "/Sb"
+    vasp.add_specie = "Na", pseudoDir + "/Na_pv"
+    vasp.add_specie = "Ca", pseudoDir + "/Ca_pv"
+    vasp.add_specie = "In", pseudoDir + "/In_d"
+    vasp.add_specie = "K", pseudoDir + "/K_sv"
+    vasp.add_specie = "Mg", pseudoDir + "/Mg"
+    vasp.add_specie = "Sn", pseudoDir + "/Sn_d"
+    vasp.add_specie = "Li", pseudoDir + "/Li_sv"
+
+    vasp.add_specie = "La", pseudoDir + "/La"  # TODO Determine U
+    return (vasp)
+
 class WSBulkChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns=[], standard=[], override=[], final_step='5_single_point' ):
         standard = [load_default_vasp, ws_standard, herc_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7]
@@ -63,6 +108,10 @@ class WSBulkChain(SpinCustomChain):
         nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
         super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, hse],
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj)
+
+class WSBulkChain_FERE(WSBulkChain):
+    def __init__(self, vaspobj: Vasp(), nupdowns=[], standard=[], override=[], final_step='5_single_point'):
+        super().__init__(vaspobj, nupdowns=[], standard=[], override=[load_FERE_species, anti_spin], final_step='5_single_point')
 
 class WSBulkChain_auto(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):

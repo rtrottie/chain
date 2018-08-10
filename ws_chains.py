@@ -45,6 +45,12 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "La", pseudoDir + "/La" # TODO Determine U
     return(vasp)
 
+def load_low_FERE_species(vasp: Vasp, structure):
+    vasp.add_specie = "Fe", pseudoDir + "/Fe", U("dudarev", "d", 3)  # FERE
+    vasp.add_specie = "O", pseudoDir + "/O_s"
+    vasp.add_specie = "Al", pseudoDir + "/Al"
+    return vasp
+
 
 def load_FERE_species(vasp: Vasp, structure):
     # See vasp/functional.py:  elementName, fileName, max or min oxidation state
@@ -111,7 +117,7 @@ class WSBulkChain(SpinCustomChain):
 
 class WSBulkChain_FERE(WSBulkChain):
     def __init__(self, vaspobj: Vasp(), nupdowns=[], standard=[], override=[], final_step='5_single_point'):
-        super().__init__(vaspobj, nupdowns=[], standard=[], override=[load_FERE_species, anti_spin], final_step='5_single_point')
+        super().__init__(vaspobj, nupdowns=[], standard=[], override=[load_low_FERE_species, anti_spin], final_step='5_single_point')
 
 class WSBulkChain_auto(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):

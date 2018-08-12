@@ -117,7 +117,7 @@ class WSBulkChain(SpinCustomChain):
 
 class WSBulkChain_FERE(WSBulkChain):
     def __init__(self, vaspobj: Vasp(), nupdowns=[], standard=[], override=[], final_step='5_single_point'):
-        super().__init__(vaspobj, nupdowns=[], standard=[], override=[load_low_FERE_species, anti_spin], final_step='5_single_point')
+        super().__init__(vaspobj, nupdowns=nupdowns, standard=standard, override=[load_low_FERE_species, anti_spin], final_step=final_step)
 
 class WSBulkChain_auto(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):

@@ -374,6 +374,8 @@ class SpinCustomChain(CustomChain):
             for x in self.functionals: # Set nupdown
                 x.modifications.append(set_nupdown)
             (_, lowest) = super().call_with_output(structure, outdir=nupdown_outdir, functionals=self.nupdown_functionals, names=names)
+        else:
+            lowest = None
         return super().__call__(structure, outdir=outdir, previous=lowest, **kwargs)
 
 class SurfaceFromBulkChain(CustomChain):

@@ -46,6 +46,7 @@ def load_optimized_U_species(vasp : Vasp, structure):
     return(vasp)
 
 def load_low_FERE_species(vasp: Vasp, structure):
+    pseudoDir = '$PSEUDO_DIR'
     vasp.add_specie = "Fe", pseudoDir + "/Fe", U("dudarev", "d", 3)  # FERE
     vasp.add_specie = "O", pseudoDir + "/O_s"
     vasp.add_specie = "Al", pseudoDir + "/Al"

@@ -118,7 +118,7 @@ class WSBulkChain(SpinCustomChain):
 
 class WSBulkChain_FERE(WSBulkChain):
     def __init__(self, vaspobj: Vasp(), nupdowns=[], standard=[], override=[], final_step='5_single_point'):
-        super().__init__(vaspobj, nupdowns=nupdowns, standard=standard, override=[load_low_FERE_species, anti_spin], final_step=final_step)
+        super().__init__(vaspobj, nupdowns=nupdowns, standard=standard, override=[load_low_FERE_species, anti_spin_interstitial], final_step=final_step)
 
 class WSBulkChain_auto(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
@@ -485,7 +485,12 @@ def ws_standard(vasp: Vasp, structure):
 
 def anti_spin(vasp, structure):
     vasp.ispin = 2
-    vasp.magmom = '32*0 8*4 8*-4 64*0' 
+    vasp.magmom = '32*0 8*4 8*-4 64*0'
+    return vasp
+
+def anti_spin_interstitial(vasp, structure):
+    vasp.ispin = 2
+    vasp.magmom = '32*0 8*4 8*-4 65*0'
     return vasp
 
 def ferro_spin(vasp, structure):

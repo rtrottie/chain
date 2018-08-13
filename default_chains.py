@@ -652,6 +652,10 @@ def set_isym_0(vasp: Vasp, structure=None):
     vasp.isym =  0
     return vasp
 
+def set_isym_2(vasp: Vasp, structure=None):
+    vasp.isym =  2
+    return vasp
+
 def set_nelm_9999(vasp: Vasp, structure=None):
     vasp.nelm =  9999
     return vasp
@@ -741,6 +745,10 @@ def set_low_ediffg(vasp: Vasp, structure=None):
 
 def set_ediffg_03(vasp: Vasp, structure=None):
     vasp.ediffg = -0.03
+    return vasp
+
+def set_isif_7(vasp: Vasp, structure=None):
+    vasp.isif = 7
     return vasp
 
 ######################

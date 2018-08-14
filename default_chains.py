@@ -737,6 +737,7 @@ def cell_relax(vasp: Vasp, structure=None):
     vasp.ibrion = 1
     vasp.potim = 0.4
     vasp.ediffg = -0.005
+    vasp.add_keyword('iopt', 0)
     return vasp
 
 def set_low_ediffg(vasp: Vasp, structure=None):

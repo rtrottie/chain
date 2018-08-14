@@ -650,7 +650,7 @@ def set_ncore_12(vasp: Vasp, structure=None):
 
 def set_ncore_auto(vasp: Vasp, structure=None):
     vasp.npar = None
-    vasp.add_keyword('ncore', int(os.environ['PBS_NUM_PPN'])
+    vasp.add_keyword('ncore', int(os.environ['PBS_NUM_PPN']))
     return vasp
 
 def set_isym_0(vasp: Vasp, structure=None):

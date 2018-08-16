@@ -754,6 +754,7 @@ def set_ediffg_03(vasp: Vasp, structure=None):
     return vasp
 
 def set_isif_7(vasp: Vasp, structure=None):
+    vasp.ediffg = 1e-4
     vasp.isif = 7
     return vasp
 

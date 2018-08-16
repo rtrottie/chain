@@ -885,12 +885,14 @@ def set_222(vasp: Vasp, structure=None):
     x=2; y=2 ; z=2
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    vasp.add_keyword('auto_gamma', False)
     return vasp
 
 def set_333(vasp: Vasp, structure=None):
     x=3; y=3 ; z=3
     packing = 'Gamma'
     vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, x, y, z)
+    vasp.add_keyword('auto_gamma', False)
     return vasp
 
 def set_444(vasp: Vasp, structure=None):

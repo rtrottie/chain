@@ -127,7 +127,7 @@ class WSBulkChain_auto(SpinCustomChain):
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
         bad_converge_gamma   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + gamma + override)
-        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin] + override)
+        get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin] + override + [single_point])
         get_nopsin_eig_gamma = CustomFunctional(Vasp, standard + [get_eigen_nospin] + gamma + override)
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen] + override)
         get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen] + gamma + override)

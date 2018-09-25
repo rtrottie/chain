@@ -12,6 +12,7 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Zr", pseudoDir + "/Zr_sv", U("dudarev", "d", 3) # FERE
     vasp.add_specie = "Mn", pseudoDir + "/Mn_pv", U("dudarev", "d", 2.98) # Wolverton 2+
     vasp.add_specie = "Mn3p", pseudoDir + "/Mn_pv", U("dudarev", "d", 4.54) # Wolverton 3+
+    vasp.add_specie = "Mn4p", pseudoDir + "/Mn", U("dudarev", "d", 3.19) # Wolverton 3+
     vasp.add_specie = "Fe", pseudoDir + "/Fe_pv", U("dudarev", "d", 4.04) # Wolverton 2+,
     vasp.add_specie = "Co", pseudoDir + "/Co_pv", U("dudarev", "d", 3.75) # Wolverton 2+
     vasp.add_specie = "Ni",  pseudoDir + "/Ni_pv", U("dudarev", "d", 4.4) # Wolverton 2+

@@ -319,12 +319,12 @@ class WSSurfaceChain_gamma_dimer(WSSurfaceChain):
         return  super().__init__(vaspobj, standard=[set_gamma, gamma_optimization, set_dimer], override=[unset_nkred])
 
 class WSBulkPBE(OptimizedParametersChain):
-    def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse' ):
+    def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse', incar_override={}, **kwargs):
         standard = [load_default_vasp, cell_relax, herc_bulk, load_optimized_U_species, set_kpar_by_core, set_spin]
         pbe = CustomFunctional(Vasp, standard)
         pbe_single = CustomFunctional(Vasp, standard + [all_output])
         names = ['1_pbe', '2_pbe_reconverge']
-        super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj)
+        super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj, incar_override=incar_override, **kwargs)
 
 class WSBulkToSurfacePBE(CustomChain):
     def __init__(self, vaspobj: Vasp, bulk_structure, standard=[], override=[], incar_settings='../INCAR.defaults', kpt_modifier=1):

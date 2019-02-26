@@ -28,7 +28,7 @@ class CustomFunctional(object):
         return
 
 class CustomChain(object):
-    def __init__(self, functionals: list, names=None, vaspobj:Vasp=None, basename='', initial_structure=None, final_structure=None, **kwargs):
+    def __init__(self, functionals: list, names=None, vaspobj:Vasp=None, basename='', initial_structure=None, final_structure=None, incar_override={}, **kwargs):
         '''
         Runs a series of workflows
         Args:
@@ -49,6 +49,7 @@ class CustomChain(object):
         self.initial_structure = initial_structure
         self.final_strucutre = final_structure
         self.kwargs = kwargs
+        self.incar_override=incar_override
         return
 
     def Extract(self, jobdir):
@@ -88,6 +89,8 @@ class CustomChain(object):
             num_kpoints = math.floor(density / np.linalg.norm(structure.cell[:, 0])+0.5) * \
                           math.floor(density / np.linalg.norm(structure.cell[:, 1])+0.5) * \
                           math.floor(density / np.linalg.norm(structure.cell[:, 2])+0.5)
+        if 'nelect' in self.kwargs:
+            vasp.nelect = self.kwargs['nelect']
         for modification in workflow.modifications:
             vasp = modification(vasp, structure_)
         print('ISMEAR: |{}|'.format(vasp.ismear))
@@ -143,7 +146,7 @@ class CustomChain(object):
         return extract
 
 class OptimizedParametersChain(CustomChain):
-    def __init__(self, functionals: list, bandgap:float=None, names=None, vaspobj:Vasp=None, basename=''):
+    def __init__(self, functionals: list, bandgap:float=None, names=None, vaspobj:Vasp=None, basename='', incar_override={}, **kwargs):
         '''
         Runs a series of workflows
         Args:
@@ -153,7 +156,7 @@ class OptimizedParametersChain(CustomChain):
             vaspobj: TODO
         '''
         self.bandgap =  bandgap
-        return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename)
+        return  super().__init__(functionals, names=names, vaspobj=vaspobj, basename=basename, incar_override=incar_override, **kwargs)
 
 
     def get_bandgap_from_aexx(self, structure, aexx, outdir=None, previous=None):

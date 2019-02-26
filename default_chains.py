@@ -480,11 +480,11 @@ def all_output(vasp, structure=None):
 
 def set_kpar_auto(vasp: Vasp, structure=None):
     try:
-        nodes = int(os.environ['SLURM_JOB_NUM_NODES'])
-        procs = int(os.environ['SLURM_NTASKS'])
-    except:
         nodes = int(os.environ['PBS_NUM_NODES'])
         procs = int(os.environ['PBS_NP'])
+    except:
+        nodes = int(os.environ['SLURM_JOB_NUM_NODES'])
+        procs = int(os.environ['SLURM_NTASKS'])
 
     atoms = len(structure)
     if procs / atoms > 1:

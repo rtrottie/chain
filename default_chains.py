@@ -452,7 +452,10 @@ def load_default_vasp(vasp: Vasp,structure=None):
             kpoints_density = 4000
             vasp.kpoints=pylada.gen_kpts(structure,kpoints_density)
     vasp.program = '$VASP_PYLADA'   # default vasp program
-    vasp.npar       = int(os.environ['PBS_NUM_NODES'])
+    try:
+        vasp.npar       = int(os.environ['PBS_NUM_NODES'])
+    except:
+        vasp.npar = int(os.environ['SLURM_JOB_NUM_NODES'])
     vasp.prec       = "accurate"
     vasp.ediff      = 1.0e-6        # total, not per atom
     vasp.ediffg     = -0.02
@@ -476,8 +479,13 @@ def all_output(vasp, structure=None):
     return vasp
 
 def set_kpar_auto(vasp: Vasp, structure=None):
-    nodes = int(os.environ['PBS_NUM_NODES'])
-    procs = int(os.environ['PBS_NP'])
+    try:
+        nodes = int(os.environ['SLURM_JOB_NUM_NODES'])
+        procs = int(os.environ['SLURM_NTASKS'])
+    except:
+        nodes = int(os.environ['PBS_NUM_NODES'])
+        procs = int(os.environ['PBS_NP'])
+
     atoms = len(structure)
     if procs / atoms > 1:
         kpar = math.ceil(procs/atoms) * 2
@@ -500,12 +508,19 @@ def set_kpar_auto(vasp: Vasp, structure=None):
     return vasp
 
 def set_kpar_per_node(vasp: Vasp, structure=None):
-    nodes = int(os.environ['PBS_NUM_NODES'])
+    try:
+        nodes = int(os.environ['PBS_NUM_NODES'])
+    except:
+        nodes = int(os.environ['SLURM_JOB_NUM_NODES'])
+
     vasp.add_keyword('kpar', nodes)
     return vasp
 
 def set_kpar_by_core(vasp: Vasp, structure=None):
-    np = int(os.environ['PBS_NP'])
+    try:
+        np = int(os.environ['PBS_NP'])
+    except:
+        np = int(os.environ['SLURM_NTASKS'])
     atoms = len(structure)
     if np / atoms > 1:
         kpar = math.ceil(np/math.sqrt(atoms))
@@ -653,7 +668,11 @@ def set_ncore_12(vasp: Vasp, structure=None):
 
 def set_ncore_auto(vasp: Vasp, structure=None):
     vasp.npar = None
-    vasp.add_keyword('ncore', int(os.environ['PBS_NUM_PPN']))
+    try:
+        vasp.add_keyword('ncore', int(os.environ['PBS_NUM_PPN']))
+    except:
+        vasp.add_keyword('ncore', int(os.environ['SLURM_CPUS_ON_NODE']))
+
     return vasp
 
 def set_isym_0(vasp: Vasp, structure=None):

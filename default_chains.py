@@ -229,7 +229,7 @@ class OptimizedParametersChain(CustomChain):
         :param outdir: outdir to write to
         :return: :type  int
         '''
-        assymptote_increment = 250
+        assymptote_increment = 100
         encut_increment = 25
         def encut_round(i: int):
             return round(i/encut_increment)*encut_increment

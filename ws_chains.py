@@ -100,6 +100,57 @@ def load_FERE_species(vasp: Vasp, structure):
     vasp.add_specie = "La", pseudoDir + "/La"  # TODO Determine U
     return (vasp)
 
+
+def load_optimized_species_no_U(vasp: Vasp, structure):
+    # See vasp/functional.py:  elementName, fileName, max or min oxidation state
+    pseudoDir = '$PSEUDO_DIR'
+    vasp.add_specie = "Sc", pseudoDir + "/Sc_sv"
+    vasp.add_specie = "Y", pseudoDir + "/Y_sv"
+    vasp.add_specie = "Ti", pseudoDir + "/Ti_pv"
+    vasp.add_specie = "V", pseudoDir + "/V_pv"
+    vasp.add_specie = "Cr", pseudoDir + "/Cr_pv"
+    vasp.add_specie = "Zr", pseudoDir + "/Zr_sv"
+    vasp.add_specie = "Mn", pseudoDir + "/Mn_pv"
+    vasp.add_specie = "Mn3p", pseudoDir + "/Mn_pv"
+    vasp.add_specie = "Mn4p", pseudoDir + "/Mn"
+    vasp.add_specie = "Fe", pseudoDir + "/Fe_pv"
+    vasp.add_specie = "Co", pseudoDir + "/Co_pv"
+    vasp.add_specie = "Ni", pseudoDir + "/Ni_pv"
+    vasp.add_specie = "Cu", pseudoDir + "/Cu_pv"
+    vasp.add_specie = "Nb", pseudoDir + "/Nb_pv"
+    vasp.add_specie = "Ce", pseudoDir + "/Ce",
+    vasp.add_specie = "Zn", pseudoDir + "/Zn"
+    vasp.add_specie = "Ga", pseudoDir + "/Ga"
+    vasp.add_specie = "O", pseudoDir + "/O"
+    vasp.add_specie = "N", pseudoDir + "/N"
+    vasp.add_specie = "Al", pseudoDir + "/Al"
+    vasp.add_specie = "H", pseudoDir + "/H"
+    vasp.add_specie = "Hf", pseudoDir + "/Hf_pv"
+    vasp.add_specie = "Ta", pseudoDir + "/Ta_pv"
+    vasp.add_specie = "W", pseudoDir + "/W_sv"/""
+    vasp.add_specie = "H", pseudoDir + "/H"
+
+    vasp.add_specie = "Sr", pseudoDir + "/Sr_sv"
+    vasp.add_specie = "Si", pseudoDir + "/Si"
+    vasp.add_specie = "Cd", pseudoDir + "/Cd"
+    vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
+    vasp.add_specie = "Be", pseudoDir + "/Be"
+    vasp.add_specie = "Ba", pseudoDir + "/Ba_sv"
+    vasp.add_specie = "Bi", pseudoDir + "/Bi_d"
+    vasp.add_specie = "Ge", pseudoDir + "/Ge_d"
+    vasp.add_specie = "Se", pseudoDir + "/Se"
+    vasp.add_specie = "Sb", pseudoDir + "/Sb"
+    vasp.add_specie = "Na", pseudoDir + "/Na_pv"
+    vasp.add_specie = "Ca", pseudoDir + "/Ca_pv"
+    vasp.add_specie = "In", pseudoDir + "/In_d"
+    vasp.add_specie = "K", pseudoDir + "/K_sv"
+    vasp.add_specie = "Mg", pseudoDir + "/Mg"
+    vasp.add_specie = "Sn", pseudoDir + "/Sn_d"
+    vasp.add_specie = "Li", pseudoDir + "/Li_sv"
+
+    vasp.add_specie = "La", pseudoDir + "/La"  # TODO Determine U
+    return (vasp)
+
 class WSBulkChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns=[], standard=[], override=[], final_step='5_single_point' ):
         standard = [load_default_vasp, ws_standard, herc_bulk, load_optimized_U_species, rough_converge, set_222, set_iopt_7]
@@ -429,7 +480,7 @@ misc_labels {}
 
 class WSBulkSCAN(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse', incar_override={}, **kwargs):
-        standard = [load_default_vasp, cell_relax, herc_bulk, scan, set_kpar_by_core]
+        standard = [load_default_vasp, load_optimized_species_no_U, cell_relax, herc_bulk, scan, set_kpar_by_core]
         pbe = CustomFunctional(Vasp, standard)
         pbe_single = CustomFunctional(Vasp, standard + [all_output])
         names = ['1_scan', '2_scan_reconverge']

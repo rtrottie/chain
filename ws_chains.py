@@ -104,6 +104,8 @@ def load_FERE_species(vasp: Vasp, structure):
 def load_optimized_species_no_U(vasp: Vasp, structure):
     # See vasp/functional.py:  elementName, fileName, max or min oxidation state
     pseudoDir = '$PSEUDO_DIR'
+    vasp.add_specie = "B", pseudoDir + "/B"
+
     vasp.add_specie = "Sc", pseudoDir + "/Sc_sv"
     vasp.add_specie = "Y", pseudoDir + "/Y_sv"
     vasp.add_specie = "Ti", pseudoDir + "/Ti_pv"

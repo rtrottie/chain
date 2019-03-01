@@ -132,7 +132,7 @@ def load_optimized_species_no_U(vasp: Vasp, structure):
     vasp.add_specie = "H", pseudoDir + "/H"
     vasp.add_specie = "Hf", pseudoDir + "/Hf_pv"
     vasp.add_specie = "Ta", pseudoDir + "/Ta_pv"
-    vasp.add_specie = "W", pseudoDir + "/W_sv"/""
+    vasp.add_specie = "W", pseudoDir + "/W_sv"
     vasp.add_specie = "H", pseudoDir + "/H"
 
     vasp.add_specie = "Sr", pseudoDir + "/Sr_sv"

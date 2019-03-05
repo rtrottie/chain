@@ -509,7 +509,7 @@ class WSBulkSCAN(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse', incar_override={}, **kwargs):
         standard = [load_default_vasp, load_optimized_species_no_U, cell_relax, herc_bulk, scan, set_kpar_by_core]
         pbe = CustomFunctional(Vasp, standard + override)
-        pbe_single = CustomFunctional(Vasp, standard + [single_point, all_output, tetrahedron] + override)
+        pbe_single = CustomFunctional(Vasp, standard + [all_output] + override)
         names = ['1_scan', '2_scan_reconverge']
         super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj, incar_override=incar_override, **kwargs)
 

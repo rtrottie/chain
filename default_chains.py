@@ -701,6 +701,29 @@ def set_nospin(vasp: Vasp, structure=None):
     vasp.ispin = 1
     return vasp
 
+def set_ismear(vasp: Vasp, structure=None):
+    '''
+
+    :param vasp: Vasp
+    :param structure:
+    :return:
+    '''
+    x=20
+    packing = 'Auto'
+    # vasp.kpoints = "Automatic\n0\n{}\n{}".format(packing, x)
+    kpoint_str = vasp.kpoints.split('\n')[3]
+    kpoints = [ int(x) for x in kpoint_str.split() ]
+    if len(kpoints) > 1:
+        num_kpoints = kpoints[0] * kpoints[1] * kpoints[2]
+    else:
+        density = kpoints[0]
+        num_kpoints = math.ceil(density / np.linalg.norm(structure.cell[:,0])) * math.ceil(density / np.linalg.norm(structure.cell[:,1])) * math.ceil(density / np.linalg.norm(structure.cell[:,2]))
+    if num_kpoints < 4:
+        vasp.ismear=0
+    return vasp
+
+    vasp.ispin = 1
+    return vasp
 
 ##########
 # IONIC  #

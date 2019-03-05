@@ -203,7 +203,7 @@ class WSBulkChain_auto(SpinCustomChain):
 
 class WSBulkChainSCAN_auto(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
-        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_iopt_7, set_kpar_auto, scan, set_spin, tetrahedron]
+        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_iopt_7, set_kpar_auto, scan, set_spin]
         gamma = [set_gamma, gamma_optimization, set_ncore_auto]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
@@ -507,7 +507,7 @@ misc_labels {}
 
 class WSBulkSCAN(OptimizedParametersChain):
     def __init__(self, vaspobj: Vasp, bandgap:float=None, standard=[], override=[], final_step='5_hse', incar_override={}, **kwargs):
-        standard = [load_default_vasp, load_optimized_species_no_U, cell_relax, herc_bulk, scan, set_kpar_by_core, tetrahedron]
+        standard = [load_default_vasp, load_optimized_species_no_U, cell_relax, herc_bulk, scan, set_kpar_by_core]
         pbe = CustomFunctional(Vasp, standard)
         pbe_single = CustomFunctional(Vasp, standard + [all_output])
         names = ['1_scan', '2_scan_reconverge']

@@ -203,7 +203,7 @@ class WSBulkChain_auto(SpinCustomChain):
 
 class WSBulkChainSCAN_auto(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
-        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_U_species, rough_converge, set_iopt_7, set_kpar_auto, scan, set_spin]
+        standard = [load_default_vasp, ws_standard, ws_bulk, load_optimized_species_no_U, rough_converge, set_iopt_7, set_kpar_auto, scan, set_spin]
         gamma = [set_gamma, gamma_optimization, set_ncore_auto]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)

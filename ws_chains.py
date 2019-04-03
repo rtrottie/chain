@@ -209,10 +209,10 @@ class WSBulkChainSCAN_auto(SpinCustomChain):
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + override)
         bad_converge_gamma   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_fast] + gamma + override)
         get_nopsin_eig = CustomFunctional(Vasp, standard + [get_eigen_nospin] + override)
-        get_nopsin_eig_gamma = CustomFunctional(Vasp, standard + [get_eigen_nospin] + gamma + override)
+        get_nopsin_eig_gamma = CustomFunctional(Vasp, standard + [get_eigen_nospin, set_algo_all] + gamma + override)
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen] + override)
-        get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen] + gamma + override)
-        final_converge = CustomFunctional(Vasp, standard + [full_converge,all_output] + override)
+        get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen, set_algo_all] + gamma + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
         final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge] + gamma + override)
         sp = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
 

@@ -22,19 +22,18 @@ class HDiffusionSCANChain(SpinCustomChain):
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj, **kwargs)
 
 class HDiffusionUnitSCANChain(SpinCustomChain):
-    def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
+    def __init__(self, vaspobj: Vasp(), standard=[], override=[], **kwargs):
         standard = [load_default_vasp, diffusion_standard, load_optimized_species_no_U, rough_converge, set_iopt_7, set_kpar_auto, scan]
         gamma = [set_gamma, gamma_optimization, set_ncore_auto]
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen, set_algo_all] + override)
         get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen, set_algo_all] + gamma + override)
         final_converge = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
-        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge] + gamma + override)
-        sp = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
+        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge, all_output()] + gamma + override)
 
         names          = ['0_converge', '1_single_point']
         nupdown_functionals = [get_eigenvalues_gamma, final_converge_gamma]
-        super().__init__([get_eigenvalues, final_converge, sp],
-                         nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj, **kwargs)
+        super().__init__([get_eigenvalues, final_converge],
+                         nupdown_functionals=nupdown_functionals, names=names, vaspobj=vaspobj, **kwargs)
 
 def diffusion_standard(vasp, structure=None):
     vasp.ediff = 1e-5

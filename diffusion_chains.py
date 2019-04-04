@@ -28,7 +28,7 @@ class HDiffusionUnitSCANChain(SpinCustomChain):
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen, set_algo_all] + override)
         get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen, set_algo_all] + gamma + override)
         final_converge = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
-        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge, all_output()] + gamma + override)
+        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge, all_output] + gamma + override)
 
         names          = ['0_converge', '1_single_point']
         nupdown_functionals = [get_eigenvalues_gamma, final_converge_gamma]

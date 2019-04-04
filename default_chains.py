@@ -17,7 +17,8 @@ import pylada
 import os
 import math
 import numpy as np
-from Classes_Pymatgen import Poscar
+from Classes_Pymatgen import Poscar, Kpoints
+from Helpers import pyl_to_pmg
 
 
 class CustomFunctional(object):
@@ -967,6 +968,12 @@ def unset_nkred(vasp: Vasp, structure=None):
     vasp.add_keyword('nkredz', 1)
     vasp.add_keyword('nkred', 1)
     return vasp
+
+def set_kpoints_1704(vasp: Vasp, structure=None):
+    kpts = Kpoints.automatic_density(pyl_to_pmg(structure), 1704)
+    vasp.kpoints = str(kpts)
+    return vasp
+
 
 ######
 # TS #

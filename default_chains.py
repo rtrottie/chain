@@ -1043,3 +1043,11 @@ def surface_final(vasp: Vasp, structure : Structure):
     vasp.add_keyword('idipol', 3)
     vasp.add_keyword('ldipol', True)
     return vasp
+
+##############
+## CONTINUE ##
+##############
+def dont_continue(vasp: Vasp, structure: Structure):
+    vasp.istart = 0
+    vasp.icharg = 2
+    return vasp

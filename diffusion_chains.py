@@ -1,6 +1,5 @@
 from default_chains import *
 from ws_chains import load_optimized_species_no_U
-from pylada import Vasp
 
 class HDiffusionSCANChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
@@ -20,6 +19,21 @@ class HDiffusionSCANChain(SpinCustomChain):
         names          = ['0_pre_converge', '1_rough_converge', '2_nospin_eig', '3_get_eigenvalues', '4_final_converge', '5_single_point']
         nupdown_functionals = [pre_converge, bad_converge_gamma, get_nopsin_eig_gamma, get_eigenvalues_gamma, final_converge_gamma]
         super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, sp],
+                         nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj, **kwargs)
+
+class HDiffusionUnitSCANChain(SpinCustomChain):
+    def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
+        standard = [load_default_vasp, diffusion_standard, load_optimized_species_no_U, rough_converge, set_iopt_7, set_kpar_auto, scan, set_spin]
+        gamma = [set_gamma, gamma_optimization, set_ncore_auto]
+        get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen, set_algo_all] + override)
+        get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen, set_algo_all] + gamma + override)
+        final_converge = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
+        final_converge_gamma = CustomFunctional(Vasp, standard + [full_converge] + gamma + override)
+        sp = CustomFunctional(Vasp, standard + [full_converge, all_output] + override)
+
+        names          = ['0_converge', '1_single_point']
+        nupdown_functionals = [get_eigenvalues_gamma, final_converge_gamma]
+        super().__init__([get_eigenvalues, final_converge, sp],
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj, **kwargs)
 
 def diffusion_standard(vasp, structure=None):

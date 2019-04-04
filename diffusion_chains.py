@@ -3,7 +3,7 @@ from ws_chains import load_optimized_species_no_U
 
 class HDiffusionSCANChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
-        standard = [load_default_vasp, diffusion_standard, load_optimized_species_no_U, rough_converge, set_iopt_7, set_kpar_auto, scan, set_spin]
+        standard = [load_default_vasp, diffusion_standard, load_optimized_species_no_U, rough_converge, set_iopt_7, set_kpar_auto, scan]
         gamma = [set_gamma, gamma_optimization, set_ncore_auto]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_all] + override)
@@ -23,7 +23,7 @@ class HDiffusionSCANChain(SpinCustomChain):
 
 class HDiffusionUnitSCANChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
-        standard = [load_default_vasp, diffusion_standard, load_optimized_species_no_U, rough_converge, set_iopt_7, set_kpar_auto, scan, set_spin]
+        standard = [load_default_vasp, diffusion_standard, load_optimized_species_no_U, rough_converge, set_iopt_7, set_kpar_auto, scan]
         gamma = [set_gamma, gamma_optimization, set_ncore_auto]
         get_eigenvalues= CustomFunctional(Vasp, standard + [get_eigen, set_algo_all] + override)
         get_eigenvalues_gamma = CustomFunctional(Vasp, standard + [get_eigen, set_algo_all] + gamma + override)

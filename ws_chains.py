@@ -28,6 +28,7 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Ta", pseudoDir + "/Ta_pv", U("dudarev", "d", 3) # FERE
 
     vasp.add_specie = "Sr", pseudoDir + "/Sr_sv"
+    vasp.add_specie = "F", pseudoDir + "/F"
     vasp.add_specie = "C", pseudoDir + "/C"
     vasp.add_specie = "Si", pseudoDir + "/Si"
     vasp.add_specie = "Cd", pseudoDir + "/Cd"

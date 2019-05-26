@@ -22,6 +22,8 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Zn", pseudoDir + "/Zn",
     vasp.add_specie = "Ga", pseudoDir + "/Ga",
     vasp.add_specie = "O",  pseudoDir + "/O"
+    vasp.add_specie = "S",  pseudoDir + "/S"
+    vasp.add_specie = "P",  pseudoDir + "/P"
     vasp.add_specie = "Al", pseudoDir + "/Al"
     vasp.add_specie = "H", pseudoDir + "/H"
     vasp.add_specie = "Hf", pseudoDir + "/Hf_pv", U("dudarev", "d", 3) # FERE

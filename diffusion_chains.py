@@ -41,6 +41,7 @@ class NaDiffusionPBEUChain(SpinCustomChain):
         super().__init__([pre_converge, bad_converge, get_nopsin_eig, get_eigenvalues, final_converge, sp],
                          nupdown_functionals=nupdown_functionals, nupdowns=nupdowns, names=names, vaspobj=vaspobj, **kwargs)
 
+
 class NaDiffusionUnitSCANChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), standard=[], override=[], **kwargs):
         standard = [load_default_vasp, diffusion_standard, load_optimized_species_no_U, rough_converge, set_iopt_7, set_kpar_auto, scan, set_npar_2, set_kpar_2, cell_relax]

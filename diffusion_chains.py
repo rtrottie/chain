@@ -23,7 +23,7 @@ class HDiffusionSCANChain(SpinCustomChain):
 
 class NaDiffusionPBEUChain(SpinCustomChain):
     def __init__(self, vaspobj: Vasp(), nupdowns, standard=[], override=[], **kwargs):
-        standard = [load_default_vasp, diffusion_standard_na, load_optimized_U_species, rough_converge, set_iopt_7, set_kpar_auto, scan]
+        standard = [load_default_vasp, diffusion_standard_na, load_optimized_U_species, rough_converge, set_iopt_7, set_kpar_auto]
         gamma = [set_gamma, gamma_optimization, set_ncore_auto]
         pre_converge   = CustomFunctional(Vasp, standard + [awful_converge, set_algo_fast] + gamma + override)
         bad_converge   = CustomFunctional(Vasp, standard + [rough_converge, set_algo_all] + override)

@@ -288,6 +288,7 @@ class OptimizedParametersChain(CustomChain):
 
 
     def __call__(self, structure, outdir=None, **kwargs):
+        print(kwargs)
         if 'kpoints' in kwargs:
             kpoints = kwargs['kpoints']
             def set_kpoint(vasp: Vasp, structure):

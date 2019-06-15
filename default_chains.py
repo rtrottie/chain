@@ -504,6 +504,7 @@ def set_kpar_auto(vasp: Vasp, structure=None):
     atoms = len(structure)
     if procs / atoms > 1:
         kpar = math.ceil(procs/atoms) * 2
+        print(vasp.kpoints)
         kpoint_str = vasp.kpoints.split('\n')[3]
         kpoints = [ int(x) for x in kpoint_str.split() ]
         if len(kpoints) > 1:

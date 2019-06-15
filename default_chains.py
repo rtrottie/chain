@@ -85,14 +85,16 @@ class CustomChain(object):
             vasp.encut = self.kwargs['encut']
         num_kpoints = 99999
         if 'kpoints' in self.kwargs:
-            vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
             density = self.kwargs['kpoints']
             if type(density) == int:
+                vasp.kpoints = "Automatic\n0\nAuto\n{}".format(self.kwargs['kpoints'])
                 num_kpoints = math.floor(density / np.linalg.norm(structure.cell[:, 0])+0.5) * \
                               math.floor(density / np.linalg.norm(structure.cell[:, 1])+0.5) * \
                               math.floor(density / np.linalg.norm(structure.cell[:, 2])+0.5)
             elif type(density) == 'str':
-                num_kpoints = 1
+                kpoint_str = vasp.kpoints.split('\n')[3]
+                kpoints = [int(x) for x in kpoint_str.split()]
+                num_kpoints = kpoints[0] * kpoints[1] * kpoints[2]
         if 'nelect' in self.kwargs:
             vasp.nelect = self.kwargs['nelect']
         for modification in workflow.modifications:

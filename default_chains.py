@@ -544,6 +544,11 @@ def set_kpar_by_core(vasp: Vasp, structure=None):
     atoms = len(structure)
     if np / atoms > 1:
         kpar = math.ceil(np/math.sqrt(atoms))
+        print(vasp.kpoints)
+        print(vasp.kpoints)
+        print(vasp.kpoints)
+        print(vasp.kpoints)
+        print(vasp.kpoints)
         kpoint_str = vasp.kpoints.split('\n')[3]
         kpoints = [ int(x) for x in kpoint_str.split() ]
         num_kpoints = kpoints[0] * kpoints[1] * kpoints[2]

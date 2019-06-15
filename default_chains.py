@@ -288,18 +288,27 @@ class OptimizedParametersChain(CustomChain):
 
 
     def __call__(self, structure, outdir=None, **kwargs):
-        kpoint = self.get_kpoints(structure, 3, 0.001, outdir=os.path.join(outdir, 'get_kpoints'))
-        def set_kpoint(vasp: Vasp, structure):
-            lengths = [sum([x ** 2 for x in structure.cell.transpose()[i]]) ** (1 / 2) for i in range(3)] # using distance formula to get vector lengths
-            kpoints = [math.ceil(min(lengths) / x * kpoint) for x in lengths] # scaling number of kpoints for shorter vectors
+        if 'kpoints' in kwargs:
+            kpoints = kwargs['kpoints']
+            def set_kpoint(vasp: Vasp, structure):
+                vasp.kpoints = kpoints
+                return vasp
+        else:
+            kpoint = self.get_kpoints(structure, 3, 0.001, outdir=os.path.join(outdir, 'get_kpoints'))
+            def set_kpoint(vasp: Vasp, structure):
+                lengths = [sum([x ** 2 for x in structure.cell.transpose()[i]]) ** (1 / 2) for i in range(3)] # using distance formula to get vector lengths
+                kpoints = [math.ceil(min(lengths) / x * kpoint) for x in lengths] # scaling number of kpoints for shorter vectors
 
-            packing = 'Gamma'
-            vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, kpoints[0], kpoints[1], kpoints[2])
-            return vasp
+                packing = 'Gamma'
+                vasp.kpoints = "Gamma_Mesh\n0\n{}\n{} {} {}".format(packing, kpoints[0], kpoints[1], kpoints[2])
+                return vasp
         for x in self.functionals: # Set nupdown
             x.modifications.append(set_kpoint)
 
-        encut = self.get_encut(structure, 500, 1000, 0, 0.001 ,outdir=os.path.join(outdir, 'get_encut'))
+        if 'encut' in kwargs:
+            encut = kwargs['encut']
+        else:
+            encut = self.get_encut(structure, 500, 1000, 0, 0.001 ,outdir=os.path.join(outdir, 'get_encut'))
         def set_encut(vasp: Vasp, structure=None):
             vasp.encut = encut
             return vasp

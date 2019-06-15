@@ -289,8 +289,8 @@ class OptimizedParametersChain(CustomChain):
 
     def __call__(self, structure, outdir=None, **kwargs):
         print(kwargs)
-        if 'kpoints' in kwargs:
-            kpoints = kwargs['kpoints']
+        if 'kpoints' in self.kwargs:
+            kpoints = self.kwargs['kpoints']
             def set_kpoint(vasp: Vasp, structure):
                 vasp.kpoints = kpoints
                 return vasp
@@ -306,8 +306,8 @@ class OptimizedParametersChain(CustomChain):
         for x in self.functionals: # Set nupdown
             x.modifications.append(set_kpoint)
 
-        if 'encut' in kwargs:
-            encut = kwargs['encut']
+        if 'encut' in self.kwargs:
+            encut = self.kwargs['encut']
         else:
             encut = self.get_encut(structure, 500, 1000, 0, 0.001 ,outdir=os.path.join(outdir, 'get_encut'))
         def set_encut(vasp: Vasp, structure=None):

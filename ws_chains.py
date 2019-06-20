@@ -18,11 +18,16 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Ni",  pseudoDir + "/Ni_pv", U("dudarev", "d", 4.4) # Wolverton 2+
     vasp.add_specie = "Cu", pseudoDir + "/Cu_pv", U("dudarev", "d" , 5.0) # FERE
     vasp.add_specie = "Nb", pseudoDir + "/Nb_pv", U("dudarev", "d" , 3.0) # FERE
+
     vasp.add_specie = "Ce", pseudoDir + "/Ce", U("dudarev", "f" , 3.0) # Wolverton Ceria Paper
     vasp.add_specie = "Pr", pseudoDir + "/Pr", U("dudarev", "f" , 6.0) # https://doi.org/10.1016/j.actamat.2010.11.041
     vasp.add_specie = "Nd", pseudoDir + "/Nd", U("dudarev", "f" , 6.0) # https://doi.org/10.1016/j.actamat.2010.11.041
     vasp.add_specie = "Eu", pseudoDir + "/Eu", U("dudarev", "f" , 7.0) # https://doi.org/10.1016/j.actamat.2010.11.041
     vasp.add_specie = "Sm", pseudoDir + "/Sm", U("dudarev", "f" , 8.0) # https://doi.org/10.1016/j.actamat.2010.11.041
+    vasp.add_specie = "Gd", pseudoDir + "/Gd", U("dudarev", "f" , 4.0) # https://doi.org/10.1002/jcc.23618
+    vasp.add_specie = "Tb", pseudoDir + "/Tb", U("dudarev", "f" , 10.0) # https://doi.org/10.1002/jcc.23618
+    vasp.add_specie = "Dy", pseudoDir + "/Dy", U("dudarev", "f" , 10.9) # https://doi.org/10.1002/jcc.23618
+
     vasp.add_specie = "Zn", pseudoDir + "/Zn",
     vasp.add_specie = "Ga", pseudoDir + "/Ga",
     vasp.add_specie = "O",  pseudoDir + "/O"
@@ -54,6 +59,10 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Li", pseudoDir + "/Li_sv"
 
     vasp.add_specie = "La", pseudoDir + "/La" # TODO Determine U
+    las = ['Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb','Dy', 'Ho','Er','Tm','Yb','Lu']
+    for atom in structure:
+        if atom.type in las:
+            vasp.lmaxmix = 6
     return(vasp)
 
 def load_low_FERE_species(vasp: Vasp, structure):
@@ -537,6 +546,22 @@ spins = {
     'O'  :  0,
     'Al' : 0,
     'H'  : 0
+
+    'Ce' : 1,
+    'Pr' : 2,
+    'Nd' : 3,
+    'Pm' : 4,
+    'Sm' : 5,
+    'Eu' : 5.5,
+    'Gd' : 6.5,
+    'Tb' : 5.5,
+    'Dy' : 5,
+    'Ho' : 4,
+    'Er' : 3,
+    'Tm' : 2,
+    'Yb' : 1,
+    'Lu' : 0,
+
 }
 
 def set_spin(vasp: Vasp, structure):

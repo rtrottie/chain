@@ -20,13 +20,19 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Nb", pseudoDir + "/Nb_pv", U("dudarev", "d" , 3.0) # FERE
 
     vasp.add_specie = "Ce", pseudoDir + "/Ce", U("dudarev", "f" , 3.0) # Wolverton Ceria Paper
-    vasp.add_specie = "Pr", pseudoDir + "/Pr", U("dudarev", "f" , 6.0) # https://doi.org/10.1016/j.actamat.2010.11.041
+
+    vasp.add_specie = "Pr", pseudoDir + "/Pr", U("dudarev", "f" , 4.3) # https://doi.org/10.1016/j.actamat.2010.11.041
     vasp.add_specie = "Nd", pseudoDir + "/Nd", U("dudarev", "f" , 6.0) # https://doi.org/10.1016/j.actamat.2010.11.041
     vasp.add_specie = "Eu", pseudoDir + "/Eu", U("dudarev", "f" , 7.0) # https://doi.org/10.1016/j.actamat.2010.11.041
     vasp.add_specie = "Sm", pseudoDir + "/Sm", U("dudarev", "f" , 8.0) # https://doi.org/10.1016/j.actamat.2010.11.041
     vasp.add_specie = "Gd", pseudoDir + "/Gd", U("dudarev", "f" , 4.0) # https://doi.org/10.1002/jcc.23618
     vasp.add_specie = "Tb", pseudoDir + "/Tb", U("dudarev", "f" , 10.0) # https://doi.org/10.1002/jcc.23618
+    vasp.add_specie = "Ho", pseudoDir + "/Ho", U("dudarev", "f" , 8.0) # https://doi.org/10.1002/jcc.24272
+    vasp.add_specie = "Er", pseudoDir + "/Er", U("dudarev", "f" , 8.4) # https://doi.org/10.1002/jcc.24272
+    vasp.add_specie = "Tm", pseudoDir + "/Tm", U("dudarev", "f" , 9.1) # https://doi.org/10.1002/jcc.24272
+    vasp.add_specie = "Yb", pseudoDir + "/Yb", U("dudarev", "f" , 6.4) # https://doi.org/10.1002/jcc.24272
     vasp.add_specie = "Dy", pseudoDir + "/Dy", U("dudarev", "f" , 10.9) # https://doi.org/10.1002/jcc.23618
+    vasp.add_specie = "Lu", pseudoDir + "/Lu", U("dudarev", "f" , 9.5) # https://doi.org/10.1002/jcc.24272
 
     vasp.add_specie = "Zn", pseudoDir + "/Zn",
     vasp.add_specie = "Ga", pseudoDir + "/Ga",

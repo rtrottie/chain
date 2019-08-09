@@ -32,6 +32,7 @@ def load_optimized_U_species(vasp : Vasp, structure):
     vasp.add_specie = "Tm", pseudoDir + "/Tm", U("dudarev", "f" , 9.1) # https://doi.org/10.1002/jcc.24272
     vasp.add_specie = "Yb", pseudoDir + "/Yb", U("dudarev", "f" , 6.4) # https://doi.org/10.1002/jcc.24272
     vasp.add_specie = "Dy", pseudoDir + "/Dy", U("dudarev", "f" , 10.9) # https://doi.org/10.1002/jcc.23618
+    vasp.add_specie = "Gd", pseudoDir + "/Gd", U("dudarev", "f" , 4.5) # https://doi.org/10.1002/jcc.23618
     vasp.add_specie = "Lu", pseudoDir + "/Lu", U("dudarev", "f" , 9.5) # https://doi.org/10.1002/jcc.24272
 
     vasp.add_specie = "Zn", pseudoDir + "/Zn",

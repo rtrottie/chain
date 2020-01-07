@@ -427,7 +427,6 @@ class WSBulkPBE(OptimizedParametersChain):
         pbe = CustomFunctional(Vasp, standard + override)
         pbe_single = CustomFunctional(Vasp, standard + [all_output] + override)
         names = ['1_pbe', '2_pbe_reconverge']
-
         super().__init__([pbe, pbe_single], bandgap=bandgap, names=names, vaspobj=vaspobj, incar_override=incar_override, **kwargs)
 
 class WSBulkToSurfacePBE(CustomChain):

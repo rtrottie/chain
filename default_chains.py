@@ -805,6 +805,10 @@ def set_ediffg_03(vasp: Vasp, structure=None):
     vasp.ediffg = -0.03
     return vasp
 
+def set_ediffg_1e6(vasp: Vasp, structure=None):
+    vasp.ediffg = 1e6
+    return vasp
+
 def set_isif_7(vasp: Vasp, structure=None):
     vasp.ediffg = 1e-4
     vasp.isif = 7

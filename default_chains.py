@@ -810,6 +810,10 @@ def set_isif_7(vasp: Vasp, structure=None):
     vasp.isif = 7
     return vasp
 
+def set_isif_2(vasp: Vasp, structure=None):
+    vasp.isif = 2
+    return vasp
+
 ######################
 # CONVERGENCE LEVELS #
 ######################

@@ -829,8 +829,8 @@ def awful_converge(vasp: Vasp, structure=None):
     # Electronic
     vasp.prec = "Normal"
     vasp.nelm = 60
-    vasp.nelmin = 8
-    vasp.ediff = 1e-3
+    vasp.nelmin = 12
+    vasp.ediff = 1e-4
     vasp.nelmdl = -15
     # Ionic
     vasp.nsw = 5000

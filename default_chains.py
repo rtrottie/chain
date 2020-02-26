@@ -978,7 +978,7 @@ def gamma_optimization(vasp: Vasp, structure = None):
     return vasp
 
 def disable_gamma_optimization(vasp: Vasp, structure = None):
-    vasp.add_keyword('auto_gamma', True)
+    vasp.add_keyword('auto_gamma', False)
     return vasp
 
 def set_nkred_222(vasp: Vasp, structure=None):
